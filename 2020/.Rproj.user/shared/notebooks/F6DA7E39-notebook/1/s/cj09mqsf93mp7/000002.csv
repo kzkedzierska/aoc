@@ -1,0 +1,14 @@
+"0","in_df <- "
+"0","  read_delim(""input.txt"", delim = "" "", "
+"0","           col_names = c(""instruction"", ""n"")) "
+"2","Parsed with column specification:
+cols(
+  instruction = [31mcol_character()[39m,
+  n = [32mcol_double()[39m
+)
+"
+"0","execute_one_loop(in_df)"
+"1","[1]"
+"1"," 1654"
+"1","
+"
