@@ -1,4 +1,0 @@
-"0","input <- t(apply(as.matrix(readLines(""input.txt"")), 1, "
-"0","                    function(line) strsplit(line, """")[[1]]))"
-"0",""
-"0","input_mat <- (input == ""#"") * 1"

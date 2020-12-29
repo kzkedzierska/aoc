@@ -1,2 +1,0 @@
-"0","start <- c(1, 1)"
-"0","end <- start + c((nrow(input_mat) - 1), (nrow(input_mat) - 1) * 3)"
