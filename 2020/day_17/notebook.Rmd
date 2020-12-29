@@ -1,6 +1,8 @@
 ---
-title: "Day 17: Conway Cubes"
-output: html_notebook
+title: 'Day 17: Conway Cubes'
+output:
+  html_document:
+    df_print: paged
 ---
 
 As your flight slowly drifts through the sky, the Elves at the Mythical Information Bureau at the North Pole contact you. They'd like some help debugging a malfunctioning experimental energy source aboard one of their super-secret imaging satellites.
@@ -171,74 +173,75 @@ If a cube is inactive but exactly 3 of its neighbors are active, the cube become
 Each cube only ever considers its neighbors: any of the 26 other cubes where any of their coordinates differ by at most 1. For example, given the cube at x=1,y=2,z=3, its neighbors include the cube at x=2,y=2,z=2, the cube at x=0,y=2,z=3, and so on.
 
 ```{r}
-check_cube <- function(cube_tibble, input_df) {
-  x <- (cube_tibble$x-1):(cube_tibble$x+1)
-  y <- (cube_tibble$y-1):(cube_tibble$y+1)
-  z <- (cube_tibble$z-1):(cube_tibble$z+1)
-  cube_neighbour_df <- expand_grid(x, y, z) %>%
-    filter(!(x == cube_tibble$x & y == cube_tibble$y & z == cube_tibble$z))
-  
-  active_cubes <-
-    input_df %>%
-    inner_join(cube_neighbour_df, by = c("x", "y", "z")) %>%
-    filter(cube_status == "#") %>%
-    nrow()
-  
-  new_cube_status = "."
-  if (cube_tibble$cube_status == "." & active_cubes == 3) {
-    new_cube_status = "#"
-  } else if (cube_tibble$cube_status == "#" & active_cubes %in% 2:3) {
-    new_cube_status = "#"
-  }
-  
-  return(tibble(x = cube_tibble$x,
-                y = cube_tibble$y, 
-                z = cube_tibble$z, 
-                cube_status = new_cube_status))
-}
+
+check_cube <- function(cube_tibble, input_df) {                                 
+  x <- (cube_tibble$x-1):(cube_tibble$x+1)                                      
+  y <- (cube_tibble$y-1):(cube_tibble$y+1)                                      
+  z <- (cube_tibble$z-1):(cube_tibble$z+1)                                      
+  cube_neighbour_df <- expand_grid(x, y, z) %>%                                 
+    filter(!(x == cube_tibble$x & y == cube_tibble$y & z == cube_tibble$z))     
+                                                                                
+  active_cubes <-                                                               
+    input_df %>%                                                                
+    inner_join(cube_neighbour_df, by = c("x", "y", "z")) %>%                    
+    filter(cube_status == "#") %>%                                              
+    nrow()                                                                      
+                                                                                
+  new_cube_status = "."                                                         
+  if (cube_tibble$cube_status == "." & active_cubes == 3) {                     
+    new_cube_status = "#"                                                       
+  } else if (cube_tibble$cube_status == "#" & active_cubes %in% 2:3) {          
+    new_cube_status = "#"                                                       
+  }                                                                             
+                                                                                
+  return(tibble(x = cube_tibble$x,                                              
+                y = cube_tibble$y,                                              
+                z = cube_tibble$z,                                              
+                cube_status = new_cube_status))                                 
+} 
+
 ```
 
 
 ```{r}
-simulate <- function(input_df, n = 1) {
-  df <- 
-    input_df %>%
-    filter(cube_status == "#")
-  
-  for (simulation in 1:n) {
+simulate <- function(input_df, n = 1) {                                         
+  df <-                                                                         
+    input_df %>%                                                                
+    filter(cube_status == "#")                                                  
+                                                                                
+  for (simulation in 1:n) {                                                     
+                                                                                
+    xs <- (min(df$x)-1):(max(df$x)+1)                                           
+    ys <- (min(df$y)-1):(max(df$y)+1)                                           
+    zs <- (min(df$z)-1):(max(df$z)+1)                                           
+                                                                                
+    full_df <-                                                                  
+      expand_grid(x = xs, y = ys,  z = zs)                                      
+                                                                                
+    df <-                                                                       
+      df %>%                                                                    
+      right_join(full_df, by = c("x", "y", "z")) %>%                            
+      replace_na(list(cube_status = "."))                                       
+                                                                                
+    df <-                                                                       
+      df %>%                                                                    
+      group_split(row_number(), .keep = FALSE) %>%                              
+      map_df(check_cube, input_df = df) %>%                                     
+      filter(cube_status == "#")                                                
+                                                                                
+  }                                                                             
+  df                                                                            
+}      
 
-    xs <- (min(df$x)-1):(max(df$x)+1)
-    ys <- (min(df$y)-1):(max(df$y)+1)
-    zs <- (min(df$z)-1):(max(df$z)+1)
-    
-    full_df <-
-      expand_grid(x = xs, y = ys,  z = zs)
-    
-    df <- 
-      df %>% 
-      right_join(full_df, by = c("x", "y", "z")) %>%
-      replace_na(list(cube_status = "."))
-    
-    df <- 
-      df %>% 
-      group_split(row_number(), .keep = FALSE) %>%
-      map_df(check_cube, input_df = df) %>%
-      filter(cube_status == "#")
-  
-  }
-  df
-}
 out_df <- simulate(demo_df, n = 1)
 
-out_df %>%
-  nrow()
+out_df %>% nrow() == 11
 ```
 
 ```{r}
 out_df <- simulate(demo_df, n = 6)
 
-out_df %>%
-  nrow()
+out_df %>% nrow() == 112
 ```
 
 ```{r}
@@ -253,17 +256,97 @@ input_df <-
   mutate(across(c(x, y, z), as.numeric))
 
 n_simulations <- 6
+```
 
+
+```{r}
 start <- Sys.time()
 out_df <- simulate(input_df, n = n_simulations)
 stop <- Sys.time()
 
-time_diff <- stop - start
+time_diff <- difftime(stop, start, units = "secs")
 
 result <- 
   out_df %>%
   nrow()
+```
 
-glue::glue("The program run {n_simulations} simulations on {input_file} for {time_diff} secs. There are {result} active cubes.")
+### mutate version
+
+```{r}
+check_cube_mutate <- function(x_cube, y_cube, z_cube, cube_status, input_df) {
+  x <- (x_cube-1):(x_cube+1)
+  y <- (y_cube-1):(y_cube+1)
+  z <- (z_cube-1):(z_cube+1)
+  cube_neighbour_df <- 
+    expand_grid(x, y, z) %>%
+    filter(!(x == x_cube & y == y_cube & z == z_cube))
+  
+  active_cubes <-
+    input_df %>%
+    inner_join(cube_neighbour_df, by = c("x", "y", "z")) %>%
+    filter(cube_status == "#") %>%
+    nrow()
+  
+  new_cube_status = "."
+  if (cube_status == "." & active_cubes == 3) {
+    new_cube_status = "#"
+  } else if (cube_status == "#" & active_cubes %in% 2:3) {
+    new_cube_status = "#"
+  }
+  
+  return(new_cube_status)
+}
+
+simulate_mutate <- function(input_df, n = 1) {
+  df <- 
+    input_df %>%
+    filter(cube_status == "#")
+  
+  for (simulation in 1:n) {
+
+    xs <- (min(df$x)-1):(max(df$x)+1)
+    ys <- (min(df$y)-1):(max(df$y)+1)
+    zs <- (min(df$z)-1):(max(df$z)+1)
+    # get all the grid needed to be checked
+    full_df <-
+      expand_grid(x = xs, y = ys,  z = zs)
+    
+    df <- 
+      df %>% 
+      right_join(full_df, by = c("x", "y", "z")) %>%
+      replace_na(list(cube_status = "."))
+    
+    df <- 
+      df %>% 
+      group_by(x, y, z) %>%
+      mutate(cube_status = check_cube_mutate(x_cube = x, y_cube = y, z_cube = z, 
+                                             cube_status = cube_status, 
+                                             input_df = df)) %>%
+      filter(cube_status == "#")
+  }
+  df
+}
+```
+
+
+```{r}
+start_mutate <- Sys.time()
+out_df_mutate <- simulate_mutate(input_df, n = n_simulations)
+stop_mutate <- Sys.time()
+
+time_diff_mutate <- difftime(stop_mutate, start_mutate, 
+                             units = "secs")
+
+result_mutate <- 
+  out_df %>%
+  nrow()
+
+result_status <- ifelse(result == result_mutate, "the same", "different")
+
+glue::glue("The original version run {n_simulations} simulations on {input_file}. It took this program {time_diff} secs to execute. There are {result} active cubes.")
+
+glue::glue("The mutate version also run {n_simulations} simulations on {input_file}. It took this program {time_diff_mutate} secs to execute. The result is {result_status}.")
+
 ```
 
