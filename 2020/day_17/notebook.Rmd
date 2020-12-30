@@ -5,6 +5,10 @@ output:
     df_print: paged
 ---
 
+```{r echo = FALSE, message=FALSE}
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE)
+```
+
 As your flight slowly drifts through the sky, the Elves at the Mythical Information Bureau at the North Pole contact you. They'd like some help debugging a malfunctioning experimental energy source aboard one of their super-secret imaging satellites.
 
 The experimental energy source is based on cutting-edge technology: a set of Conway Cubes contained in a pocket dimension! When you hear it's having problems, you can't help but agree to take a look.
@@ -163,7 +167,7 @@ demo_df <-
 demo_df
 ```
 
-
+*Rules:*
 During a cycle, all cubes simultaneously change their state according to the following rules:
 ```
 If a cube is active and exactly 2 or 3 of its neighbors are also active, the cube remains active. Otherwise, the cube becomes inactive.
@@ -172,28 +176,36 @@ If a cube is inactive but exactly 3 of its neighbors are active, the cube become
 
 Each cube only ever considers its neighbors: any of the 26 other cubes where any of their coordinates differ by at most 1. For example, given the cube at x=1,y=2,z=3, its neighbors include the cube at x=2,y=2,z=2, the cube at x=0,y=2,z=3, and so on.
 
-```{r}
-
-check_cube <- function(cube_tibble, input_df) {                                 
+```{r check_cube}
+check_cube <- function(cube_tibble, input_df) {   
+  # Take two tibbles - one-row cube info and all cubes info, check all neighbors
+  
+  # get the neighbors  coordinates
   x <- (cube_tibble$x-1):(cube_tibble$x+1)                                      
   y <- (cube_tibble$y-1):(cube_tibble$y+1)                                      
   z <- (cube_tibble$z-1):(cube_tibble$z+1)                                      
   cube_neighbour_df <- expand_grid(x, y, z) %>%                                 
     filter(!(x == cube_tibble$x & y == cube_tibble$y & z == cube_tibble$z))     
-                                                                                
+                     
+  # sum the number of active cubes from the neighbors 
   active_cubes <-                                                               
-    input_df %>%                                                                
-    inner_join(cube_neighbour_df, by = c("x", "y", "z")) %>%                    
+    input_df %>%                            
     filter(cube_status == "#") %>%                                              
+    # inner join here makes sure that we only take the active cubes
+    # in the neighborhood
+    inner_join(cube_neighbour_df, by = c("x", "y", "z")) %>%                    
     nrow()                                                                      
-                                                                                
+  
+  # set the cube status to inactive, only change to active
+  # if one of the conditions satisfied 
   new_cube_status = "."                                                         
   if (cube_tibble$cube_status == "." & active_cubes == 3) {                     
     new_cube_status = "#"                                                       
   } else if (cube_tibble$cube_status == "#" & active_cubes %in% 2:3) {          
     new_cube_status = "#"                                                       
   }                                                                             
-                                                                                
+
+  # return the tibble                                   
   return(tibble(x = cube_tibble$x,                                              
                 y = cube_tibble$y,                                              
                 z = cube_tibble$z,                                              
@@ -203,36 +215,55 @@ check_cube <- function(cube_tibble, input_df) {
 ```
 
 
-```{r}
-simulate <- function(input_df, n = 1) {                                         
+```{r simulate}
+simulate <- function(input_df, n = 1) {     
+  # Given initial state return the active cubes after n simulations
+  # input_df must be a data.frame with at least 1 row and 4 columns 
+  # (x, y, z, cube_status)
+  stopifnot(n > 0, is.numeric(n))
+  stopifnot(nrow(input_df) > 0, ncol(input_df) >= 4, 
+            all(c("x", "y", "z", "cube_status") %in% colnames(input_df)), 
+            all(input_df$cube_status %in% c("#", ".")),
+            all(input_df %>% 
+                  select(-cube_status) %>% 
+                  summarise_all(class) == "numeric"))
+  
+  # take only the active cubes
   df <-                                                                         
     input_df %>%                                                                
     filter(cube_status == "#")                                                  
                                                                                 
   for (simulation in 1:n) {                                                     
-                                                                                
+    # create a set of cubes to be assessed
     xs <- (min(df$x)-1):(max(df$x)+1)                                           
     ys <- (min(df$y)-1):(max(df$y)+1)                                           
     zs <- (min(df$z)-1):(max(df$z)+1)                                           
-                                                                                
+                                         
     full_df <-                                                                  
       expand_grid(x = xs, y = ys,  z = zs)                                      
-                                                                                
+                                            
     df <-                                                                       
       df %>%                                                                    
       right_join(full_df, by = c("x", "y", "z")) %>%                            
-      replace_na(list(cube_status = "."))                                       
-                                                                                
+      replace_na(list(cube_status = ".")) 
+    
     df <-                                                                       
-      df %>%                                                                    
-      group_split(row_number(), .keep = FALSE) %>%                              
-      map_df(check_cube, input_df = df) %>%                                     
+      df %>%  
+      # make sure next is applied per each row (i.e. per each cube)
+      group_split(row_number(), .keep = FALSE) %>%   
+      # check each cube
+      map_df(check_cube, input_df = df) %>% 
+      # keep only active cubes
       filter(cube_status == "#")                                                
                                                                                 
   }                                                                             
   df                                                                            
-}      
+}
+```
 
+Testing the functions on demo input. 
+
+```{r}
 out_df <- simulate(demo_df, n = 1)
 
 out_df %>% nrow() == 11
@@ -243,6 +274,8 @@ out_df <- simulate(demo_df, n = 6)
 
 out_df %>% nrow() == 112
 ```
+
+Now, that tests passed, time for the real simulations.
 
 ```{r}
 input_file <- "input.txt"
@@ -258,7 +291,6 @@ input_df <-
 n_simulations <- 6
 ```
 
-
 ```{r}
 start <- Sys.time()
 out_df <- simulate(input_df, n = n_simulations)
@@ -271,10 +303,18 @@ result <-
   nrow()
 ```
 
-### mutate version
+The previous version, based on tibbles is good (as it does what's needed), but it makes sense to return only the new cube status, rather than the coordinates which are unchanged.
 
-```{r}
-check_cube_mutate <- function(x_cube, y_cube, z_cube, cube_status, input_df) {
+```{r mutate}
+check_cube_mutate <- function(x_cube, y_cube, z_cube, cube_status, 
+                              input_df) {
+  # Take current cube status, its location and all the cubes
+  # and return the updated status
+  stopifnot("data.frame" %in% class(input_df),
+            all(is.numeric(c(x_cube, y_cube, z_cube))),
+            cube_status %in% c("#", "."))
+  
+  # get the neighbors  coordinates
   x <- (x_cube-1):(x_cube+1)
   y <- (y_cube-1):(y_cube+1)
   z <- (z_cube-1):(z_cube+1)
@@ -282,29 +322,42 @@ check_cube_mutate <- function(x_cube, y_cube, z_cube, cube_status, input_df) {
     expand_grid(x, y, z) %>%
     filter(!(x == x_cube & y == y_cube & z == z_cube))
   
+  # sum the number of active cubes from the neighbors 
   active_cubes <-
     input_df %>%
     inner_join(cube_neighbour_df, by = c("x", "y", "z")) %>%
     filter(cube_status == "#") %>%
     nrow()
   
+  # set the new status to inactive unless one of the conditions is met
   new_cube_status = "."
   if (cube_status == "." & active_cubes == 3) {
     new_cube_status = "#"
   } else if (cube_status == "#" & active_cubes %in% 2:3) {
     new_cube_status = "#"
   }
-  
   return(new_cube_status)
 }
 
 simulate_mutate <- function(input_df, n = 1) {
+  # Given initial state return the active cubes after n simulations
+  # input_df must be a data.frame with at least 1 row and 4 columns 
+  # (x, y, z, cube_status)
+  stopifnot(n > 0, is.numeric(n))
+  stopifnot(nrow(input_df) > 0, ncol(input_df) >= 4, 
+            all(c("x", "y", "z", "cube_status") %in% colnames(input_df)), 
+            all(input_df$cube_status %in% c("#", ".")),
+            all(input_df %>% 
+                  select(-cube_status) %>% 
+                  summarise_all(class) == "numeric"))
+  
+  # take only the active cubes
   df <- 
     input_df %>%
     filter(cube_status == "#")
   
   for (simulation in 1:n) {
-
+    
     xs <- (min(df$x)-1):(max(df$x)+1)
     ys <- (min(df$y)-1):(max(df$y)+1)
     zs <- (min(df$z)-1):(max(df$z)+1)
@@ -319,16 +372,20 @@ simulate_mutate <- function(input_df, n = 1) {
     
     df <- 
       df %>% 
+      # make sure next is applied per each row (i.e. per each cube)
       group_by(x, y, z) %>%
+      # check each cube
       mutate(cube_status = check_cube_mutate(x_cube = x, y_cube = y, z_cube = z, 
                                              cube_status = cube_status, 
                                              input_df = df)) %>%
+      # keep only active cubes
       filter(cube_status == "#")
   }
   df
 }
 ```
 
+Now, let's compare the execution times.
 
 ```{r}
 start_mutate <- Sys.time()
@@ -344,9 +401,477 @@ result_mutate <-
 
 result_status <- ifelse(result == result_mutate, "the same", "different")
 
-glue::glue("The original version run {n_simulations} simulations on {input_file}. It took this program {time_diff} secs to execute. There are {result} active cubes.")
+glue::glue(
+  paste("The original version run {n_simulations} simulations on the {input_file}.",
+        "It took this program {time_diff} secs to execute.",
+        "There are {result} active cubes."))
 
-glue::glue("The mutate version also run {n_simulations} simulations on {input_file}. It took this program {time_diff_mutate} secs to execute. The result is {result_status}.")
+glue::glue(
+  paste("The mutate version also run {n_simulations} simulations on the {input_file}.",
+        "It took this program {time_diff_mutate} secs to execute.",
+        "The result is {result_status}."))
+
+```
+
+And now, more formally, with microbenchmark.
+
+```{r}
+benchmark_df <- 
+  microbenchmark::microbenchmark(simulate(demo_df), 
+                                 simulate_mutate(demo_df), times = 10) 
+benchmark_df %>%
+  autoplot()
+```
+
+# Part Two
+For some reason, your simulated results don't match what the experimental energy source engineers expected. Apparently, the pocket dimension actually has four spatial dimensions, not three.
+
+The pocket dimension contains an infinite 4-dimensional grid. At every integer 4-dimensional coordinate (x,y,z,w), there exists a single cube (really, a hypercube) which is still either active or inactive.
+
+Each cube only ever considers its neighbors: any of the 80 other cubes where any of their coordinates differ by at most 1. For example, given the cube at x=1,y=2,z=3,w=4, its neighbors include the cube at x=2,y=2,z=3,w=3, the cube at x=0,y=2,z=3,w=4, and so on.
+
+The initial state of the pocket dimension still consists of a small flat region of cubes. Furthermore, the same rules for cycle updating still apply: during each cycle, consider the number of active neighbors of each cube.
+
+For example, consider the same initial state as in the example above. Even though the pocket dimension is 4-dimensional, this initial state represents a small 2-dimensional slice of it. (In particular, this initial state defines a 3x3x1x1 region of the 4-dimensional space.)
+
+Simulating a few cycles from this initial state produces the following configurations, where the result of each cycle is shown layer-by-layer at each given z and w coordinate:
+
+```
+Before any cycles:
+
+z=0, w=0
+.#.
+..#
+###
+
+
+After 1 cycle:
+
+z=-1, w=-1
+#..
+..#
+.#.
+
+z=0, w=-1
+#..
+..#
+.#.
+
+z=1, w=-1
+#..
+..#
+.#.
+
+z=-1, w=0
+#..
+..#
+.#.
+
+z=0, w=0
+#.#
+.##
+.#.
+
+z=1, w=0
+#..
+..#
+.#.
+
+z=-1, w=1
+#..
+..#
+.#.
+
+z=0, w=1
+#..
+..#
+.#.
+
+z=1, w=1
+#..
+..#
+.#.
+
+
+After 2 cycles:
+
+z=-2, w=-2
+.....
+.....
+..#..
+.....
+.....
+
+z=-1, w=-2
+.....
+.....
+.....
+.....
+.....
+
+z=0, w=-2
+###..
+##.##
+#...#
+.#..#
+.###.
+
+z=1, w=-2
+.....
+.....
+.....
+.....
+.....
+
+z=2, w=-2
+.....
+.....
+..#..
+.....
+.....
+
+z=-2, w=-1
+.....
+.....
+.....
+.....
+.....
+
+z=-1, w=-1
+.....
+.....
+.....
+.....
+.....
+
+z=0, w=-1
+.....
+.....
+.....
+.....
+.....
+
+z=1, w=-1
+.....
+.....
+.....
+.....
+.....
+
+z=2, w=-1
+.....
+.....
+.....
+.....
+.....
+
+z=-2, w=0
+###..
+##.##
+#...#
+.#..#
+.###.
+
+z=-1, w=0
+.....
+.....
+.....
+.....
+.....
+
+z=0, w=0
+.....
+.....
+.....
+.....
+.....
+
+z=1, w=0
+.....
+.....
+.....
+.....
+.....
+
+z=2, w=0
+###..
+##.##
+#...#
+.#..#
+.###.
+
+z=-2, w=1
+.....
+.....
+.....
+.....
+.....
+
+z=-1, w=1
+.....
+.....
+.....
+.....
+.....
+
+z=0, w=1
+.....
+.....
+.....
+.....
+.....
+
+z=1, w=1
+.....
+.....
+.....
+.....
+.....
+
+z=2, w=1
+.....
+.....
+.....
+.....
+.....
+
+z=-2, w=2
+.....
+.....
+..#..
+.....
+.....
+
+z=-1, w=2
+.....
+.....
+.....
+.....
+.....
+
+z=0, w=2
+###..
+##.##
+#...#
+.#..#
+.###.
+
+z=1, w=2
+.....
+.....
+.....
+.....
+.....
+
+z=2, w=2
+.....
+.....
+..#..
+.....
+.....
+```
+
+After the full six-cycle boot process completes, 848 cubes are left in the active state.
+
+Starting with your given initial configuration, simulate six cycles in a 4-dimensional space. How many cubes are left in the active state after the sixth cycle?
+
+I wrote the function below for 4d, it would be better to write it to nd so it wouldn't matter which dimensionality we use. However, the function below, despite being way faster than the 3D functions, is slow and it would be much better to abstractize a new function taking advantage of linear algebra.
+
+```{r mutate_4d}
+check_cube_4d <- function(x_cube, y_cube, z_cube, w_cube,
+                          cube_status, input_df) {
+  temp_mat <- t(as.matrix(input_df[input_df$cube_status == "#",
+                                   c("x", "y", "z", "w")]))
+  temp_mat <- temp_mat - c(x_cube, y_cube, z_cube, w_cube) + 2
+  temp_mat <- t(temp_mat)
+  colnames(temp_mat) <- NULL
+  temp_mat <- temp_mat[apply(temp_mat, 1,
+                             function(row) all(row %in% 1:3)),]
+  active_cubes_indices <- matrix(as.numeric(temp_mat), ncol = 4)
+  
+  cube_mat <- array(0, dim = rep(3, 4))
+  cube_mat[active_cubes_indices] <- 1
+  
+  n_active_cubes <- sum(cube_mat) - ifelse(cube_status == "#", 1, 0)
+  
+  new_cube_status = "."
+  if (cube_status == "." & n_active_cubes == 3) {
+    new_cube_status = "#"
+  } else if (cube_status == "#" & n_active_cubes %in% 2:3) {
+    new_cube_status = "#"
+  }
+  return(new_cube_status)
+}
+
+simulate_4d <- function(input_df, n = 1) {
+  df <- input_df %>%
+    filter(cube_status == "#")
+  
+  for (simulation in 1:n) {
+
+    xs <- (min(df$x)-1):(max(df$x)+1)
+    ys <- (min(df$y)-1):(max(df$y)+1)
+    zs <- (min(df$z)-1):(max(df$z)+1)
+    ws <- (min(df$w)-1):(max(df$w)+1)
+    # get all the grid needed to be checked
+    full_df <-
+      expand_grid(x = xs, y = ys, z = zs, w = ws)
+    
+    df <- 
+      df %>% 
+      right_join(full_df, by = c("x", "y", "z", "w")) %>%
+      replace_na(list(cube_status = "."))
+    
+    df <- 
+      df %>% 
+      group_by(x, y, z, w) %>%
+      mutate(cube_status = check_cube_4d(x_cube = x, y_cube = y, 
+                                         z_cube = z, w_cube = w,
+                                         cube_status = cube_status, 
+                                         input_df = df)) %>%
+      filter(cube_status == "#")
+  }
+  df
+}
+
+demo_df_4d <-
+  demo_df %>%
+  mutate(w = 0)
+```
+
+Run the tests.
+
+```{r}
+out_df_4d <- simulate_4d(demo_df_4d, n = 1)
+
+out_df_4d %>% nrow() == 29
+```
+
+```{r}
+out_df_4d <- simulate_4d(demo_df_4d, n = 6)
+
+out_df_4d %>% nrow() == 848
+```
+
+Now, for speed comparison, add new dimension to old functions.
+
+```{r check_cube_4d}
+check_cube_mutate_4d <- function(x_cube, y_cube, z_cube, w_cube,
+                                 cube_status, input_df) {     
+  x <- (x_cube-1):(x_cube+1)
+  y <- (y_cube-1):(y_cube+1)
+  z <- (z_cube-1):(z_cube+1)
+  w <- (w_cube-1):(w_cube+1)
+  
+  cube_neighbour_df <- 
+    expand_grid(x, y, z, w) %>%
+    filter(!(x == x_cube & y == y_cube & z == z_cube & w == w_cube))
+                                                                                
+  active_cubes <-                                                               
+    input_df %>%                                                                
+    inner_join(cube_neighbour_df, 
+               by = c("x", "y", "z", "w")) %>%                    
+    filter(cube_status == "#") %>%                                              
+    nrow()                                                                      
+                                                                                
+  new_cube_status = "."                                                         
+  if (cube_status == "." & active_cubes == 3) {                     
+    new_cube_status = "#"                                                       
+  } else if (cube_status == "#" & active_cubes %in% 2:3) {          
+    new_cube_status = "#"                                                       
+  }                                                                             
+                                                                                
+  return(new_cube_status)                               
+} 
+```
+
+```{r simulate_4d}
+simulate_mutate_4d <- function(input_df, n = 1) {                                         
+  df <- input_df                                                
+                                                                                
+  for (simulation in 1:n) {                                                     
+                                                                                
+    xs <- (min(df$x)-1):(max(df$x)+1)                                           
+    ys <- (min(df$y)-1):(max(df$y)+1)                                           
+    zs <- (min(df$z)-1):(max(df$z)+1)   
+    ws <- (min(df$w)-1):(max(df$w)+1)   
+                                                                                
+    full_df <-                                                                  
+      expand_grid(x = xs, y = ys,  z = zs, w = ws)                                      
+                                                                                
+    df <-                                                                       
+      df %>%                                                                    
+      right_join(full_df, by = c("x", "y", "z", "w")) %>%                            
+      replace_na(list(cube_status = "."))                                       
+                                                                                
+    df <-                                                                       
+      df %>%                                                                    
+      group_by(x, y, z, w) %>%
+      mutate(cube_status = check_cube_mutate_4d(x_cube = x, y_cube = y, 
+                                                z_cube = z, w_cube = w,
+                                                cube_status = cube_status, 
+                                                input_df = df)) %>%
+      filter(cube_status == "#")
+                                                                                
+  }                                                                             
+  df                                                                            
+}      
+
+```
+
+Test it.
+
+```{r}
+out_df_4d <- simulate_mutate_4d(demo_df_4d, n = 1)
+
+out_df_4d %>% nrow() == 29
+```
+And compare their performence. 
+
+```{r benchmark}
+benchmark_df <- 
+  microbenchmark::microbenchmark(simulate_4d(demo_df_4d), 
+                                 simulate_mutate_4d(demo_df_4d),
+                                 simulate(demo_df), 
+                                 simulate_mutate(demo_df), times = 10) 
+  
+```
+
+```{r benchmark_plot, fig.width=6, fig.height=6}
+benchmark_df %>%
+  mutate(time_mili = time / 1000000) %>%
+  ggplot(aes(x = expr, y = time_mili)) +
+  geom_jitter() +
+  geom_boxplot(width = 0.2, alpha = 0.1, outlier.shape = NA, color = "grey60") + 
+  labs(x = "", 
+       y = "Time [miliseconds]") +
+  expand_limits(y = 0) +
+  theme_classic() + 
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
+```
+
+```{r}
+input_df_4d <-
+  input_df %>%
+  mutate(w = 0)
+
+start_4d <- Sys.time()
+out_df_4d <- simulate_4d(input_df_4d,
+                                n = n_simulations)
+stop_4d <- Sys.time()
+
+time_diff_4d <- difftime(stop_4d, start_4d, 
+                                units = "secs")
+
+result_4d <- 
+  out_df_4d %>%
+  nrow()
+
+
+glue::glue(
+  paste("The mutate 4D version run {n_simulations} simulations on the {input_file}.",
+        "It took this program {time_diff_4d} secs to execute.",
+        "There are {result_4d} active cubes."))
 
 ```
 
