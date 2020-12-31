@@ -1869,9 +1869,16 @@ summary {
 <p>Find a chain that uses all of your adapters to connect the charging outlet to your device’s built-in adapter and count the joltage differences between the charging outlet, the adapters, and your device. What is the number of 1-jolt differences multiplied by the number of 3-jolt differences?</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5kZW1vX2lucHV0X3ZlYyA8LVxuICByZWFkX3RzdihcImRlbW9faW5wdXQxLnR4dFwiLCBjb2xfbmFtZXMgPSBcImlucFwiKSAlPiVcbiAgcHVsbChpbnApXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KFIudXRpbHMpXG5gYGAifQ== -->
 <pre class="r"><code>library(tidyverse)
-demo_input_vec &lt;-
+library(R.utils)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGVtb19pbnB1dF92ZWMgPC1cbiAgcmVhZF90c3YoXCJkZW1vX2lucHV0MS50eHRcIiwgY29sX25hbWVzID0gXCJpbnBcIikgJT4lXG4gIHB1bGwoaW5wKVxuYGBgIn0= -->
+<pre class="r"><code>demo_input_vec &lt;-
   read_tsv(&quot;demo_input1.txt&quot;, col_names = &quot;inp&quot;) %&gt;%
   pull(inp)</code></pre>
 <!-- rnb-source-end -->
@@ -1993,113 +2000,209 @@ out_vec[names(out_vec) == &quot;1&quot;] * out_vec[names(out_vec) == &quot;3&quo
 <p>In total, this set of adapters can connect the charging outlet to your device in 19208 distinct arrangements.</p>
 <p>You glance back down at your bag and try to remember why you brought so many adapters; there must be more than a trillion valid ways to arrange them! Surely, there must be an efficient way to count the arrangements.</p>
 <p>What is the total number of distinct ways you can arrange the adapters to connect the charging outlet to your device?</p>
+<p>Got stuck here…</p>
+<p>What do I know: - I can identify all the elements that have to be kept; - I tried to take advantage of the sum of n choose k formula, but got stuck</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2V0X2Vzc2VudGlhbF9lbGVtZW50cyA8LSBmdW5jdGlvbih2ZWMsIG4gPSAzLCBhZGRfdG9fZGV2aWNlID0gMykge1xuICBzdG9waWZub3QoaXMubnVtZXJpYyh2ZWMpKVxuICB2ZWMgPC0gYygwLCBtYXgodmVjKSArIGFkZF90b19kZXZpY2UsIHZlYylcbiAgc29ydGVkX3ZlYyA8LSBzb3J0KHZlYylcbiAgZGlmZl92ZWMgPC0gXG4gICAgYyhzb3J0ZWRfdmVjW3doaWNoKHNvcnRlZF92ZWMgLSBsYWcoc29ydGVkX3ZlYywgMSkgPT0gMykgLSAxXSxcbiAgICAgIHNvcnRlZF92ZWNbd2hpY2goc29ydGVkX3ZlYyAtIGxhZyhzb3J0ZWRfdmVjLCAxKSA9PSAzKV0sXG4gICAgICBzb3J0ZWRfdmVjW3doaWNoKHNvcnRlZF92ZWMgLSBsYWcoc29ydGVkX3ZlYywgMikgPT0gMyldLFxuICAgICAgc29ydGVkX3ZlY1t3aGljaChzb3J0ZWRfdmVjIC0gbGFnKHNvcnRlZF92ZWMsIDMpID09IDMpXSlcbiAgZGlmZl92ZWMgPC0gbmEuZXhjbHVkZSh1bmlxdWUoZGlmZl92ZWMpKVxuICBzb3J0KGRpZmZfdmVjKVxufVxuXG5jYWxjX251bWJlcl9vZl9wb3NzaWJsZV9zb2x1dGlvbnMgPC0gZnVuY3Rpb24odmVjKSB7XG4gIHN0b3BpZm5vdChpcy5udW1lcmljKHZlYykpXG4gIGVzc2VudGlhbF92ZWMgPC0gZ2V0X2Vzc2VudGlhbF9lbGVtZW50cyh2ZWMpXG4gIG4gPC0gbGVuZ3RoKHNldGRpZmYodmVjLCBlc3NlbnRpYWxfdmVjKSlcbiAgMl5uXG59XG5cbmNhbGNfbnVtYmVyX29mX3Bvc3NpYmxlX3NvbHV0aW9ucyhkZW1vX2lucHV0X3ZlYykgPT0gOFxuYGBgIn0= -->
-<pre class="r"><code>get_essential_elements &lt;- function(vec, n = 3, add_to_device = 3) {
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2V0X2Vzc2VudGlhbF9lbGVtZW50cyA8LSBmdW5jdGlvbih2ZWMsIG4gPSAzLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbl9hZGQgPSAzLCBvdXRsZXQgPSAwLCBhZGQgPSBGQUxTRSkge1xuICBzdG9waWZub3QoaXMubnVtZXJpYyh2ZWMpKVxuICBpZiAoYWRkKSB7XG4gICAgdmVjIDwtIGMob3V0bGV0LCB2ZWMsIG1heCh2ZWMpICsgbl9hZGQpXG4gIH1cbiAgc29ydGVkX3ZlYyA8LSBzb3J0KHZlYylcbiAgaW5kcyA8LSB3aGljaChzb3J0ZWRfdmVjIC0gbGFnKHNvcnRlZF92ZWMsIDEpID09IDMpXG4gIGhhdmVfdG9fc3RheSA8LSBcbiAgICBjKHNvcnRlZF92ZWNbaW5kcyAtIDFdLFxuICAgICAgc29ydGVkX3ZlY1tpbmRzXSwgXG4gICAgICBzb3J0ZWRfdmVjWzFdLFxuICAgICAgc29ydGVkX3ZlY1tsZW5ndGgoc29ydGVkX3ZlYyldKSBcbiAgaGF2ZV90b19zdGF5IDwtIHNvcnQodW5pcXVlKGhhdmVfdG9fc3RheSkpXG4gIGhhdmVfdG9fc3RheVxufVxuXG5zZXFfYnJlYWtpbmcgPC0gYyg0MiwgNDU6NDkpXG5zZXRkaWZmKHNlcV9icmVha2luZywgZ2V0X2Vzc2VudGlhbF9lbGVtZW50cyhzZXFfYnJlYWtpbmcpKVxuYGBgIn0= -->
+<pre class="r"><code>get_essential_elements &lt;- function(vec, n = 3, 
+                                   n_add = 3, outlet = 0, add = FALSE) {
   stopifnot(is.numeric(vec))
-  vec &lt;- c(0, max(vec) + add_to_device, vec)
+  if (add) {
+    vec &lt;- c(outlet, vec, max(vec) + n_add)
+  }
   sorted_vec &lt;- sort(vec)
-  diff_vec &lt;- 
-    c(sorted_vec[which(sorted_vec - lag(sorted_vec, 1) == 3) - 1],
-      sorted_vec[which(sorted_vec - lag(sorted_vec, 1) == 3)],
-      sorted_vec[which(sorted_vec - lag(sorted_vec, 2) == 3)],
-      sorted_vec[which(sorted_vec - lag(sorted_vec, 3) == 3)])
-  diff_vec &lt;- na.exclude(unique(diff_vec))
-  sort(diff_vec)
+  inds &lt;- which(sorted_vec - lag(sorted_vec, 1) == 3)
+  have_to_stay &lt;- 
+    c(sorted_vec[inds - 1],
+      sorted_vec[inds], 
+      sorted_vec[1],
+      sorted_vec[length(sorted_vec)]) 
+  have_to_stay &lt;- sort(unique(have_to_stay))
+  have_to_stay
 }
 
-calc_number_of_possible_solutions &lt;- function(vec) {
-  stopifnot(is.numeric(vec))
-  essential_vec &lt;- get_essential_elements(vec)
-  n &lt;- length(setdiff(vec, essential_vec))
-  2^n
-}
-
-calc_number_of_possible_solutions(demo_input_vec) == 8</code></pre>
+seq_breaking &lt;- c(42, 45:49)
+setdiff(seq_breaking, get_essential_elements(seq_breaking))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFRSVUVcbiJ9 -->
-<pre><code>[1] TRUE</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDQ2IDQ3IDQ4XG4ifQ== -->
+<pre><code>[1] 46 47 48</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2FsY19udW1iZXJfb2ZfcG9zc2libGVfc29sdXRpb25zKGRlbW9faW5wdXRfdmVjMilcblxuYGBgIn0= -->
-<pre class="r"><code>calc_number_of_possible_solutions(demo_input_vec2)
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDIwNDhcbiJ9 -->
-<pre><code>[1] 2048</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYyhzb3J0ZWRfZGVtb192ZWMyW3doaWNoKHNvcnRlZF9kZW1vX3ZlYzIgLSBsYWcoc29ydGVkX2RlbW9fdmVjMiwgMykgPT0gMyldLFxuICBzb3J0ZWRfZGVtb192ZWMyW3doaWNoKHNvcnRlZF9kZW1vX3ZlYzIgLSBsYWcoc29ydGVkX2RlbW9fdmVjMiwgMikgPT0gMyldLFxuICBzb3J0ZWRfZGVtb192ZWMyW3doaWNoKHNvcnRlZF9kZW1vX3ZlYzIgLSBsYWcoc29ydGVkX2RlbW9fdmVjMiwgMSkgPT0gMykgLTFdLFxuICBzb3J0ZWRfZGVtb192ZWMyW3doaWNoKHNvcnRlZF9kZW1vX3ZlYzIgLSBsYWcoc29ydGVkX2RlbW9fdmVjMiwgMSkgPT0gMyldKSAlPiVcbiAgdW5pcXVlKCkgJT4lXG4gIG5hLmV4Y2x1ZGUoKSAlPiVcbiAgc29ydCgpXG5cbmBgYCJ9 -->
-<pre class="r"><code>c(sorted_demo_vec2[which(sorted_demo_vec2 - lag(sorted_demo_vec2, 3) == 3)],
-  sorted_demo_vec2[which(sorted_demo_vec2 - lag(sorted_demo_vec2, 2) == 3)],
-  sorted_demo_vec2[which(sorted_demo_vec2 - lag(sorted_demo_vec2, 1) == 3) -1],
-  sorted_demo_vec2[which(sorted_demo_vec2 - lag(sorted_demo_vec2, 1) == 3)]) %&gt;%
-  unique() %&gt;%
-  na.exclude() %&gt;%
-  sort()
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSAgMyAgNCAgNyAxMCAxMSAxNCAxNyAyMCAyMyAyNSAyOCAzMSAzNCAzNSAzOCAzOSA0MiA0NSA0OCA0OSA1MlxuIn0= -->
-<pre><code> [1]  3  4  7 10 11 14 17 20 23 25 28 31 34 35 38 39 42 45 48 49 52</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZiA8LSBmdW5jdGlvbihuLCB2ZWMsIHByZXZfbiA9IDApe1xuICAjcHJpbnQobilcbiAgaWYgKG4gPT0gbGVuZ3RoKHZlYykpIHtcbiAgICAjcHJpbnQodmVjW25dKVxuICAgIHJldHVybigxKVxuICB9XG4gIGlmIChwcmV2X24gPT0gMCAmIG4gPT0gMSkge1xuICAgICNwcmludCh2ZWNbbl0pXG4gICAgcmV0dXJuKGYobiArIDEsIHZlYywgbikpXG4gIH1cbiAgZGlmZl9iZWZvcmUgPC0gdmVjW25dIC0gdmVjW3ByZXZfbl1cbiAgIyBwcmludChnbHVlOjpnbHVlKHBhc3RlKFxuICAjICAgXCJuOiB7bn1cIixcbiAgIyAgIFwibi0xOiB7cHJldl9ufVwiLFxuICAjICAgXCJhX246IHt2ZWNbbl19ZmZcIixcbiAgIyAgIFwiYV9uLTE6IHt2ZWNbcHJldl9uXX1cIixcbiAgIyAgIFwiYV9uIC0gYV9uLTE6IHtkaWZmX2JlZm9yZX1cIlxuICAjICkpKVxuICBpZiAoZGlmZl9iZWZvcmUgPiAzKSB7XG4gICAgcmV0dXJuKDApIFxuICB9XG4gIGlmIChkaWZmX2JlZm9yZSA9PSAzKSB7XG4gICAgI3ByaW50KHZlY1tuXSlcbiAgICByZXR1cm4oZihuKzEsIHZlYywgbikpXG4gIH1cbiAgI3ByaW50KHBhc3RlKGModmVjW25dLCBcInhcIikpKVxuICByZXR1cm4oZihuKzEsIHZlYywgbikgKyBmKG4rMSwgdmVjLCBwcmV2X24pKVxufVxuYGBgIn0= -->
-<pre class="r"><code>f &lt;- function(n, vec, prev_n = 0){
-  #print(n)
-  if (n == length(vec)) {
-    #print(vec[n])
-    return(1)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaWRlbnRpZnlfbm9uZXNzZW50aWFsIDwtIGZ1bmN0aW9uKHZlYywgb3V0bGV0ID0gMCwgYWRkX3RvX2RldmljZSA9IDMsIG4gPSAzLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm5fbm9uZXNzZW50aWFscyA9IEZBTFNFKSB7XG4gIGRpZmZfdmVjIDwtIHNldGRpZmYodmVjLCBcbiAgICAgICAgICAgICAgICAgICAgICBnZXRfZXNzZW50aWFsX2VsZW1lbnRzKHZlYywgbiA9IG4sIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbl9hZGQgPSBhZGRfdG9fZGV2aWNlLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG91dGxldCA9IG91dGxldCwgYWRkID0gVFJVRSkpXG4gIGlmKHJldHVybl9ub25lc3NlbnRpYWxzKSB7XG4gICAgcmV0dXJuKHNvcnQoZGlmZl92ZWMpKVxuICB9XG4gIGxlbmd0aChkaWZmX3ZlYylcbn1cbmlkZW50aWZ5X25vbmVzc2VudGlhbChkZW1vX2lucHV0X3ZlYywgcmV0dXJuX25vbmVzc2VudGlhbHMgPSBUUlVFKVxuYGBgIn0= -->
+<pre class="r"><code>identify_nonessential &lt;- function(vec, outlet = 0, add_to_device = 3, n = 3, 
+                               return_nonessentials = FALSE) {
+  diff_vec &lt;- setdiff(vec, 
+                      get_essential_elements(vec, n = n, 
+                                             n_add = add_to_device, 
+                                             outlet = outlet, add = TRUE))
+  if(return_nonessentials) {
+    return(sort(diff_vec))
   }
+  length(diff_vec)
+}
+identify_nonessential(demo_input_vec, return_nonessentials = TRUE)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdICA1ICA2IDExXG4ifQ== -->
+<pre><code>[1]  5  6 11</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>For all those nonessential elements we can include them or not. Therefore the number of combinations is equal to 2^k, where k is equal to number of nonessential elements.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuMiBeIGlkZW50aWZ5X25vbmVzc2VudGlhbChkZW1vX2lucHV0X3ZlYylcblxuYGBgIn0= -->
+<pre class="r"><code>2 ^ identify_nonessential(demo_input_vec)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDhcbiJ9 -->
+<pre><code>[1] 8</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>This is a match.</p>
+<p>However, when checked on the longer vector <code>demo_input_vec2</code>, it breaks.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudHJ1ZV9kZW1vX2lucHV0X3ZlYzJfcmVzIDwtIDE5MjA4XG4yIF4gaWRlbnRpZnlfbm9uZXNzZW50aWFsKGRlbW9faW5wdXRfdmVjMikgPT0gdHJ1ZV9kZW1vX2lucHV0X3ZlYzJfcmVzXG5gYGAifQ== -->
+<pre class="r"><code>true_demo_input_vec2_res &lt;- 19208
+2 ^ identify_nonessential(demo_input_vec2) == true_demo_input_vec2_res</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIEZBTFNFXG4ifQ== -->
+<pre><code>[1] FALSE</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>One reason it is not working is that it’s not working is that it did not account that in the sequence <code>1, 2, 3, 4, 7</code> one of <code>1, 2, 3</code> has to be kept at all times, as it breaks the sequence if there isn’t one.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc29ydChkZW1vX2lucHV0X3ZlYzIpXG5cbmBgYCJ9 -->
+<pre class="r"><code>sort(demo_input_vec2)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSAgMSAgMiAgMyAgNCAgNyAgOCAgOSAxMCAxMSAxNCAxNyAxOCAxOSAyMCAyMyAyNCAyNSAyOCAzMSAzMiAzMyAzNCAzNSAzOCAzOSA0MlxuWzI3XSA0NSA0NiA0NyA0OCA0OVxuIn0= -->
+<pre><code> [1]  1  2  3  4  7  8  9 10 11 14 17 18 19 20 23 24 25 28 31 32 33 34 35 38 39 42
+[27] 45 46 47 48 49</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaWRlbnRpZnlfbm9uZXNzZW50aWFsKGRlbW9faW5wdXRfdmVjMiwgcmV0dXJuX25vbmVzc2VudGlhbHMgPSBUUlVFKVxuXG5gYGAifQ== -->
+<pre class="r"><code>identify_nonessential(demo_input_vec2, return_nonessentials = TRUE)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSAgMSAgMiAgMyAgOCAgOSAxMCAxOCAxOSAyNCAzMiAzMyAzNCA0NiA0NyA0OFxuIn0= -->
+<pre><code> [1]  1  2  3  8  9 10 18 19 24 32 33 34 46 47 48</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2V0X2Vzc2VudGlhbF9lbGVtZW50cyhkZW1vX2lucHV0X3ZlYzIsIGFkZCA9IFRSVUUpXG5cbmBgYCJ9 -->
+<pre class="r"><code>get_essential_elements(demo_input_vec2, add = TRUE)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSAgMCAgNCAgNyAxMSAxNCAxNyAyMCAyMyAyNSAyOCAzMSAzNSAzOCAzOSA0MiA0NSA0OSA1MlxuIn0= -->
+<pre><code> [1]  0  4  7 11 14 17 20 23 25 28 31 35 38 39 42 45 49 52</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>If the difference, between the two essential numbers, one would need at least 1 more element. In other words, the sequence in which there isn’t any element takes is eliminated.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuMiBeIGlkZW50aWZ5X25vbmVzc2VudGlhbChkZW1vX2lucHV0X3ZlYzIpIC0gXG4gICMgYXQgbGVhc3Qgb25lIGhhcyB0byBiZSBwcmVzZW50LCB0aGVyZWZvcmUgXG4gIDIgXiBzdW0obmEub21pdChlc3NlbnRpYWxfZGVtb192ZWMyIC0gbGFnKGVzc2VudGlhbF9kZW1vX3ZlYzIpID4gMykpXG5cbmBgYCJ9 -->
+<pre class="r"><code>2 ^ identify_nonessential(demo_input_vec2) - 
+  # at least one has to be present, therefore 
+  2 ^ sum(na.omit(essential_demo_vec2 - lag(essential_demo_vec2) &gt; 3))
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDMyNzUyXG4ifQ== -->
+<pre><code>[1] 32752</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Better yet, the true answer to the second demo input example is not a power of 2.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaXMuaW50ZWdlcihsb2cyKHRydWVfZGVtb19pbnB1dF92ZWMyX3JlcykpXG5gYGAifQ== -->
+<pre class="r"><code>is.integer(log2(true_demo_input_vec2_res))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>I gave up on an idea I can find a formula to calculate those. I still think, I can count all essential, and top it up with others, but I can’t figure out how…</p>
+<p>I wrote the recursive function.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGlzdGluY3Rfc2VxcyA8LSBmdW5jdGlvbihuLCB2ZWMsIHByZXZfbiA9IDAsIFxuICAgICAgICAgICAgICAgICAgICAgICAgICB2ZWNfc2V0ID0gYygpLCBsaXN0X3Bvc3NpYmlsaXRpZXMgPSBGQUxTRSkge1xuICBcbiAgIyBpZiB3ZSBhcmUgc3RhcnRpbmcsIHRoZW4gZ28gb24gdG8gbmV4dCwgdGhpcyBvbmUgaGFzIHRvIGJlIGluY2x1ZGVkXG4gIGlmIChwcmV2X24gPT0gMCAmIG4gPT0gMSkge1xuICAgIHJldHVybihkaXN0aW5jdF9zZXFzKG4gPSBuICsgMSwgdmVjID0gdmVjLCBwcmV2X24gPSBuLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICB2ZWNfc2V0ID0gYyh2ZWNfc2V0LCB2ZWNbbl0pLFxuICAgICAgICAgICAgICAgICAgICAgICAgIGxpc3RfcG9zc2liaWxpdGllcyA9IGxpc3RfcG9zc2liaWxpdGllcykpXG4gIH1cbiAgXG4gIGRpZmZfYmVmb3JlIDwtIHZlY1tuXSAtIHZlY1twcmV2X25dXG4gIFxuICAjIGltcG9zc2libGUgY29tYmluYXRpb24sIGRvbid0IGNvdW50IC8gbGlzdFxuICBpZiAoZGlmZl9iZWZvcmUgPiAzKSB7XG4gICAgaWYgKGxpc3RfcG9zc2liaWxpdGllcykge1xuICAgICAgcmV0dXJuKE5VTEwpXG4gICAgfVxuICAgIHJldHVybigwKSBcbiAgfVxuICBcbiAgIyBhcyB3ZSBlbGltaW5hdGVkIGltcG9zc2libGUgY29tYmluYXRpb25zLCBpZiByZWFjaGVkIHRoZSBlbmRcbiAgIyB3ZSBzaG91bGQgaW5jbHVkZSB0aGlzIGFuZCBmaW5pc2ggdGhlIHJlY3Vyc2lvblxuICBpZiAobiA9PSBsZW5ndGgodmVjKSkge1xuICAgIGlmIChsaXN0X3Bvc3NpYmlsaXRpZXMpIHtcbiAgICAgIHJldHVybihjKHZlY19zZXQsIHZlY1tuXSkpXG4gICAgfVxuICAgIHJldHVybigxKVxuICB9XG4gIFxuICAjIGlmIHRoZSBkaWZmZXJlbmNlIGlzIGVxdWFsIHRvIDMgLSB3ZSBtdXN0IGluY2x1ZGUgdGhpc1xuICBpZiAoZGlmZl9iZWZvcmUgPT0gMykge1xuICAgIGlmIChsaXN0X3Bvc3NpYmlsaXRpZXMpIHtcbiAgICAgIHJldHVybihkaXN0aW5jdF9zZXFzKG4gPSBuICsgMSwgdmVjID0gdmVjLCBwcmV2X24gPSBuLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgIHZlY19zZXQgPSBjKHZlY19zZXQsIHZlY1tuXSksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICBsaXN0X3Bvc3NpYmlsaXRpZXMgPSBsaXN0X3Bvc3NpYmlsaXRpZXMpKVxuICAgIH1cbiAgICByZXR1cm4oZGlzdGluY3Rfc2VxcyhuID0gbiArIDEsIHZlYyA9IHZlYywgcHJldl9uID0gbikpXG4gIH1cbiAgXG4gICMgaW4gYWxsIG90aGVyIGNhc2VzIHdlIGhhdmUgdHdvIG9wdGlvbnMsXG4gICMgdGhlcmVmb3JlIG5lZWQgdG8gY2FsbCB0aGUgZnVuY3Rpb24gZm9yIGJvdGhcbiAgaWYgKGxpc3RfcG9zc2liaWxpdGllcykge1xuICAgIFxuICAgIHJldHVybihsaXN0KGRpc3RpbmN0X3NlcXMobiA9IG4gKyAxLCB2ZWMgPSB2ZWMsIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBvcHRpb25zIHdoZXJlIHdlIGtlZXAgY3VycmVudCBlbGVtZW50XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwcmV2X24gPSBuLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZlY19zZXQgPSBjKHZlY19zZXQsIHZlY1tuXSksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsaXN0X3Bvc3NpYmlsaXRpZXMgPSBsaXN0X3Bvc3NpYmlsaXRpZXMpLFxuICAgICAgICAgICAgICAgIGRpc3RpbmN0X3NlcXMobiA9IG4gKyAxLCB2ZWMgPSB2ZWMsIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBvcHRpb25zIHdoZXJlIHdlIGRvbid0IGtlZXAgdGhlIGN1cnJlbnQgZWxlbWVudFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcHJldl9uID0gcHJldl9uLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZlY19zZXQgPSB2ZWNfc2V0LCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxpc3RfcG9zc2liaWxpdGllcyA9IGxpc3RfcG9zc2liaWxpdGllcykpKVxuICB9XG4gIHJldHVybihkaXN0aW5jdF9zZXFzKG4gPSBuICsgMSwgdmVjID0gdmVjLCBwcmV2X24gPSBuKSArIFxuICAgICAgICAgICBkaXN0aW5jdF9zZXFzKG4gPSBuICsgMSwgdmVjID0gdmVjLCBwcmV2X24gPSBwcmV2X24pKVxufVxuYGBgIn0= -->
+<pre class="r"><code>distinct_seqs &lt;- function(n, vec, prev_n = 0, 
+                          vec_set = c(), list_possibilities = FALSE) {
+  
+  # if we are starting, then go on to next, this one has to be included
   if (prev_n == 0 &amp; n == 1) {
-    #print(vec[n])
-    return(f(n + 1, vec, n))
+    return(distinct_seqs(n = n + 1, vec = vec, prev_n = n, 
+                         vec_set = c(vec_set, vec[n]),
+                         list_possibilities = list_possibilities))
   }
+  
   diff_before &lt;- vec[n] - vec[prev_n]
-  # print(glue::glue(paste(
-  #   &quot;n: {n}&quot;,
-  #   &quot;n-1: {prev_n}&quot;,
-  #   &quot;a_n: {vec[n]}ff&quot;,
-  #   &quot;a_n-1: {vec[prev_n]}&quot;,
-  #   &quot;a_n - a_n-1: {diff_before}&quot;
-  # )))
+  
+  # impossible combination, don&#39;t count / list
   if (diff_before &gt; 3) {
+    if (list_possibilities) {
+      return(NULL)
+    }
     return(0) 
   }
-  if (diff_before == 3) {
-    #print(vec[n])
-    return(f(n+1, vec, n))
+  
+  # as we eliminated impossible combinations, if reached the end
+  # we should include this and finish the recursion
+  if (n == length(vec)) {
+    if (list_possibilities) {
+      return(c(vec_set, vec[n]))
+    }
+    return(1)
   }
-  #print(paste(c(vec[n], &quot;x&quot;)))
-  return(f(n+1, vec, n) + f(n+1, vec, prev_n))
+  
+  # if the difference is equal to 3 - we must include this
+  if (diff_before == 3) {
+    if (list_possibilities) {
+      return(distinct_seqs(n = n + 1, vec = vec, prev_n = n, 
+                           vec_set = c(vec_set, vec[n]),
+                           list_possibilities = list_possibilities))
+    }
+    return(distinct_seqs(n = n + 1, vec = vec, prev_n = n))
+  }
+  
+  # in all other cases we have two options,
+  # therefore need to call the function for both
+  if (list_possibilities) {
+    
+    return(list(distinct_seqs(n = n + 1, vec = vec, 
+                              # options where we keep current element
+                              prev_n = n, 
+                              vec_set = c(vec_set, vec[n]),
+                              list_possibilities = list_possibilities),
+                distinct_seqs(n = n + 1, vec = vec, 
+                              # options where we don&#39;t keep the current element
+                              prev_n = prev_n, 
+                              vec_set = vec_set, 
+                              list_possibilities = list_possibilities)))
+  }
+  return(distinct_seqs(n = n + 1, vec = vec, prev_n = n) + 
+           distinct_seqs(n = n + 1, vec = vec, prev_n = prev_n))
 }</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<p>It works.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZigxLCA0NTo0OSkgPT0gN1xuYGBgIn0= -->
-<pre class="r"><code>f(1, 45:49) == 7</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZigxLCBjKDAsIHNvcnQoZGVtb19pbnB1dF92ZWMpLCAyMiksIDApID09IDhcblxuYGBgIn0= -->
-<pre class="r"><code>f(1, c(0, sort(demo_input_vec), 22), 0) == 8
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGlzdGluY3Rfc2VxcygxLCA0NTo0OSkgPT0gN1xuXG5gYGAifQ== -->
+<pre class="r"><code>distinct_seqs(1, 45:49) == 7
 </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiWzFdIFRSVUVcbiJ9 -->
@@ -2109,20 +2212,51 @@ calc_number_of_possible_solutions(demo_input_vec) == 8</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZigxLCBjKDAsIHNvcnQoZGVtb19pbnB1dF92ZWMyKSwgbWF4KGRlbW9faW5wdXRfdmVjMikrMykpXG5cbmBgYCJ9 -->
-<pre class="r"><code>f(1, c(0, sort(demo_input_vec2), max(demo_input_vec2)+3))
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGlzdGluY3Rfc2VxcygxLCBjKDAsIHNvcnQoZGVtb19pbnB1dF92ZWMpLCAyMiksIDApID09IDhcblxuYGBgIn0= -->
+<pre class="r"><code>distinct_seqs(1, c(0, sort(demo_input_vec), 22), 0) == 8
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDM1NjcyXG4ifQ== -->
-<pre><code>[1] 35672</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFRSVUVcbiJ9 -->
+<pre><code>[1] TRUE</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>WHY?</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGlzdGluY3Rfc2VxcygxLCBjKDAsIHNvcnQoZGVtb19pbnB1dF92ZWMyKSwgbWF4KGRlbW9faW5wdXRfdmVjMikgKyAzKSkgPT0gMTkyMDhcblxuYGBgIn0= -->
+<pre class="r"><code>distinct_seqs(1, c(0, sort(demo_input_vec2), max(demo_input_vec2) + 3)) == 19208
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFRSVUVcbiJ9 -->
+<pre><code>[1] TRUE</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>But is too long to</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVzIDwtIE5VTExcbnRpbWVfbGltaXQgPC0gNyAqIDYwICMxMCBtaW51dGVzIGluIHNlY29uZHNcbnRyeUNhdGNoKHtcbiAgcmVzIDwtIHdpdGhUaW1lb3V0KHtcbiAgICBkaXN0aW5jdF9zZXFzKDEsIGMoMCwgc29ydChpbnB1dF92ZWMpLCBtYXgoaW5wdXRfdmVjKSArIDMpKVxuICB9LCB0aW1lb3V0ID0gdGltZV9saW1pdClcbn0sIFRpbWVvdXRFeGNlcHRpb24gPSBmdW5jdGlvbihleCkge1xuICBtZXNzYWdlKGdsdWU6OmdsdWUoXCJUaW1lb3V0LCB7dGltZV9saW1pdH0gc2Vjb25kcyBlbGFwc2VkLiBBYm9ydGluZy5cIikpXG59KVxuYGBgIn0= -->
+<pre class="r"><code>res &lt;- NULL
+time_limit &lt;- 7 * 60 #10 minutes in seconds
+tryCatch({
+  res &lt;- withTimeout({
+    distinct_seqs(1, c(0, sort(input_vec), max(input_vec) + 3))
+  }, timeout = time_limit)
+}, TimeoutException = function(ex) {
+  message(glue::glue(&quot;Timeout, {time_limit} seconds elapsed. Aborting.&quot;))
+})</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiVGltZW91dCwgNDIwIHNlY29uZHMgZWxhcHNlZC4gQWJvcnRpbmcuXG4ifQ== -->
+<pre><code>Timeout, 420 seconds elapsed. Aborting.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Another idea - maybe take only the elements between essential elemnts, count possible combinations there and get the product? That shoud be faster. Though not sure how much.</p>
+<p>But for now, I have enough.</p>
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiRGF5IDEwOiBBZGFwdGVyIEFycmF5IgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgpQYXRjaGVkIGludG8gdGhlIGFpcmNyYWZ0J3MgZGF0YSBwb3J0LCB5b3UgZGlzY292ZXIgd2VhdGhlciBmb3JlY2FzdHMgb2YgYSBtYXNzaXZlIHRyb3BpY2FsIHN0b3JtLiBCZWZvcmUgeW91IGNhbiBmaWd1cmUgb3V0IHdoZXRoZXIgaXQgd2lsbCBpbXBhY3QgeW91ciB2YWNhdGlvbiBwbGFucywgaG93ZXZlciwgeW91ciBkZXZpY2Ugc3VkZGVubHkgdHVybnMgb2ZmIQoKSXRzIGJhdHRlcnkgaXMgZGVhZC4KCllvdSdsbCBuZWVkIHRvIHBsdWcgaXQgaW4uIFRoZXJlJ3Mgb25seSBvbmUgcHJvYmxlbTogdGhlIGNoYXJnaW5nIG91dGxldCBuZWFyIHlvdXIgc2VhdCBwcm9kdWNlcyB0aGUgd3JvbmcgbnVtYmVyIG9mIGpvbHRzLiBBbHdheXMgcHJlcGFyZWQsIHlvdSBtYWtlIGEgbGlzdCBvZiBhbGwgb2YgdGhlIGpvbHRhZ2UgYWRhcHRlcnMgaW4geW91ciBiYWcuCgpFYWNoIG9mIHlvdXIgam9sdGFnZSBhZGFwdGVycyBpcyByYXRlZCBmb3IgYSBzcGVjaWZpYyBvdXRwdXQgam9sdGFnZSAoeW91ciBwdXp6bGUgaW5wdXQpLiBBbnkgZ2l2ZW4gYWRhcHRlciBjYW4gdGFrZSBhbiBpbnB1dCAxLCAyLCBvciAzIGpvbHRzIGxvd2VyIHRoYW4gaXRzIHJhdGluZyBhbmQgc3RpbGwgcHJvZHVjZSBpdHMgcmF0ZWQgb3V0cHV0IGpvbHRhZ2UuCgpJbiBhZGRpdGlvbiwgeW91ciBkZXZpY2UgaGFzIGEgYnVpbHQtaW4gam9sdGFnZSBhZGFwdGVyIHJhdGVkIGZvciAzIGpvbHRzIGhpZ2hlciB0aGFuIHRoZSBoaWdoZXN0LXJhdGVkIGFkYXB0ZXIgaW4geW91ciBiYWcuIChJZiB5b3VyIGFkYXB0ZXIgbGlzdCB3ZXJlIDMsIDksIGFuZCA2LCB5b3VyIGRldmljZSdzIGJ1aWx0LWluIGFkYXB0ZXIgd291bGQgYmUgcmF0ZWQgZm9yIDEyIGpvbHRzLikKClRyZWF0IHRoZSBjaGFyZ2luZyBvdXRsZXQgbmVhciB5b3VyIHNlYXQgYXMgaGF2aW5nIGFuIGVmZmVjdGl2ZSBqb2x0YWdlIHJhdGluZyBvZiAwLgoKU2luY2UgeW91IGhhdmUgc29tZSB0aW1lIHRvIGtpbGwsIHlvdSBtaWdodCBhcyB3ZWxsIHRlc3QgYWxsIG9mIHlvdXIgYWRhcHRlcnMuIFdvdWxkbid0IHdhbnQgdG8gZ2V0IHRvIHlvdXIgcmVzb3J0IGFuZCByZWFsaXplIHlvdSBjYW4ndCBldmVuIGNoYXJnZSB5b3VyIGRldmljZSEKCklmIHlvdSB1c2UgZXZlcnkgYWRhcHRlciBpbiB5b3VyIGJhZyBhdCBvbmNlLCB3aGF0IGlzIHRoZSBkaXN0cmlidXRpb24gb2Ygam9sdGFnZSBkaWZmZXJlbmNlcyBiZXR3ZWVuIHRoZSBjaGFyZ2luZyBvdXRsZXQsIHRoZSBhZGFwdGVycywgYW5kIHlvdXIgZGV2aWNlPwoKRm9yIGV4YW1wbGUsIHN1cHBvc2UgdGhhdCBpbiB5b3VyIGJhZywgeW91IGhhdmUgYWRhcHRlcnMgd2l0aCB0aGUgZm9sbG93aW5nIGpvbHRhZ2UgcmF0aW5nczoKYGBgCjE2CjEwCjE1CjUKMQoxMQo3CjE5CjYKMTIKNApgYGAKV2l0aCB0aGVzZSBhZGFwdGVycywgeW91ciBkZXZpY2UncyBidWlsdC1pbiBqb2x0YWdlIGFkYXB0ZXIgd291bGQgYmUgcmF0ZWQgZm9yIDE5ICsgMyA9IDIyIGpvbHRzLCAzIGhpZ2hlciB0aGFuIHRoZSBoaWdoZXN0LXJhdGVkIGFkYXB0ZXIuCgpCZWNhdXNlIGFkYXB0ZXJzIGNhbiBvbmx5IGNvbm5lY3QgdG8gYSBzb3VyY2UgMS0zIGpvbHRzIGxvd2VyIHRoYW4gaXRzIHJhdGluZywgaW4gb3JkZXIgdG8gdXNlIGV2ZXJ5IGFkYXB0ZXIsIHlvdSdkIG5lZWQgdG8gY2hvb3NlIHRoZW0gbGlrZSB0aGlzOgoKVGhlIGNoYXJnaW5nIG91dGxldCBoYXMgYW4gZWZmZWN0aXZlIHJhdGluZyBvZiAwIGpvbHRzLCBzbyB0aGUgb25seSBhZGFwdGVycyB0aGF0IGNvdWxkIGNvbm5lY3QgdG8gaXQgZGlyZWN0bHkgd291bGQgbmVlZCB0byBoYXZlIGEgam9sdGFnZSByYXRpbmcgb2YgMSwgMiwgb3IgMyBqb2x0cy4gT2YgdGhlc2UsIG9ubHkgb25lIHlvdSBoYXZlIGlzIGFuIGFkYXB0ZXIgcmF0ZWQgMSBqb2x0IChkaWZmZXJlbmNlIG9mIDEpLgpGcm9tIHlvdXIgMS1qb2x0IHJhdGVkIGFkYXB0ZXIsIHRoZSBvbmx5IGNob2ljZSBpcyB5b3VyIDQtam9sdCByYXRlZCBhZGFwdGVyIChkaWZmZXJlbmNlIG9mIDMpLgpGcm9tIHRoZSA0LWpvbHQgcmF0ZWQgYWRhcHRlciwgdGhlIGFkYXB0ZXJzIHJhdGVkIDUsIDYsIG9yIDcgYXJlIHZhbGlkIGNob2ljZXMuIEhvd2V2ZXIsIGluIG9yZGVyIHRvIG5vdCBza2lwIGFueSBhZGFwdGVycywgeW91IGhhdmUgdG8gcGljayB0aGUgYWRhcHRlciByYXRlZCA1IGpvbHRzIChkaWZmZXJlbmNlIG9mIDEpLgpTaW1pbGFybHksIHRoZSBuZXh0IGNob2ljZXMgd291bGQgbmVlZCB0byBiZSB0aGUgYWRhcHRlciByYXRlZCA2IGFuZCB0aGVuIHRoZSBhZGFwdGVyIHJhdGVkIDcgKHdpdGggZGlmZmVyZW5jZSBvZiAxIGFuZCAxKS4KVGhlIG9ubHkgYWRhcHRlciB0aGF0IHdvcmtzIHdpdGggdGhlIDctam9sdCByYXRlZCBhZGFwdGVyIGlzIHRoZSBvbmUgcmF0ZWQgMTAgam9sdHMgKGRpZmZlcmVuY2Ugb2YgMykuCkZyb20gMTAsIHRoZSBjaG9pY2VzIGFyZSAxMSBvciAxMjsgY2hvb3NlIDExIChkaWZmZXJlbmNlIG9mIDEpIGFuZCB0aGVuIDEyIChkaWZmZXJlbmNlIG9mIDEpLgpBZnRlciAxMiwgb25seSB2YWxpZCBhZGFwdGVyIGhhcyBhIHJhdGluZyBvZiAxNSAoZGlmZmVyZW5jZSBvZiAzKSwgdGhlbiAxNiAoZGlmZmVyZW5jZSBvZiAxKSwgdGhlbiAxOSAoZGlmZmVyZW5jZSBvZiAzKS4KRmluYWxseSwgeW91ciBkZXZpY2UncyBidWlsdC1pbiBhZGFwdGVyIGlzIGFsd2F5cyAzIGhpZ2hlciB0aGFuIHRoZSBoaWdoZXN0IGFkYXB0ZXIsIHNvIGl0cyByYXRpbmcgaXMgMjIgam9sdHMgKGFsd2F5cyBhIGRpZmZlcmVuY2Ugb2YgMykuCkluIHRoaXMgZXhhbXBsZSwgd2hlbiB1c2luZyBldmVyeSBhZGFwdGVyLCB0aGVyZSBhcmUgNyBkaWZmZXJlbmNlcyBvZiAxIGpvbHQgYW5kIDUgZGlmZmVyZW5jZXMgb2YgMyBqb2x0cy4KCkhlcmUgaXMgYSBsYXJnZXIgZXhhbXBsZToKYGBgCjI4CjMzCjE4CjQyCjMxCjE0CjQ2CjIwCjQ4CjQ3CjI0CjIzCjQ5CjQ1CjE5CjM4CjM5CjExCjEKMzIKMjUKMzUKOAoxNwo3CjkKNAoyCjM0CjEwCjMKYGBgCkluIHRoaXMgbGFyZ2VyIGV4YW1wbGUsIGluIGEgY2hhaW4gdGhhdCB1c2VzIGFsbCBvZiB0aGUgYWRhcHRlcnMsIHRoZXJlIGFyZSAyMiBkaWZmZXJlbmNlcyBvZiAxIGpvbHQgYW5kIDEwIGRpZmZlcmVuY2VzIG9mIDMgam9sdHMuCgpGaW5kIGEgY2hhaW4gdGhhdCB1c2VzIGFsbCBvZiB5b3VyIGFkYXB0ZXJzIHRvIGNvbm5lY3QgdGhlIGNoYXJnaW5nIG91dGxldCB0byB5b3VyIGRldmljZSdzIGJ1aWx0LWluIGFkYXB0ZXIgYW5kIGNvdW50IHRoZSBqb2x0YWdlIGRpZmZlcmVuY2VzIGJldHdlZW4gdGhlIGNoYXJnaW5nIG91dGxldCwgdGhlIGFkYXB0ZXJzLCBhbmQgeW91ciBkZXZpY2UuIFdoYXQgaXMgdGhlIG51bWJlciBvZiAxLWpvbHQgZGlmZmVyZW5jZXMgbXVsdGlwbGllZCBieSB0aGUgbnVtYmVyIG9mIDMtam9sdCBkaWZmZXJlbmNlcz8KCmBgYHtyfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKZGVtb19pbnB1dF92ZWMgPC0KICByZWFkX3RzdigiZGVtb19pbnB1dDEudHh0IiwgY29sX25hbWVzID0gImlucCIpICU+JQogIHB1bGwoaW5wKQpgYGAKCmBgYHtyfQoKZGlmZmVyZW5jZV9iZXR3ZWVuX2VsZW1lbnRzIDwtIGZ1bmN0aW9uKHZlYywgb3V0bGV0ID0gMCwgYWRkX3RvX2RldmljZSA9IDMpIHsKICBzdG9waWZub3QoaXMubnVtZXJpYyh2ZWMpKQogIHZlYyA8LSBjKDAsIHZlYywgbWF4KHZlYykgKyBhZGRfdG9fZGV2aWNlKQogIHNvcnRlZF92ZWMgPC0gc29ydCh2ZWMpCiAgc29ydGVkX3ZlYyAtIGMobWluKHNvcnRlZF92ZWMpLCBzb3J0ZWRfdmVjWy1sZW5ndGgoc29ydGVkX3ZlYyldKQp9CgpvdXRfZGVtbyA8LSBkaWZmZXJlbmNlX2JldHdlZW5fZWxlbWVudHMoZGVtb19pbnB1dF92ZWMpICU+JSB0YWJsZSgpCmFsbChvdXRfZGVtb1tuYW1lcyhvdXRfZGVtbykgPT0gIjMiXSA9PSA1LAogICAgb3V0X2RlbW9bbmFtZXMob3V0X2RlbW8pID09ICIxIl0gPT0gNykKCmBgYAoKYGBge3J9CgpkZW1vX2lucHV0X3ZlYzIgPC0KICByZWFkX3RzdigiZGVtb19pbnB1dDIudHh0IiwgY29sX25hbWVzID0gImlucCIpICU+JQogIHB1bGwoaW5wKQoKb3V0X2RlbW8yIDwtIGRpZmZlcmVuY2VfYmV0d2Vlbl9lbGVtZW50cyhkZW1vX2lucHV0X3ZlYzIpICU+JSB0YWJsZSgpCmFsbChvdXRfZGVtbzJbbmFtZXMob3V0X2RlbW8yKSA9PSAiMyJdID09IDEwLAogICAgb3V0X2RlbW8yW25hbWVzKG91dF9kZW1vMikgPT0gIjEiXSA9PSAyMikKCmBgYAoKYGBge3J9CmlucHV0X3ZlYyA8LQogIHJlYWRfdHN2KCJpbnB1dC50eHQiLCBjb2xfbmFtZXMgPSAiaW5wIikgJT4lCiAgcHVsbChpbnApCgpvdXRfdmVjIDwtCiAgZGlmZmVyZW5jZV9iZXR3ZWVuX2VsZW1lbnRzKGlucHV0X3ZlYykgJT4lCiAgdGFibGUoKQoKb3V0X3ZlY1tuYW1lcyhvdXRfdmVjKSA9PSAiMSJdICogb3V0X3ZlY1tuYW1lcyhvdXRfdmVjKSA9PSAiMyJdCmBgYAoKIyBQYXJ0IFR3bwpUbyBjb21wbGV0ZWx5IGRldGVybWluZSB3aGV0aGVyIHlvdSBoYXZlIGVub3VnaCBhZGFwdGVycywgeW91J2xsIG5lZWQgdG8gZmlndXJlIG91dCBob3cgbWFueSBkaWZmZXJlbnQgd2F5cyB0aGV5IGNhbiBiZSBhcnJhbmdlZC4gRXZlcnkgYXJyYW5nZW1lbnQgbmVlZHMgdG8gY29ubmVjdCB0aGUgY2hhcmdpbmcgb3V0bGV0IHRvIHlvdXIgZGV2aWNlLiBUaGUgcHJldmlvdXMgcnVsZXMgYWJvdXQgd2hlbiBhZGFwdGVycyBjYW4gc3VjY2Vzc2Z1bGx5IGNvbm5lY3Qgc3RpbGwgYXBwbHkuCgpUaGUgZmlyc3QgZXhhbXBsZSBhYm92ZSAodGhlIG9uZSB0aGF0IHN0YXJ0cyB3aXRoIDE2LCAxMCwgMTUpIHN1cHBvcnRzIHRoZSBmb2xsb3dpbmcgYXJyYW5nZW1lbnRzOgpgYGAKKDApLCAxLCA0LCA1LCA2LCA3LCAxMCwgMTEsIDEyLCAxNSwgMTYsIDE5LCAoMjIpCigwKSwgMSwgNCwgNSwgNiwgNywgMTAsIDEyLCAxNSwgMTYsIDE5LCAoMjIpCigwKSwgMSwgNCwgNSwgNywgMTAsIDExLCAxMiwgMTUsIDE2LCAxOSwgKDIyKQooMCksIDEsIDQsIDUsIDcsIDEwLCAxMiwgMTUsIDE2LCAxOSwgKDIyKQooMCksIDEsIDQsIDYsIDcsIDEwLCAxMSwgMTIsIDE1LCAxNiwgMTksICgyMikKKDApLCAxLCA0LCA2LCA3LCAxMCwgMTIsIDE1LCAxNiwgMTksICgyMikKKDApLCAxLCA0LCA3LCAxMCwgMTEsIDEyLCAxNSwgMTYsIDE5LCAoMjIpCigwKSwgMSwgNCwgNywgMTAsIDEyLCAxNSwgMTYsIDE5LCAoMjIpCmBgYAooVGhlIGNoYXJnaW5nIG91dGxldCBhbmQgeW91ciBkZXZpY2UncyBidWlsdC1pbiBhZGFwdGVyIGFyZSBzaG93biBpbiBwYXJlbnRoZXNlcy4pIEdpdmVuIHRoZSBhZGFwdGVycyBmcm9tIHRoZSBmaXJzdCBleGFtcGxlLCB0aGUgdG90YWwgbnVtYmVyIG9mIGFycmFuZ2VtZW50cyB0aGF0IGNvbm5lY3QgdGhlIGNoYXJnaW5nIG91dGxldCB0byB5b3VyIGRldmljZSBpcyA4LgoKVGhlIHNlY29uZCBleGFtcGxlIGFib3ZlICh0aGUgb25lIHRoYXQgc3RhcnRzIHdpdGggMjgsIDMzLCAxOCkgaGFzIG1hbnkgYXJyYW5nZW1lbnRzLiBIZXJlIGFyZSBhIGZldzoKYGBgCigwKSwgMSwgMiwgMywgNCwgNywgOCwgOSwgMTAsIDExLCAxNCwgMTcsIDE4LCAxOSwgMjAsIDIzLCAyNCwgMjUsIDI4LCAzMSwKMzIsIDMzLCAzNCwgMzUsIDM4LCAzOSwgNDIsIDQ1LCA0NiwgNDcsIDQ4LCA0OSwgKDUyKQoKKDApLCAxLCAyLCAzLCA0LCA3LCA4LCA5LCAxMCwgMTEsIDE0LCAxNywgMTgsIDE5LCAyMCwgMjMsIDI0LCAyNSwgMjgsIDMxLAozMiwgMzMsIDM0LCAzNSwgMzgsIDM5LCA0MiwgNDUsIDQ2LCA0NywgNDksICg1MikKCigwKSwgMSwgMiwgMywgNCwgNywgOCwgOSwgMTAsIDExLCAxNCwgMTcsIDE4LCAxOSwgMjAsIDIzLCAyNCwgMjUsIDI4LCAzMSwKMzIsIDMzLCAzNCwgMzUsIDM4LCAzOSwgNDIsIDQ1LCA0NiwgNDgsIDQ5LCAoNTIpCgooMCksIDEsIDIsIDMsIDQsIDcsIDgsIDksIDEwLCAxMSwgMTQsIDE3LCAxOCwgMTksIDIwLCAyMywgMjQsIDI1LCAyOCwgMzEsCjMyLCAzMywgMzQsIDM1LCAzOCwgMzksIDQyLCA0NSwgNDYsIDQ5LCAoNTIpCgooMCksIDEsIDIsIDMsIDQsIDcsIDgsIDksIDEwLCAxMSwgMTQsIDE3LCAxOCwgMTksIDIwLCAyMywgMjQsIDI1LCAyOCwgMzEsCjMyLCAzMywgMzQsIDM1LCAzOCwgMzksIDQyLCA0NSwgNDcsIDQ4LCA0OSwgKDUyKQoKKDApLCAzLCA0LCA3LCAxMCwgMTEsIDE0LCAxNywgMjAsIDIzLCAyNSwgMjgsIDMxLCAzNCwgMzUsIDM4LCAzOSwgNDIsIDQ1LAo0NiwgNDgsIDQ5LCAoNTIpCgooMCksIDMsIDQsIDcsIDEwLCAxMSwgMTQsIDE3LCAyMCwgMjMsIDI1LCAyOCwgMzEsIDM0LCAzNSwgMzgsIDM5LCA0MiwgNDUsCjQ2LCA0OSwgKDUyKQoKKDApLCAzLCA0LCA3LCAxMCwgMTEsIDE0LCAxNywgMjAsIDIzLCAyNSwgMjgsIDMxLCAzNCwgMzUsIDM4LCAzOSwgNDIsIDQ1LAo0NywgNDgsIDQ5LCAoNTIpCgooMCksIDMsIDQsIDcsIDEwLCAxMSwgMTQsIDE3LCAyMCwgMjMsIDI1LCAyOCwgMzEsIDM0LCAzNSwgMzgsIDM5LCA0MiwgNDUsCjQ3LCA0OSwgKDUyKQoKKDApLCAzLCA0LCA3LCAxMCwgMTEsIDE0LCAxNywgMjAsIDIzLCAyNSwgMjgsIDMxLCAzNCwgMzUsIDM4LCAzOSwgNDIsIDQ1LAo0OCwgNDksICg1MikKYGBgCkluIHRvdGFsLCB0aGlzIHNldCBvZiBhZGFwdGVycyBjYW4gY29ubmVjdCB0aGUgY2hhcmdpbmcgb3V0bGV0IHRvIHlvdXIgZGV2aWNlIGluIDE5MjA4IGRpc3RpbmN0IGFycmFuZ2VtZW50cy4KCllvdSBnbGFuY2UgYmFjayBkb3duIGF0IHlvdXIgYmFnIGFuZCB0cnkgdG8gcmVtZW1iZXIgd2h5IHlvdSBicm91Z2h0IHNvIG1hbnkgYWRhcHRlcnM7IHRoZXJlIG11c3QgYmUgbW9yZSB0aGFuIGEgdHJpbGxpb24gdmFsaWQgd2F5cyB0byBhcnJhbmdlIHRoZW0hIFN1cmVseSwgdGhlcmUgbXVzdCBiZSBhbiBlZmZpY2llbnQgd2F5IHRvIGNvdW50IHRoZSBhcnJhbmdlbWVudHMuCgpXaGF0IGlzIHRoZSB0b3RhbCBudW1iZXIgb2YgZGlzdGluY3Qgd2F5cyB5b3UgY2FuIGFycmFuZ2UgdGhlIGFkYXB0ZXJzIHRvIGNvbm5lY3QgdGhlIGNoYXJnaW5nIG91dGxldCB0byB5b3VyIGRldmljZT8KCmBgYHtyfQoKYGBgCgpgYGB7cn0KZ2V0X2Vzc2VudGlhbF9lbGVtZW50cyA8LSBmdW5jdGlvbih2ZWMsIG4gPSAzLCBhZGRfdG9fZGV2aWNlID0gMykgewogIHN0b3BpZm5vdChpcy5udW1lcmljKHZlYykpCiAgYm9yZGVyX3ZlYyA8LSBjKDAsIG1heCh2ZWMpICsgYWRkX3RvX2RldmljZSkKICB2ZWMgPC0gYyhib3JkZXJfdmVjLCB2ZWMpCiAgc29ydGVkX3ZlYyA8LSBzb3J0KHZlYykKICBoYXZlX3RvX3N0YXkgPC0gCiAgICBjKHNvcnRlZF92ZWNbd2hpY2goc29ydGVkX3ZlYyAtIGxhZyhzb3J0ZWRfdmVjLCAxKSA9PSAzKSAtIDFdLAogICAgICBzb3J0ZWRfdmVjW3doaWNoKHNvcnRlZF92ZWMgLSBsYWcoc29ydGVkX3ZlYywgMSkgPT0gMyldKQoKICBwcmludChzb3J0KGhhdmVfdG9fc3RheSkpICAKICBpX2RvbnRfa25vdzEgPC0gc29ydGVkX3ZlY1t3aGljaChzb3J0ZWRfdmVjIC0gbGFnKHNvcnRlZF92ZWMsIDIpID09IDMpXQogIHByaW50KHNvcnQoaV9kb250X2tub3cxKSkKICBpX2RvbnRfa25vdzIgPC0gc29ydGVkX3ZlY1t3aGljaChzb3J0ZWRfdmVjIC0gbGFnKHNvcnRlZF92ZWMsIDMpID09IDMpXQogIHByaW50KHNvcnQoaV9kb250X2tub3cyKSkKICAKfQoKY2FsY19udW1iZXJfb2ZfcG9zc2libGVfc29sdXRpb25zIDwtIGZ1bmN0aW9uKHZlYykgewogIHN0b3BpZm5vdChpcy5udW1lcmljKHZlYykpCiAgZXNzZW50aWFsX3ZlYyA8LSBnZXRfZXNzZW50aWFsX2VsZW1lbnRzKHZlYykKICBuIDwtIGxlbmd0aChzZXRkaWZmKHZlYywgZXNzZW50aWFsX3ZlYykpCiAgMl5uCn0KCmNhbGNfbnVtYmVyX29mX3Bvc3NpYmxlX3NvbHV0aW9ucyhkZW1vX2lucHV0X3ZlYykgPT0gOApgYGAKCmBgYHtyfQpjYWxjX251bWJlcl9vZl9wb3NzaWJsZV9zb2x1dGlvbnMoZGVtb19pbnB1dF92ZWMyKQpgYGAKCgoKYGBge3J9CnNvcnRlZF9kZW1vX3ZlYzIgPC0gc29ydChjKDAsIDUyLCBkZW1vX2lucHV0X3ZlYzIpKQoKCgpgYGAKCmBgYHtyfQpmIDwtIGZ1bmN0aW9uKG4sIHZlYywgcHJldl9uID0gMCl7CiAgI3ByaW50KG4pCiAgaWYgKG4gPT0gbGVuZ3RoKHZlYykpIHsKICAgICNwcmludCh2ZWNbbl0pCiAgICByZXR1cm4oMSkKICB9CiAgaWYgKHByZXZfbiA9PSAwICYgbiA9PSAxKSB7CiAgICAjcHJpbnQodmVjW25dKQogICAgcmV0dXJuKGYobiArIDEsIHZlYywgbikpCiAgfQogIGRpZmZfYmVmb3JlIDwtIHZlY1tuXSAtIHZlY1twcmV2X25dCiAgIyBwcmludChnbHVlOjpnbHVlKHBhc3RlKAogICMgICAibjoge259IiwKICAjICAgIm4tMToge3ByZXZfbn0iLAogICMgICAiYV9uOiB7dmVjW25dfWZmIiwKICAjICAgImFfbi0xOiB7dmVjW3ByZXZfbl19IiwKICAjICAgImFfbiAtIGFfbi0xOiB7ZGlmZl9iZWZvcmV9IgogICMgKSkpCiAgaWYgKGRpZmZfYmVmb3JlID4gMykgewogICAgcmV0dXJuKDApIAogIH0KICBpZiAoZGlmZl9iZWZvcmUgPT0gMykgewogICAgI3ByaW50KHZlY1tuXSkKICAgIHJldHVybihmKG4rMSwgdmVjLCBuKSkKICB9CiAgI3ByaW50KHBhc3RlKGModmVjW25dLCAieCIpKSkKICByZXR1cm4oZihuKzEsIHZlYywgbikgKyBmKG4rMSwgdmVjLCBwcmV2X24pKQp9CmBgYAoKCmBgYHtyfQpmKDEsIDQ1OjQ5KSA9PSA3CmBgYAoKCmBgYHtyfQpmKDEsIGMoMCwgc29ydChkZW1vX2lucHV0X3ZlYyksIDIyKSwgMCkgPT0gOApgYGAKCmBgYHtyfQpmKDEsIGMoMCwgc29ydChkZW1vX2lucHV0X3ZlYzIpLCBtYXgoZGVtb19pbnB1dF92ZWMyKSszKSkgPT0gMTkyMDgKYGBgCgpXSFk/</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiRGF5IDEwOiBBZGFwdGVyIEFycmF5IgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgpQYXRjaGVkIGludG8gdGhlIGFpcmNyYWZ0J3MgZGF0YSBwb3J0LCB5b3UgZGlzY292ZXIgd2VhdGhlciBmb3JlY2FzdHMgb2YgYSBtYXNzaXZlIHRyb3BpY2FsIHN0b3JtLiBCZWZvcmUgeW91IGNhbiBmaWd1cmUgb3V0IHdoZXRoZXIgaXQgd2lsbCBpbXBhY3QgeW91ciB2YWNhdGlvbiBwbGFucywgaG93ZXZlciwgeW91ciBkZXZpY2Ugc3VkZGVubHkgdHVybnMgb2ZmIQoKSXRzIGJhdHRlcnkgaXMgZGVhZC4KCllvdSdsbCBuZWVkIHRvIHBsdWcgaXQgaW4uIFRoZXJlJ3Mgb25seSBvbmUgcHJvYmxlbTogdGhlIGNoYXJnaW5nIG91dGxldCBuZWFyIHlvdXIgc2VhdCBwcm9kdWNlcyB0aGUgd3JvbmcgbnVtYmVyIG9mIGpvbHRzLiBBbHdheXMgcHJlcGFyZWQsIHlvdSBtYWtlIGEgbGlzdCBvZiBhbGwgb2YgdGhlIGpvbHRhZ2UgYWRhcHRlcnMgaW4geW91ciBiYWcuCgpFYWNoIG9mIHlvdXIgam9sdGFnZSBhZGFwdGVycyBpcyByYXRlZCBmb3IgYSBzcGVjaWZpYyBvdXRwdXQgam9sdGFnZSAoeW91ciBwdXp6bGUgaW5wdXQpLiBBbnkgZ2l2ZW4gYWRhcHRlciBjYW4gdGFrZSBhbiBpbnB1dCAxLCAyLCBvciAzIGpvbHRzIGxvd2VyIHRoYW4gaXRzIHJhdGluZyBhbmQgc3RpbGwgcHJvZHVjZSBpdHMgcmF0ZWQgb3V0cHV0IGpvbHRhZ2UuCgpJbiBhZGRpdGlvbiwgeW91ciBkZXZpY2UgaGFzIGEgYnVpbHQtaW4gam9sdGFnZSBhZGFwdGVyIHJhdGVkIGZvciAzIGpvbHRzIGhpZ2hlciB0aGFuIHRoZSBoaWdoZXN0LXJhdGVkIGFkYXB0ZXIgaW4geW91ciBiYWcuIChJZiB5b3VyIGFkYXB0ZXIgbGlzdCB3ZXJlIDMsIDksIGFuZCA2LCB5b3VyIGRldmljZSdzIGJ1aWx0LWluIGFkYXB0ZXIgd291bGQgYmUgcmF0ZWQgZm9yIDEyIGpvbHRzLikKClRyZWF0IHRoZSBjaGFyZ2luZyBvdXRsZXQgbmVhciB5b3VyIHNlYXQgYXMgaGF2aW5nIGFuIGVmZmVjdGl2ZSBqb2x0YWdlIHJhdGluZyBvZiAwLgoKU2luY2UgeW91IGhhdmUgc29tZSB0aW1lIHRvIGtpbGwsIHlvdSBtaWdodCBhcyB3ZWxsIHRlc3QgYWxsIG9mIHlvdXIgYWRhcHRlcnMuIFdvdWxkbid0IHdhbnQgdG8gZ2V0IHRvIHlvdXIgcmVzb3J0IGFuZCByZWFsaXplIHlvdSBjYW4ndCBldmVuIGNoYXJnZSB5b3VyIGRldmljZSEKCklmIHlvdSB1c2UgZXZlcnkgYWRhcHRlciBpbiB5b3VyIGJhZyBhdCBvbmNlLCB3aGF0IGlzIHRoZSBkaXN0cmlidXRpb24gb2Ygam9sdGFnZSBkaWZmZXJlbmNlcyBiZXR3ZWVuIHRoZSBjaGFyZ2luZyBvdXRsZXQsIHRoZSBhZGFwdGVycywgYW5kIHlvdXIgZGV2aWNlPwoKRm9yIGV4YW1wbGUsIHN1cHBvc2UgdGhhdCBpbiB5b3VyIGJhZywgeW91IGhhdmUgYWRhcHRlcnMgd2l0aCB0aGUgZm9sbG93aW5nIGpvbHRhZ2UgcmF0aW5nczoKYGBgCjE2CjEwCjE1CjUKMQoxMQo3CjE5CjYKMTIKNApgYGAKV2l0aCB0aGVzZSBhZGFwdGVycywgeW91ciBkZXZpY2UncyBidWlsdC1pbiBqb2x0YWdlIGFkYXB0ZXIgd291bGQgYmUgcmF0ZWQgZm9yIDE5ICsgMyA9IDIyIGpvbHRzLCAzIGhpZ2hlciB0aGFuIHRoZSBoaWdoZXN0LXJhdGVkIGFkYXB0ZXIuCgpCZWNhdXNlIGFkYXB0ZXJzIGNhbiBvbmx5IGNvbm5lY3QgdG8gYSBzb3VyY2UgMS0zIGpvbHRzIGxvd2VyIHRoYW4gaXRzIHJhdGluZywgaW4gb3JkZXIgdG8gdXNlIGV2ZXJ5IGFkYXB0ZXIsIHlvdSdkIG5lZWQgdG8gY2hvb3NlIHRoZW0gbGlrZSB0aGlzOgoKVGhlIGNoYXJnaW5nIG91dGxldCBoYXMgYW4gZWZmZWN0aXZlIHJhdGluZyBvZiAwIGpvbHRzLCBzbyB0aGUgb25seSBhZGFwdGVycyB0aGF0IGNvdWxkIGNvbm5lY3QgdG8gaXQgZGlyZWN0bHkgd291bGQgbmVlZCB0byBoYXZlIGEgam9sdGFnZSByYXRpbmcgb2YgMSwgMiwgb3IgMyBqb2x0cy4gT2YgdGhlc2UsIG9ubHkgb25lIHlvdSBoYXZlIGlzIGFuIGFkYXB0ZXIgcmF0ZWQgMSBqb2x0IChkaWZmZXJlbmNlIG9mIDEpLgpGcm9tIHlvdXIgMS1qb2x0IHJhdGVkIGFkYXB0ZXIsIHRoZSBvbmx5IGNob2ljZSBpcyB5b3VyIDQtam9sdCByYXRlZCBhZGFwdGVyIChkaWZmZXJlbmNlIG9mIDMpLgpGcm9tIHRoZSA0LWpvbHQgcmF0ZWQgYWRhcHRlciwgdGhlIGFkYXB0ZXJzIHJhdGVkIDUsIDYsIG9yIDcgYXJlIHZhbGlkIGNob2ljZXMuIEhvd2V2ZXIsIGluIG9yZGVyIHRvIG5vdCBza2lwIGFueSBhZGFwdGVycywgeW91IGhhdmUgdG8gcGljayB0aGUgYWRhcHRlciByYXRlZCA1IGpvbHRzIChkaWZmZXJlbmNlIG9mIDEpLgpTaW1pbGFybHksIHRoZSBuZXh0IGNob2ljZXMgd291bGQgbmVlZCB0byBiZSB0aGUgYWRhcHRlciByYXRlZCA2IGFuZCB0aGVuIHRoZSBhZGFwdGVyIHJhdGVkIDcgKHdpdGggZGlmZmVyZW5jZSBvZiAxIGFuZCAxKS4KVGhlIG9ubHkgYWRhcHRlciB0aGF0IHdvcmtzIHdpdGggdGhlIDctam9sdCByYXRlZCBhZGFwdGVyIGlzIHRoZSBvbmUgcmF0ZWQgMTAgam9sdHMgKGRpZmZlcmVuY2Ugb2YgMykuCkZyb20gMTAsIHRoZSBjaG9pY2VzIGFyZSAxMSBvciAxMjsgY2hvb3NlIDExIChkaWZmZXJlbmNlIG9mIDEpIGFuZCB0aGVuIDEyIChkaWZmZXJlbmNlIG9mIDEpLgpBZnRlciAxMiwgb25seSB2YWxpZCBhZGFwdGVyIGhhcyBhIHJhdGluZyBvZiAxNSAoZGlmZmVyZW5jZSBvZiAzKSwgdGhlbiAxNiAoZGlmZmVyZW5jZSBvZiAxKSwgdGhlbiAxOSAoZGlmZmVyZW5jZSBvZiAzKS4KRmluYWxseSwgeW91ciBkZXZpY2UncyBidWlsdC1pbiBhZGFwdGVyIGlzIGFsd2F5cyAzIGhpZ2hlciB0aGFuIHRoZSBoaWdoZXN0IGFkYXB0ZXIsIHNvIGl0cyByYXRpbmcgaXMgMjIgam9sdHMgKGFsd2F5cyBhIGRpZmZlcmVuY2Ugb2YgMykuCkluIHRoaXMgZXhhbXBsZSwgd2hlbiB1c2luZyBldmVyeSBhZGFwdGVyLCB0aGVyZSBhcmUgNyBkaWZmZXJlbmNlcyBvZiAxIGpvbHQgYW5kIDUgZGlmZmVyZW5jZXMgb2YgMyBqb2x0cy4KCkhlcmUgaXMgYSBsYXJnZXIgZXhhbXBsZToKYGBgCjI4CjMzCjE4CjQyCjMxCjE0CjQ2CjIwCjQ4CjQ3CjI0CjIzCjQ5CjQ1CjE5CjM4CjM5CjExCjEKMzIKMjUKMzUKOAoxNwo3CjkKNAoyCjM0CjEwCjMKYGBgCkluIHRoaXMgbGFyZ2VyIGV4YW1wbGUsIGluIGEgY2hhaW4gdGhhdCB1c2VzIGFsbCBvZiB0aGUgYWRhcHRlcnMsIHRoZXJlIGFyZSAyMiBkaWZmZXJlbmNlcyBvZiAxIGpvbHQgYW5kIDEwIGRpZmZlcmVuY2VzIG9mIDMgam9sdHMuCgpGaW5kIGEgY2hhaW4gdGhhdCB1c2VzIGFsbCBvZiB5b3VyIGFkYXB0ZXJzIHRvIGNvbm5lY3QgdGhlIGNoYXJnaW5nIG91dGxldCB0byB5b3VyIGRldmljZSdzIGJ1aWx0LWluIGFkYXB0ZXIgYW5kIGNvdW50IHRoZSBqb2x0YWdlIGRpZmZlcmVuY2VzIGJldHdlZW4gdGhlIGNoYXJnaW5nIG91dGxldCwgdGhlIGFkYXB0ZXJzLCBhbmQgeW91ciBkZXZpY2UuIFdoYXQgaXMgdGhlIG51bWJlciBvZiAxLWpvbHQgZGlmZmVyZW5jZXMgbXVsdGlwbGllZCBieSB0aGUgbnVtYmVyIG9mIDMtam9sdCBkaWZmZXJlbmNlcz8KCmBgYHtyfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKbGlicmFyeShSLnV0aWxzKQpgYGAKCgpgYGB7cn0KZGVtb19pbnB1dF92ZWMgPC0KICByZWFkX3RzdigiZGVtb19pbnB1dDEudHh0IiwgY29sX25hbWVzID0gImlucCIpICU+JQogIHB1bGwoaW5wKQpgYGAKCmBgYHtyfQoKZGlmZmVyZW5jZV9iZXR3ZWVuX2VsZW1lbnRzIDwtIGZ1bmN0aW9uKHZlYywgb3V0bGV0ID0gMCwgYWRkX3RvX2RldmljZSA9IDMpIHsKICBzdG9waWZub3QoaXMubnVtZXJpYyh2ZWMpKQogIHZlYyA8LSBjKDAsIHZlYywgbWF4KHZlYykgKyBhZGRfdG9fZGV2aWNlKQogIHNvcnRlZF92ZWMgPC0gc29ydCh2ZWMpCiAgc29ydGVkX3ZlYyAtIGMobWluKHNvcnRlZF92ZWMpLCBzb3J0ZWRfdmVjWy1sZW5ndGgoc29ydGVkX3ZlYyldKQp9CgpvdXRfZGVtbyA8LSBkaWZmZXJlbmNlX2JldHdlZW5fZWxlbWVudHMoZGVtb19pbnB1dF92ZWMpICU+JSB0YWJsZSgpCmFsbChvdXRfZGVtb1tuYW1lcyhvdXRfZGVtbykgPT0gIjMiXSA9PSA1LAogICAgb3V0X2RlbW9bbmFtZXMob3V0X2RlbW8pID09ICIxIl0gPT0gNykKCmBgYAoKYGBge3J9CgpkZW1vX2lucHV0X3ZlYzIgPC0KICByZWFkX3RzdigiZGVtb19pbnB1dDIudHh0IiwgY29sX25hbWVzID0gImlucCIpICU+JQogIHB1bGwoaW5wKQoKb3V0X2RlbW8yIDwtIGRpZmZlcmVuY2VfYmV0d2Vlbl9lbGVtZW50cyhkZW1vX2lucHV0X3ZlYzIpICU+JSB0YWJsZSgpCmFsbChvdXRfZGVtbzJbbmFtZXMob3V0X2RlbW8yKSA9PSAiMyJdID09IDEwLAogICAgb3V0X2RlbW8yW25hbWVzKG91dF9kZW1vMikgPT0gIjEiXSA9PSAyMikKCmBgYAoKYGBge3J9CmlucHV0X3ZlYyA8LQogIHJlYWRfdHN2KCJpbnB1dC50eHQiLCBjb2xfbmFtZXMgPSAiaW5wIikgJT4lCiAgcHVsbChpbnApCgpvdXRfdmVjIDwtCiAgZGlmZmVyZW5jZV9iZXR3ZWVuX2VsZW1lbnRzKGlucHV0X3ZlYykgJT4lCiAgdGFibGUoKQoKb3V0X3ZlY1tuYW1lcyhvdXRfdmVjKSA9PSAiMSJdICogb3V0X3ZlY1tuYW1lcyhvdXRfdmVjKSA9PSAiMyJdCmBgYAoKIyBQYXJ0IFR3bwpUbyBjb21wbGV0ZWx5IGRldGVybWluZSB3aGV0aGVyIHlvdSBoYXZlIGVub3VnaCBhZGFwdGVycywgeW91J2xsIG5lZWQgdG8gZmlndXJlIG91dCBob3cgbWFueSBkaWZmZXJlbnQgd2F5cyB0aGV5IGNhbiBiZSBhcnJhbmdlZC4gRXZlcnkgYXJyYW5nZW1lbnQgbmVlZHMgdG8gY29ubmVjdCB0aGUgY2hhcmdpbmcgb3V0bGV0IHRvIHlvdXIgZGV2aWNlLiBUaGUgcHJldmlvdXMgcnVsZXMgYWJvdXQgd2hlbiBhZGFwdGVycyBjYW4gc3VjY2Vzc2Z1bGx5IGNvbm5lY3Qgc3RpbGwgYXBwbHkuCgpUaGUgZmlyc3QgZXhhbXBsZSBhYm92ZSAodGhlIG9uZSB0aGF0IHN0YXJ0cyB3aXRoIDE2LCAxMCwgMTUpIHN1cHBvcnRzIHRoZSBmb2xsb3dpbmcgYXJyYW5nZW1lbnRzOgpgYGAKKDApLCAxLCA0LCA1LCA2LCA3LCAxMCwgMTEsIDEyLCAxNSwgMTYsIDE5LCAoMjIpCigwKSwgMSwgNCwgNSwgNiwgNywgMTAsIDEyLCAxNSwgMTYsIDE5LCAoMjIpCigwKSwgMSwgNCwgNSwgNywgMTAsIDExLCAxMiwgMTUsIDE2LCAxOSwgKDIyKQooMCksIDEsIDQsIDUsIDcsIDEwLCAxMiwgMTUsIDE2LCAxOSwgKDIyKQooMCksIDEsIDQsIDYsIDcsIDEwLCAxMSwgMTIsIDE1LCAxNiwgMTksICgyMikKKDApLCAxLCA0LCA2LCA3LCAxMCwgMTIsIDE1LCAxNiwgMTksICgyMikKKDApLCAxLCA0LCA3LCAxMCwgMTEsIDEyLCAxNSwgMTYsIDE5LCAoMjIpCigwKSwgMSwgNCwgNywgMTAsIDEyLCAxNSwgMTYsIDE5LCAoMjIpCmBgYAooVGhlIGNoYXJnaW5nIG91dGxldCBhbmQgeW91ciBkZXZpY2UncyBidWlsdC1pbiBhZGFwdGVyIGFyZSBzaG93biBpbiBwYXJlbnRoZXNlcy4pIEdpdmVuIHRoZSBhZGFwdGVycyBmcm9tIHRoZSBmaXJzdCBleGFtcGxlLCB0aGUgdG90YWwgbnVtYmVyIG9mIGFycmFuZ2VtZW50cyB0aGF0IGNvbm5lY3QgdGhlIGNoYXJnaW5nIG91dGxldCB0byB5b3VyIGRldmljZSBpcyA4LgoKVGhlIHNlY29uZCBleGFtcGxlIGFib3ZlICh0aGUgb25lIHRoYXQgc3RhcnRzIHdpdGggMjgsIDMzLCAxOCkgaGFzIG1hbnkgYXJyYW5nZW1lbnRzLiBIZXJlIGFyZSBhIGZldzoKYGBgCigwKSwgMSwgMiwgMywgNCwgNywgOCwgOSwgMTAsIDExLCAxNCwgMTcsIDE4LCAxOSwgMjAsIDIzLCAyNCwgMjUsIDI4LCAzMSwKMzIsIDMzLCAzNCwgMzUsIDM4LCAzOSwgNDIsIDQ1LCA0NiwgNDcsIDQ4LCA0OSwgKDUyKQoKKDApLCAxLCAyLCAzLCA0LCA3LCA4LCA5LCAxMCwgMTEsIDE0LCAxNywgMTgsIDE5LCAyMCwgMjMsIDI0LCAyNSwgMjgsIDMxLAozMiwgMzMsIDM0LCAzNSwgMzgsIDM5LCA0MiwgNDUsIDQ2LCA0NywgNDksICg1MikKCigwKSwgMSwgMiwgMywgNCwgNywgOCwgOSwgMTAsIDExLCAxNCwgMTcsIDE4LCAxOSwgMjAsIDIzLCAyNCwgMjUsIDI4LCAzMSwKMzIsIDMzLCAzNCwgMzUsIDM4LCAzOSwgNDIsIDQ1LCA0NiwgNDgsIDQ5LCAoNTIpCgooMCksIDEsIDIsIDMsIDQsIDcsIDgsIDksIDEwLCAxMSwgMTQsIDE3LCAxOCwgMTksIDIwLCAyMywgMjQsIDI1LCAyOCwgMzEsCjMyLCAzMywgMzQsIDM1LCAzOCwgMzksIDQyLCA0NSwgNDYsIDQ5LCAoNTIpCgooMCksIDEsIDIsIDMsIDQsIDcsIDgsIDksIDEwLCAxMSwgMTQsIDE3LCAxOCwgMTksIDIwLCAyMywgMjQsIDI1LCAyOCwgMzEsCjMyLCAzMywgMzQsIDM1LCAzOCwgMzksIDQyLCA0NSwgNDcsIDQ4LCA0OSwgKDUyKQoKKDApLCAzLCA0LCA3LCAxMCwgMTEsIDE0LCAxNywgMjAsIDIzLCAyNSwgMjgsIDMxLCAzNCwgMzUsIDM4LCAzOSwgNDIsIDQ1LAo0NiwgNDgsIDQ5LCAoNTIpCgooMCksIDMsIDQsIDcsIDEwLCAxMSwgMTQsIDE3LCAyMCwgMjMsIDI1LCAyOCwgMzEsIDM0LCAzNSwgMzgsIDM5LCA0MiwgNDUsCjQ2LCA0OSwgKDUyKQoKKDApLCAzLCA0LCA3LCAxMCwgMTEsIDE0LCAxNywgMjAsIDIzLCAyNSwgMjgsIDMxLCAzNCwgMzUsIDM4LCAzOSwgNDIsIDQ1LAo0NywgNDgsIDQ5LCAoNTIpCgooMCksIDMsIDQsIDcsIDEwLCAxMSwgMTQsIDE3LCAyMCwgMjMsIDI1LCAyOCwgMzEsIDM0LCAzNSwgMzgsIDM5LCA0MiwgNDUsCjQ3LCA0OSwgKDUyKQoKKDApLCAzLCA0LCA3LCAxMCwgMTEsIDE0LCAxNywgMjAsIDIzLCAyNSwgMjgsIDMxLCAzNCwgMzUsIDM4LCAzOSwgNDIsIDQ1LAo0OCwgNDksICg1MikKYGBgCkluIHRvdGFsLCB0aGlzIHNldCBvZiBhZGFwdGVycyBjYW4gY29ubmVjdCB0aGUgY2hhcmdpbmcgb3V0bGV0IHRvIHlvdXIgZGV2aWNlIGluIDE5MjA4IGRpc3RpbmN0IGFycmFuZ2VtZW50cy4KCllvdSBnbGFuY2UgYmFjayBkb3duIGF0IHlvdXIgYmFnIGFuZCB0cnkgdG8gcmVtZW1iZXIgd2h5IHlvdSBicm91Z2h0IHNvIG1hbnkgYWRhcHRlcnM7IHRoZXJlIG11c3QgYmUgbW9yZSB0aGFuIGEgdHJpbGxpb24gdmFsaWQgd2F5cyB0byBhcnJhbmdlIHRoZW0hIFN1cmVseSwgdGhlcmUgbXVzdCBiZSBhbiBlZmZpY2llbnQgd2F5IHRvIGNvdW50IHRoZSBhcnJhbmdlbWVudHMuCgpXaGF0IGlzIHRoZSB0b3RhbCBudW1iZXIgb2YgZGlzdGluY3Qgd2F5cyB5b3UgY2FuIGFycmFuZ2UgdGhlIGFkYXB0ZXJzIHRvIGNvbm5lY3QgdGhlIGNoYXJnaW5nIG91dGxldCB0byB5b3VyIGRldmljZT8KCkdvdCBzdHVjayBoZXJlLi4uCgpXaGF0IGRvIEkga25vdzoKLSBJIGNhbiBpZGVudGlmeSBhbGwgdGhlIGVsZW1lbnRzIHRoYXQgaGF2ZSB0byBiZSBrZXB0OwotIEkgdHJpZWQgdG8gdGFrZSBhZHZhbnRhZ2Ugb2YgdGhlIHN1bSBvZiBuIGNob29zZSBrIGZvcm11bGEsIGJ1dCBnb3Qgc3R1Y2sKCgoKYGBge3J9CmdldF9lc3NlbnRpYWxfZWxlbWVudHMgPC0gZnVuY3Rpb24odmVjLCBuID0gMywgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbl9hZGQgPSAzLCBvdXRsZXQgPSAwLCBhZGQgPSBGQUxTRSkgewogIHN0b3BpZm5vdChpcy5udW1lcmljKHZlYykpCiAgaWYgKGFkZCkgewogICAgdmVjIDwtIGMob3V0bGV0LCB2ZWMsIG1heCh2ZWMpICsgbl9hZGQpCiAgfQogIHNvcnRlZF92ZWMgPC0gc29ydCh2ZWMpCiAgaW5kcyA8LSB3aGljaChzb3J0ZWRfdmVjIC0gbGFnKHNvcnRlZF92ZWMsIDEpID09IDMpCiAgaGF2ZV90b19zdGF5IDwtIAogICAgYyhzb3J0ZWRfdmVjW2luZHMgLSAxXSwKICAgICAgc29ydGVkX3ZlY1tpbmRzXSwgCiAgICAgIHNvcnRlZF92ZWNbMV0sCiAgICAgIHNvcnRlZF92ZWNbbGVuZ3RoKHNvcnRlZF92ZWMpXSkgCiAgaGF2ZV90b19zdGF5IDwtIHNvcnQodW5pcXVlKGhhdmVfdG9fc3RheSkpCiAgaGF2ZV90b19zdGF5Cn0KCnNlcV9icmVha2luZyA8LSBjKDQyLCA0NTo0OSkKc2V0ZGlmZihzZXFfYnJlYWtpbmcsIGdldF9lc3NlbnRpYWxfZWxlbWVudHMoc2VxX2JyZWFraW5nKSkKYGBgCgpgYGB7cn0KaWRlbnRpZnlfbm9uZXNzZW50aWFsIDwtIGZ1bmN0aW9uKHZlYywgb3V0bGV0ID0gMCwgYWRkX3RvX2RldmljZSA9IDMsIG4gPSAzLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybl9ub25lc3NlbnRpYWxzID0gRkFMU0UpIHsKICBkaWZmX3ZlYyA8LSBzZXRkaWZmKHZlYywgCiAgICAgICAgICAgICAgICAgICAgICBnZXRfZXNzZW50aWFsX2VsZW1lbnRzKHZlYywgbiA9IG4sIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBuX2FkZCA9IGFkZF90b19kZXZpY2UsIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBvdXRsZXQgPSBvdXRsZXQsIGFkZCA9IFRSVUUpKQogIGlmKHJldHVybl9ub25lc3NlbnRpYWxzKSB7CiAgICByZXR1cm4oc29ydChkaWZmX3ZlYykpCiAgfQogIGxlbmd0aChkaWZmX3ZlYykKfQppZGVudGlmeV9ub25lc3NlbnRpYWwoZGVtb19pbnB1dF92ZWMsIHJldHVybl9ub25lc3NlbnRpYWxzID0gVFJVRSkKYGBgCgpGb3IgYWxsIHRob3NlIG5vbmVzc2VudGlhbCBlbGVtZW50cyB3ZSBjYW4gaW5jbHVkZSB0aGVtIG9yIG5vdC4gVGhlcmVmb3JlIHRoZSBudW1iZXIgb2YgY29tYmluYXRpb25zIGlzIGVxdWFsIHRvIDJeaywgd2hlcmUgayBpcyBlcXVhbCB0byBudW1iZXIgb2Ygbm9uZXNzZW50aWFsIGVsZW1lbnRzLiAKCmBgYHtyfQoyIF4gaWRlbnRpZnlfbm9uZXNzZW50aWFsKGRlbW9faW5wdXRfdmVjKQpgYGAKClRoaXMgaXMgYSBtYXRjaC4gCgpIb3dldmVyLCB3aGVuIGNoZWNrZWQgb24gdGhlIGxvbmdlciB2ZWN0b3IgYGRlbW9faW5wdXRfdmVjMmAsIGl0IGJyZWFrcy4KCmBgYHtyfQp0cnVlX2RlbW9faW5wdXRfdmVjMl9yZXMgPC0gMTkyMDgKMiBeIGlkZW50aWZ5X25vbmVzc2VudGlhbChkZW1vX2lucHV0X3ZlYzIpID09IHRydWVfZGVtb19pbnB1dF92ZWMyX3JlcwpgYGAKCk9uZSByZWFzb24gaXQgaXMgbm90IHdvcmtpbmcgaXMgdGhhdCBpdCdzIG5vdCB3b3JraW5nIGlzIHRoYXQgaXQgZGlkIG5vdCBhY2NvdW50IHRoYXQgaW4gdGhlIHNlcXVlbmNlIGAxLCAyLCAzLCA0LCA3YCBvbmUgb2YgYDEsIDIsIDNgIGhhcyB0byBiZSBrZXB0IGF0IGFsbCB0aW1lcywgYXMgaXQgYnJlYWtzIHRoZSBzZXF1ZW5jZSBpZiB0aGVyZSBpc24ndCBvbmUuCgpgYGB7cn0Kc29ydChkZW1vX2lucHV0X3ZlYzIpCmBgYAoKYGBge3J9CmlkZW50aWZ5X25vbmVzc2VudGlhbChkZW1vX2lucHV0X3ZlYzIsIHJldHVybl9ub25lc3NlbnRpYWxzID0gVFJVRSkKYGBgCgpgYGB7cn0KZXNzZW50aWFsX2RlbW9fdmVjMiA8LSBnZXRfZXNzZW50aWFsX2VsZW1lbnRzKGRlbW9faW5wdXRfdmVjMiwgYWRkID0gVFJVRSkKYGBgCgpJZiB0aGUgZGlmZmVyZW5jZSwgYmV0d2VlbiB0aGUgdHdvIGVzc2VudGlhbCBudW1iZXJzLCBvbmUgd291bGQgbmVlZCBhdCBsZWFzdCAxIG1vcmUgZWxlbWVudC4gSW4gb3RoZXIgd29yZHMsIHRoZSBzZXF1ZW5jZSBpbiB3aGljaCB0aGVyZSBpc24ndCBhbnkgZWxlbWVudCB0YWtlcyBpcyBlbGltaW5hdGVkLgoKYGBge3J9CgoyIF4gaWRlbnRpZnlfbm9uZXNzZW50aWFsKGRlbW9faW5wdXRfdmVjMikgLSAKICAjIGF0IGxlYXN0IG9uZSBoYXMgdG8gYmUgcHJlc2VudCwgdGhlcmVmb3JlIHJlbW92aW5nIHRob3NlIChhbSBJIHJlYWxseSBkb2luZyBpdCBoZXJlPykKICAyIF4gc3VtKG5hLm9taXQoZXNzZW50aWFsX2RlbW9fdmVjMiAtIGxhZyhlc3NlbnRpYWxfZGVtb192ZWMyKSA+IDMpKQpgYGAKCkJldHRlciB5ZXQsIHRoZSB0cnVlIGFuc3dlciB0byB0aGUgc2Vjb25kIGRlbW8gaW5wdXQgZXhhbXBsZSBpcyBub3QgYSBwb3dlciBvZiAyLgogCmBgYHtyfQppcy5pbnRlZ2VyKGxvZzIodHJ1ZV9kZW1vX2lucHV0X3ZlYzJfcmVzKSkKYGBgCgpJIGdhdmUgdXAgb24gYW4gaWRlYSBJIGNhbiBmaW5kIGEgZm9ybXVsYSB0byBjYWxjdWxhdGUgdGhvc2UuIEkgc3RpbGwgdGhpbmssIEkgY2FuIGNvdW50IGFsbCBlc3NlbnRpYWwsIGFuZCB0b3AgaXQgdXAgd2l0aCBvdGhlcnMsIGJ1dCBJIGNhbid0IGZpZ3VyZSBvdXQgaG93Li4uCgpJIHdyb3RlIHRoZSByZWN1cnNpdmUgZnVuY3Rpb24uCgpgYGB7cn0KZGlzdGluY3Rfc2VxcyA8LSBmdW5jdGlvbihuLCB2ZWMsIHByZXZfbiA9IDAsIAogICAgICAgICAgICAgICAgICAgICAgICAgIHZlY19zZXQgPSBjKCksIGxpc3RfcG9zc2liaWxpdGllcyA9IEZBTFNFKSB7CiAgCiAgIyBpZiB3ZSBhcmUgc3RhcnRpbmcsIHRoZW4gZ28gb24gdG8gbmV4dCwgdGhpcyBvbmUgaGFzIHRvIGJlIGluY2x1ZGVkCiAgaWYgKHByZXZfbiA9PSAwICYgbiA9PSAxKSB7CiAgICByZXR1cm4oZGlzdGluY3Rfc2VxcyhuID0gbiArIDEsIHZlYyA9IHZlYywgcHJldl9uID0gbiwgCiAgICAgICAgICAgICAgICAgICAgICAgICB2ZWNfc2V0ID0gYyh2ZWNfc2V0LCB2ZWNbbl0pLAogICAgICAgICAgICAgICAgICAgICAgICAgbGlzdF9wb3NzaWJpbGl0aWVzID0gbGlzdF9wb3NzaWJpbGl0aWVzKSkKICB9CiAgCiAgZGlmZl9iZWZvcmUgPC0gdmVjW25dIC0gdmVjW3ByZXZfbl0KICAKICAjIGltcG9zc2libGUgY29tYmluYXRpb24sIGRvbid0IGNvdW50IC8gbGlzdAogIGlmIChkaWZmX2JlZm9yZSA+IDMpIHsKICAgIGlmIChsaXN0X3Bvc3NpYmlsaXRpZXMpIHsKICAgICAgcmV0dXJuKE5VTEwpCiAgICB9CiAgICByZXR1cm4oMCkgCiAgfQogIAogICMgYXMgd2UgZWxpbWluYXRlZCBpbXBvc3NpYmxlIGNvbWJpbmF0aW9ucywgaWYgcmVhY2hlZCB0aGUgZW5kCiAgIyB3ZSBzaG91bGQgaW5jbHVkZSB0aGlzIGFuZCBmaW5pc2ggdGhlIHJlY3Vyc2lvbgogIGlmIChuID09IGxlbmd0aCh2ZWMpKSB7CiAgICBpZiAobGlzdF9wb3NzaWJpbGl0aWVzKSB7CiAgICAgIHJldHVybihjKHZlY19zZXQsIHZlY1tuXSkpCiAgICB9CiAgICByZXR1cm4oMSkKICB9CiAgCiAgIyBpZiB0aGUgZGlmZmVyZW5jZSBpcyBlcXVhbCB0byAzIC0gd2UgbXVzdCBpbmNsdWRlIHRoaXMKICBpZiAoZGlmZl9iZWZvcmUgPT0gMykgewogICAgaWYgKGxpc3RfcG9zc2liaWxpdGllcykgewogICAgICByZXR1cm4oZGlzdGluY3Rfc2VxcyhuID0gbiArIDEsIHZlYyA9IHZlYywgcHJldl9uID0gbiwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgIHZlY19zZXQgPSBjKHZlY19zZXQsIHZlY1tuXSksCiAgICAgICAgICAgICAgICAgICAgICAgICAgIGxpc3RfcG9zc2liaWxpdGllcyA9IGxpc3RfcG9zc2liaWxpdGllcykpCiAgICB9CiAgICByZXR1cm4oZGlzdGluY3Rfc2VxcyhuID0gbiArIDEsIHZlYyA9IHZlYywgcHJldl9uID0gbikpCiAgfQogIAogICMgaW4gYWxsIG90aGVyIGNhc2VzIHdlIGhhdmUgdHdvIG9wdGlvbnMsCiAgIyB0aGVyZWZvcmUgbmVlZCB0byBjYWxsIHRoZSBmdW5jdGlvbiBmb3IgYm90aAogIGlmIChsaXN0X3Bvc3NpYmlsaXRpZXMpIHsKICAgIAogICAgcmV0dXJuKGxpc3QoZGlzdGluY3Rfc2VxcyhuID0gbiArIDEsIHZlYyA9IHZlYywgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgb3B0aW9ucyB3aGVyZSB3ZSBrZWVwIGN1cnJlbnQgZWxlbWVudAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwcmV2X24gPSBuLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmVjX3NldCA9IGModmVjX3NldCwgdmVjW25dKSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGlzdF9wb3NzaWJpbGl0aWVzID0gbGlzdF9wb3NzaWJpbGl0aWVzKSwKICAgICAgICAgICAgICAgIGRpc3RpbmN0X3NlcXMobiA9IG4gKyAxLCB2ZWMgPSB2ZWMsIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIG9wdGlvbnMgd2hlcmUgd2UgZG9uJ3Qga2VlcCB0aGUgY3VycmVudCBlbGVtZW50CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHByZXZfbiA9IHByZXZfbiwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZlY19zZXQgPSB2ZWNfc2V0LCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGlzdF9wb3NzaWJpbGl0aWVzID0gbGlzdF9wb3NzaWJpbGl0aWVzKSkpCiAgfQogIHJldHVybihkaXN0aW5jdF9zZXFzKG4gPSBuICsgMSwgdmVjID0gdmVjLCBwcmV2X24gPSBuKSArIAogICAgICAgICAgIGRpc3RpbmN0X3NlcXMobiA9IG4gKyAxLCB2ZWMgPSB2ZWMsIHByZXZfbiA9IHByZXZfbikpCn0KYGBgCgpJdCB3b3Jrcy4KCmBgYHtyfQpkaXN0aW5jdF9zZXFzKDEsIDQ1OjQ5KSA9PSA3CmBgYAoKYGBge3J9CmRpc3RpbmN0X3NlcXMoMSwgYygwLCBzb3J0KGRlbW9faW5wdXRfdmVjKSwgMjIpLCAwKSA9PSA4CmBgYAoKYGBge3J9CmRpc3RpbmN0X3NlcXMoMSwgYygwLCBzb3J0KGRlbW9faW5wdXRfdmVjMiksIG1heChkZW1vX2lucHV0X3ZlYzIpICsgMykpID09IDE5MjA4CmBgYAoKQnV0IGlzIHRvbyBsb25nIHRvIAoKYGBge3J9CnJlcyA8LSBOVUxMCnRpbWVfbGltaXQgPC0gNyAqIDYwICMgbWludXRlcyBpbiBzZWNvbmRzCnRyeUNhdGNoKHsKICByZXMgPC0gd2l0aFRpbWVvdXQoewogICAgZGlzdGluY3Rfc2VxcygxLCBjKDAsIHNvcnQoaW5wdXRfdmVjKSwgbWF4KGlucHV0X3ZlYykgKyAzKSkKICB9LCB0aW1lb3V0ID0gdGltZV9saW1pdCkKfSwgVGltZW91dEV4Y2VwdGlvbiA9IGZ1bmN0aW9uKGV4KSB7CiAgbWVzc2FnZShnbHVlOjpnbHVlKCJUaW1lb3V0LCB7dGltZV9saW1pdH0gc2Vjb25kcyBlbGFwc2VkLiBBYm9ydGluZy4iKSkKfSkKCmBgYApBbm90aGVyIGlkZWEgLSBtYXliZSB0YWtlIG9ubHkgdGhlIGVsZW1lbnRzIGJldHdlZW4gZXNzZW50aWFsIGVsZW1udHMsIGNvdW50IHBvc3NpYmxlIGNvbWJpbmF0aW9ucyB0aGVyZSBhbmQgZ2V0IHRoZSBwcm9kdWN0PyBUaGF0IHNob3VkIGJlIGZhc3Rlci4gVGhvdWdoIG5vdCBzdXJlIGhvdyBtdWNoLgoKQnV0IGZvciBub3csIEkgaGF2ZSBlbm91Z2guCgo=</div>
 
 
 
