@@ -1,0 +1,527 @@
+---
+title: "Day 11: Seating System"
+output: html_notebook
+---
+
+Your plane lands with plenty of time to spare. The final leg of your journey is a ferry that goes directly to the tropical island where you can finally start your vacation. As you reach the waiting area to board the ferry, you realize you're so early, nobody else has even arrived yet!
+
+By modeling the process people use to choose (or abandon) their seat in the waiting area, you're pretty sure you can predict the best place to sit. You make a quick map of the seat layout (your puzzle input).
+
+The seat layout fits neatly on a grid. Each position is either floor (.), an empty seat (L), or an occupied seat (#). For example, the initial seat layout might look like this:
+```
+L.LL.LL.LL
+LLLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLLL
+L.LLLLLL.L
+L.LLLLL.LL
+```
+Now, you just need to model the people who will be arriving shortly. Fortunately, people are entirely predictable and always follow a simple set of rules. All decisions are based on the number of occupied seats adjacent to a given seat (one of the eight positions immediately up, down, left, right, or diagonal from the seat). The following rules are applied to every seat simultaneously:
+
+- If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.  
+- If a seat is occupied (#) and four or more seats adjacent to it are also occupied, the seat becomes empty.  
+- Otherwise, the seat's state does not change.  
+Floor (.) never changes; seats don't move, and nobody sits on the floor.
+
+After one round of these rules, every seat in the example layout becomes occupied:
+```
+#.##.##.##
+#######.##
+#.#.#..#..
+####.##.##
+#.##.##.##
+#.#####.##
+..#.#.....
+##########
+#.######.#
+#.#####.##
+```
+After a second round, the seats with four or more occupied adjacent seats become empty again:
+```
+#.LL.L#.##
+#LLLLLL.L#
+L.L.L..L..
+#LLL.LL.L#
+#.LL.LL.LL
+#.LLLL#.##
+..L.L.....
+#LLLLLLLL#
+#.LLLLLL.L
+#.#LLLL.##
+```
+This process continues for three more rounds:
+```
+#.##.L#.##
+#L###LL.L#
+L.#.#..#..
+#L##.##.L#
+#.##.LL.LL
+#.###L#.##
+..#.#.....
+#L######L#
+#.LL###L.L
+#.#L###.##
+```
+```
+#.#L.L#.##
+#LLL#LL.L#
+L.L.L..#..
+#LLL.##.L#
+#.LL.LL.LL
+#.LL#L#.##
+..L.L.....
+#L#LLLL#L#
+#.LLLLLL.L
+#.#L#L#.##
+```
+
+```
+#.#L.L#.##
+#LLL#LL.L#
+L.#.L..#..
+#L##.##.L#
+#.#L.LL.LL
+#.#L#L#.##
+..L.L.....
+#L#L##L#L#
+#.LLLLLL.L
+#.#L#L#.##
+```
+At this point, something interesting happens: the chaos stabilizes and further applications of these rules cause no seats to change state! Once people stop moving around, you count 37 occupied seats.
+
+Simulate your seating area by applying the seating rules repeatedly until no seats change state. How many seats end up occupied?
+
+Since I already done Day17 which is this task, but in 3- and 4D this should be easy. However... :D
+
+```{r setup}
+library(tidyverse)
+```
+
+```{r}
+
+read_input_to_mat <- function(input_file_path) {
+  strsplit(scan(input_file_path, what = ""), "") %>%
+    do.call(rbind, .)
+}
+
+read_input_to_df <- function(input_file_path) {
+  read_input_to_mat(input_file_path) %>%
+    as_tibble() %>%
+    mutate(x = 1:n()) %>%
+    pivot_longer(names_to = "y", values_to = "seat_status", -x) %>%
+    mutate(y = as.numeric(str_remove(y, "V")))
+}
+
+
+```
+
+- If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.  
+- If a seat is occupied (#) and four or more seats adjacent to it are also occupied, the seat becomes empty.  
+- Otherwise, the seat's state does not change.  
+Floor (.) never changes; seats don't move, and nobody sits on the floor.
+
+```{r}
+check_seat <- function(x, y, seat_status, floor_map) {
+  neighbouring_seats <-
+    expand_grid(x = (x-1):(x+1),
+                y = (y-1):(y+1)) 
+  
+  neighbouring_seats_sum <-
+    floor_map %>% 
+    filter(seat_status != ".") %>%
+    mutate(seat_status = factor(seat_status, levels = c("L", "#"))) %>%
+    inner_join(neighbouring_seats, by = c("x", "y")) %>%
+    group_by(seat_status, .drop = FALSE) %>%
+    summarise(count = n(), .groups = "drop")
+  
+  new_seat_status <- seat_status
+  
+  n_free <-
+    neighbouring_seats_sum %>% 
+    filter(seat_status == "L") %>%
+    pull(count)
+  
+  n_occup <- 
+    neighbouring_seats_sum %>% 
+    filter(seat_status == "#") %>%
+    pull(count)
+  
+  if (seat_status == "L" & n_occup == 0) {
+    new_seat_status <- "#"
+  } else if (seat_status == "#" & n_occup >= 4) {
+    new_seat_status <- "L"
+  }
+  
+  new_seat_status
+}
+demo_df <- read_input_to_df("demo_input.txt")
+check_seat(3, 1, "L", demo_df) == "#"
+```
+
+```{r}
+
+simulate <- function(input_df, n = NULL) {
+  seats_df <- 
+    input_df %>%
+    filter(seat_status != ".")
+  
+  df <- input_df
+  m <- 1
+  if (is.null(n)) {
+    n <- Inf
+  }
+  while(TRUE) {
+    seats_df <- 
+      seats_df %>%
+      group_by(x, y) %>%
+      mutate(seat_status = check_seat(x, y, seat_status, floor_map = df))
+    
+    prev_df <- df
+    
+    df <-
+      bind_rows(seats_df,
+                df %>% anti_join(seats_df, by = c("x", "y")))
+    
+    df
+    if(m >= n) {
+      break
+    }
+    print(m)
+    m <- m + 1
+    if(nrow(df) == nrow(full_join(df, prev_df, 
+                                  by = c("x", "y", "seat_status")))) {
+      break
+                                  }
+  }
+ 
+  df
+}
+
+
+simulate(demo_df, n = 1) %>%
+  filter(seat_status == "#") %>%
+  nrow()
+```
+
+- If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.  
+- If a seat is occupied (#) and four or more seats adjacent to it are also occupied, the seat becomes empty.  
+- Otherwise, the seat's state does not change.  
+Floor (.) never changes; seats don't move, and nobody sits on the floor.
+
+```{r}
+demo_mat <- read_input_to_mat("demo_input.txt")
+simulate_mat <- function(mat) {
+  stopifnot(is.character(mat),
+            all(unique(as.character(mat)) %in% c(".", "L", "#")))
+  I <- nrow(mat)
+  J <- ncol(mat)
+  new_mat <- mat
+  occupied_mat <- array(0, dim = dim(mat))
+  occupied_mat[mat == "#"] <- 1
+  for (i in 1:I) {
+    for (j in 1:J) {
+      if (mat[i, j] == ".") {
+        next
+      } 
+      x <- seq(max(1, i-1), min(I, i+1))
+      y <- seq(max(1, j-1), min(J, j+1))
+      if (mat[i, j] == "#" & sum(occupied_mat[x, y]) >= 5) {
+        new_mat[i, j] <- "L"
+      }
+      if (mat[i, j] == "L" & sum(occupied_mat[x, y]) == 0) {
+        new_mat[i, j] <- "#"
+      }
+    }
+  }
+  new_mat
+}
+out_demo_1 <- simulate_mat(demo_mat)
+# After one round every seat in the example layout becomes occupied
+sum(out_demo_1 == "#") == sum(demo_mat == "L") 
+```
+
+
+```{r}
+out_demo_2 <- simulate_mat(out_demo_1)
+sum(out_demo_2 == "#") == 20 
+```
+
+```{r}
+out_demo_3 <- simulate_mat(out_demo_2)
+sum(out_demo_3 == "#") == 51
+```
+
+```{r}
+simulate_until_stable <- function(input_mat) {
+  in_mat <- input_mat
+  n <- 1
+  while(TRUE) {
+    if (n %% 10 == 1) {
+      print(glue::glue("Running simulation nr {n}"))
+    }
+    out_mat <- simulate_mat(in_mat)
+    if (all(out_mat == in_mat)) {
+      print(glue::glue("Success! Stopping after {n} simulations."))
+      break
+    }
+    in_mat <- out_mat
+    n <- n + 1
+  }
+  out_mat
+}
+```
+
+
+```{r}
+out_demo <- simulate_until_stable(demo_mat)
+sum(out_demo == "#") == 37
+```
+
+
+```{r}
+input_mat <- read_input_to_mat("input.txt")
+out_mat <- simulate_until_stable(input_mat)
+
+sum(out_mat == "#")
+```
+
+
+# Part Two ---
+As soon as people start to arrive, you realize your mistake. People don't just care about adjacent seats - they care about the first seat they can see in each of those eight directions!
+
+Now, instead of considering just the eight immediately adjacent seats, consider the first seat in each of those eight directions. For example, the empty seat below would see eight occupied seats:
+```
+.......#.
+...#.....
+.#.......
+.........
+..#L....#
+....#....
+.........
+#........
+...#.....
+```
+The leftmost empty seat below would only see one empty seat, but cannot see any of the occupied ones:
+
+```
+.............
+.L.L.#.#.#.#.
+.............
+```
+The empty seat below would see no occupied seats:
+```
+.##.##.
+#.#.#.#
+##...##
+...L...
+##...##
+#.#.#.#
+.##.##.
+```
+Also, people seem to be more tolerant than you expected: it now takes five or more visible occupied seats for an occupied seat to become empty (rather than four or more from the previous rules). The other rules still apply: empty seats that see no occupied seats become occupied, seats matching no rule don't change, and floor never changes.
+
+Given the same starting layout as above, these new rules cause the seating area to shift around as follows:
+```
+L.LL.LL.LL
+LLLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLLL
+L.LLLLLL.L
+L.LLLLL.LL
+```
+```
+#.##.##.##
+#######.##
+#.#.#..#..
+####.##.##
+#.##.##.##
+#.#####.##
+..#.#.....
+##########
+#.######.#
+#.#####.##
+```
+```
+#.LL.LL.L#
+#LLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLL#
+#.LLLLLL.L
+#.LLLLL.L#
+```
+```
+#.L#.##.L#
+#L#####.LL
+L.#.#..#..
+##L#.##.##
+#.##.#L.##
+#.#####.#L
+..#.#.....
+LLL####LL#
+#.L#####.L
+#.L####.L#
+```
+```
+#.L#.L#.L#
+#LLLLLL.LL
+L.L.L..#..
+##LL.LL.L#
+L.LL.LL.L#
+#.LLLLL.LL
+..L.L.....
+LLLLLLLLL#
+#.LLLLL#.L
+#.L#LL#.L#
+```
+```
+#.L#.L#.L#
+#LLLLLL.LL
+L.L.L..#..
+##L#.#L.L#
+L.L#.#L.L#
+#.L####.LL
+..#.#.....
+LLL###LLL#
+#.LLLLL#.L
+#.L#LL#.L#
+```
+
+```
+#.L#.L#.L#
+#LLLLLL.LL
+L.L.L..#..
+##L#.#L.L#
+L.L#.LL.L#
+#.LLLL#.LL
+..#.L.....
+LLL###LLL#
+#.LLLLL#.L
+#.L#LL#.L#
+```
+Again, at this point, people stop shifting around and the seating area reaches equilibrium. Once this occurs, you count 26 occupied seats.
+
+Given the new visibility method and the rule change for occupied seats becoming empty, once equilibrium is reached, how many seats end up occupied?
+
+```{r}
+`%not in%` <- Negate(`%in%`)
+count_occupied_closest <- function(seat_location, floor_map) {
+  axis <- list(c(-1, -1), c(-1, 0), c(-1, 1),
+               c(0, -1), c(0, 1),
+               c(1, -1), c(1, 0), c(1, 1))
+  occupied <- 0
+  rows_ <- 1:nrow(floor_map)
+  cols_ <- 1:ncol(floor_map)
+  
+  for (axe in axis) {
+    current_pos <- seat_location
+    # print(glue::glue("Axe: ({paste(axe, collapse=', ')})"))
+    while (TRUE) {
+      current_pos <- current_pos + axe
+      # print(glue::glue("Current position: {paste(current_pos, collapse=',')}"))
+      if (current_pos[1] %not in% rows_ | current_pos[2] %not in% cols_) {
+        break
+      }
+      seat_checked <- floor_map[current_pos[1], current_pos[2]]
+      if (seat_checked == "L") {
+        break
+      } else if (seat_checked == "#") {
+        # print("Adding to occupied counter!")
+        occupied <- occupied + 1
+        break
+      }
+    }
+  }
+  occupied
+}
+```
+
+
+```{r}
+demo_occupied_mat <- read_input_to_mat("demo_occupied.txt")
+count_occupied_closest(c(5, 4), demo_occupied_mat) == 8
+```
+
+```{r}
+demo_leftmost_mat <- read_input_to_mat("demo_leftmost.txt")
+count_occupied_closest(c(2, 2), demo_leftmost_mat) == 0
+```
+
+```{r}
+demo_no_mat <- read_input_to_mat("demo_no.txt")
+count_occupied_closest(c(4, 4), demo_no_mat) == 0
+```
+
+```{r}
+simulate_mat_closest <- function(mat) {
+  stopifnot(is.character(mat),
+            all(unique(as.character(mat)) %in% c(".", "L", "#")))
+  I <- nrow(mat)
+  J <- ncol(mat)
+  new_mat <- mat
+  occupied_mat <- array(0, dim = dim(mat))
+  occupied_mat[mat == "#"] <- 1
+  for (i in 1:I) {
+    for (j in 1:J) {
+      if (mat[i, j] == ".") {
+        next
+      } 
+      n_occupied <- count_occupied_closest(c(i, j), mat)
+      if (mat[i, j] == "#" & n_occupied >= 5) {
+        new_mat[i, j] <- "L"
+      }
+      if (mat[i, j] == "L" & n_occupied == 0) {
+        new_mat[i, j] <- "#"
+      }
+    }
+  }
+  new_mat
+}
+```
+
+
+```{r}
+simulate_mat_closest(simulate_mat_closest(demo_mat))
+```
+
+```{r}
+simulate_until_stable_closest <- function(input_mat) {
+  in_mat <- input_mat
+  n <- 1
+  while(TRUE) {
+    if (n %% 10 == 1) {
+      print(glue::glue("Running simulation nr {n}"))
+    }
+    out_mat <- simulate_mat_closest(in_mat)
+    if (all(out_mat == in_mat)) {
+      print(glue::glue("Success! Stopping after {n} simulations."))
+      break
+    }
+    in_mat <- out_mat
+    n <- n + 1
+  }
+  out_mat
+}
+```
+
+```{r}
+out_demo_part2 <- simulate_until_stable_closest(demo_mat)
+sum(out_demo_part2 == "#") == 26
+```
+
+```{r}
+out_part2 <- simulate_until_stable_closest(input_mat)
+sum(out_part2 == "#") 
+```
+
