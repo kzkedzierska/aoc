@@ -48,6 +48,10 @@ time   bus 7   bus 13  bus 59  bus 31  bus 19
 The earliest bus you could take is bus ID 59. It doesn't depart until timestamp 944, so you would need to wait 944 - 939 = 5 minutes before it departs. Multiplying the bus ID by the number of minutes you'd need to wait gives 295.
 
 What is the ID of the earliest bus you can take to the airport multiplied by the number of minutes you'll need to wait for that bus?
+```{r setup}
+library(tidyverse)
+```
+
 
 ```{r}
 read <- function(input_list) {
@@ -185,7 +189,7 @@ scan_the_conditions("1789,37,47,1889") == 1202161486
 
 ```{r}
 input_vec <- scan("input.txt", character(), skip = 1)
-scan_the_conditions(input_vec, start = 100000000000000)
+# scan_the_conditions(input_vec, start = 100000000000000)
 ```
 
 ```{r}
@@ -233,9 +237,84 @@ scan_the_conditions2("67,x,7,59,61") == 779210
 scan_the_conditions2("1789,37,47,1889") == 1202161486
 ```
 
-https://en.wikipedia.org/wiki/Chinese_remainder_theorem#Computation
+
 ```{r}
-scan_the_conditions2(input_vec, slice = 100000, granularity = 1000,
-                     start = 100000000000000 / 571)
+scan_the_conditions2(input_vec, slice = 10000, granularity = 1000,
+                     start = 100000000000000 / 571, max_iter = 1001)
+```
+Having figured out the solution for this, but unfortunately the one that won't compute within 10 minutes (and probably much more, but I haven't checked) I allowed myself to google for tips. 
+
+I was pointed towards Chinese remainder theroem. Tbh, aving no background in maths without this tip I would never have figured it out... 
+
+https://en.wikipedia.org/wiki/Chinese_remainder_theorem#Computation
+
+
+```{r}
+scan_the_conditions_by_sieving <- function(input_string) {
+  
+  input_vec <- strsplit(input_string, ",") %>% unlist()
+  # those the remainders from the division
+  additional_minutes <- which(input_vec != "x") - 1
+  busses <- as.numeric(input_vec[additional_minutes + 1])
+  
+  # sort them in the decreasing order
+  ind_ <- sort(busses, decreasing = TRUE, index.return = TRUE)$ix
+  additional_minutes <- additional_minutes[ind_]
+  busses <- busses[ind_]
+
+  # covert the reminders
+  additional_minutes <- (-1 * additional_minutes) %% busses
+  increase <- busses[1]
+  lowest_number <- additional_minutes[1]
+  # print(glue::glue("Increase: {increase}"))
+  # print(glue::glue("Current lowest number: {lowest_number}"))
+  for (iter in 2:length(busses)) {
+    number <- busses[iter]
+    remainder <- additional_minutes[iter]
+    # print(glue::glue(paste(
+    #   "Increase: {increase}\n",
+    #   "Number: {number}\n",
+    #   "Remainder: {remainder}")))
+    while (TRUE) {
+      if (lowest_number %% number == remainder) {
+        # print(glue::glue("The current number is {lowest_number}"))
+        increase <- increase * number
+        break
+      }
+      lowest_number <- lowest_number + increase
+    }
+  }
+  return(lowest_number)
+}
 ```
 
+
+```{r}
+scan_the_conditions_by_sieving("3,x,x,4,5") == 21
+
+```
+
+```{r}
+testing_vec <- "1789,37,47,1889"
+
+check_answer <- function(values) {
+  true_answer <- 1202161486
+  all(values == true_answer)
+}
+out_benchmark <-
+  microbenchmark::microbenchmark(
+  scan_the_conditions(testing_vec),
+  scan_the_conditions2(testing_vec),
+  scan_the_conditions_by_sieving(testing_vec),
+  check = check_answer, times = 10
+)
+
+out_benchmark %>%
+  autoplot()
+```
+
+```{r}
+scan_the_conditions_by_sieving(input_vec)
+```
+
+WOW, so much faster.
