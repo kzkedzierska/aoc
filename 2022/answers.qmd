@@ -4,8 +4,11 @@ author: "Kasia Kedzierska"
 date: last-modified
 format: 
   html:
+    self-contained: true
     toc: true
     toc-location: left
+project:
+  execute-dir: project
 ---
 
 
