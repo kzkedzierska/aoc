@@ -1,0 +1,4 @@
+- source: answers.qmd
+  quarto-pub:
+    - id: 4804fb8b-3736-4484-a345-78c471946ff4
+      url: 'https://quartopub.com/sites/kzkedzierska/advent-of-code-2022'
