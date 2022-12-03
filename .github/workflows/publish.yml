@@ -5,12 +5,13 @@ on:
 
 name: Quarto Publish
 
+defaults:
+  run:
+    working-directory: 2022
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: 2022
         
     steps:
       - name: Check out repository
