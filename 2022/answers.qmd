@@ -371,7 +371,7 @@ Find the item type that corresponds to the badges of each three-Elf group. **Wha
 ```{python}
 #| label: solution_3_b
 def rucksuck_badges(input_file):
-  common_carryon = set()
+  cc = set()
   elves = 0
   prior_sum = 0
   with open(input_file, "r+") as f:
@@ -380,7 +380,7 @@ def rucksuck_badges(input_file):
       
       elves += 1
       
-      common_carryon = carryon if elves % 3 == 1 else common_carryon.intersection(carryon)
+      cc = carryon if elves % 3 == 1 else cc.intersection(carryon)
       
       if (elves % 3 == 0):
         
