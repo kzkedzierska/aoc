@@ -34,7 +34,7 @@ This notebook contains the solutions to the [Advent of Code 2022 problems](https
 library(tidyverse)
 library(gt)
 # https://stackoverflow.com/a/65835640
-hp_table <- function(x){
+hp_table <- function(x) {
   gt(x) %>% 
     #tab_options(column_labels.hidden = TRUE) %>% 
   fmt_markdown(columns = everything()) %>%
