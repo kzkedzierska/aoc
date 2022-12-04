@@ -2,8 +2,10 @@
 
 ## 2022
 
+
 For `AOC 2022` I decided to solve the problems by writing up my solutions in Quarto Publication (so far using `Python`). You can look up the answers in the online version of the notebook [here](https://kzkedzierska.quarto.pub/advent-of-code-2022/). 
 
+[![Quarto Publish](https://github.com/kzkedzierska/aoc/actions/workflows/publish.yml/badge.svg)](https://github.com/kzkedzierska/aoc/actions/workflows/publish.yml)
 
 ## 2020
 In 2020, I solved `AOC 2020` challenges using `R` with solutions organised and split into subdirectories, you can check them out [here](/2020).
