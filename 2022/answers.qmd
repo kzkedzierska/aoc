@@ -4,12 +4,65 @@ author: "Kasia Kedzierska"
 date: last-modified
 format: 
   html:
+    theme: 
+      light: sandstone
+      dark: solar
     self-contained: true
     toc: true
     toc-location: left
+    code-block-border-left: true
+    code-block-bg: true
+    highlight-style: github
+    sidebar:
+      style: docked
 project:
   execute-dir: project
 ---
+
+## Intro
+
+This notebook contains the solutions to the [Advent of Code 2022 problems](https://adventofcode.com/). The repository with source code for this notebook (and solutions for AoC 2020) can be found [here](https://github.com/kzkedzierska/aoc).
+
+### Summary
+
+```{r}
+#| label: stars-summary
+#| echo: false
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(gt)
+# https://stackoverflow.com/a/65835640
+hp_table <- function(x){
+  gt(x) %>% 
+    #tab_options(column_labels.hidden = TRUE) %>% 
+  fmt_markdown(columns = everything()) %>%
+  opt_table_lines() %>%
+  cols_width(Day ~ px(40),
+             everything() ~ px(60)) %>%
+  cols_align(align = "center",
+             everything()) %>%
+  cols_align(align = "right",
+             Day) %>%
+  as_raw_html() # return as html
+}
+
+tibble(Day = c("[1](#day-1-calorie-counting)",
+               "[2](#day-2-rock-paper-scissors)",
+               "[3](#day-3-rucksack-reorganization)",
+               4:25),
+       Week = rep(1:4, times = c(7, 7, 7, 4))) %>%
+  mutate(`Part 1` = c(rep(html("&#11088;"), 3), rep("", 22)),
+         `Part 2` = c(rep(html("&#11088;"), 3), rep("", 22))) %>%
+  group_by(Week) %>%
+  group_map(~ hp_table(.x)) %>% 
+  data.frame(.) %>% 
+  setNames(., paste("Week", 1:4)) %>% 
+  gt() %>%
+  fmt_markdown(columns = everything()) #render cell contents as html
+  
+```
 
 
 ## Day 1: Calorie Counting
@@ -47,6 +100,8 @@ This list represents the Calories of the food carried by five Elves:
 Find the Elf carrying the most Calories. **How many total Calories is that Elf carrying?**
 
 ```{python}
+#| results: markup
+#| label: solution_1_a
 def max_calories_snacks(input_file):
   snacks = []
   i = 0
@@ -67,11 +122,12 @@ def max_calories_snacks(input_file):
   return(max_calories)
 
 # passing test?
-max_calories_snacks("day_01/test_case.txt") == 24000
+max_calories_snacks("inputs/01_test_case.txt") == 24000
 ```
 
 ```{python}
-max_calories_snacks("day_01/input.txt")
+#| label: answer_1_a
+max_calories_snacks("inputs/01_input.txt")
 ```
 
 **Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
@@ -87,6 +143,7 @@ In the example above, the top three Elves are the fourth Elf (with `24000` Calor
 Find the top three Elves carrying the most Calories. How many Calories are those Elves carrying in total?
 
 ```{python}
+#| label: solution_1_b
 def nmax_calories_snacks(input_file, n):
   snacks = []
   i = 0
@@ -107,11 +164,12 @@ def nmax_calories_snacks(input_file, n):
   return(sum(sum_snacks[:n]))
 
 # passing test?
-nmax_calories_snacks("day_01/test_case.txt", 2) == 35000
+nmax_calories_snacks("inputs/01_test_case.txt", 2) == 35000
 ```
 
 ```{python}
-nmax_calories_snacks("day_01/input.txt", 3)
+#| label: answer_1_b
+nmax_calories_snacks("inputs/01_input.txt", 3)
 ```
 
 **Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
@@ -149,6 +207,7 @@ In this example, if you were to follow the strategy guide, you would get a total
 **What would your total score be if everything goes exactly according to your strategy guide?**
 
 ```{python}
+#| label: solution_2_a
 def rps(input_file):
   outcomes = {"A": {"X": 3+1, "Y": 6+2, "Z": 0+3}, 
               "B": {"X": 0+1, "Y": 3+2, "Z": 6+3}, 
@@ -160,25 +219,191 @@ def rps(input_file):
       scores.append(outcomes[game[0]][game[1]])
   return(sum(scores))
       
-rps("day_02/test_case.txt") == 15
+rps("inputs/02_test_case.txt") == 15
 ```
 
 ```{python}
-rps("day_02/input.txt")
+#| label: answer_2_a
+rps("inputs/02_input.txt")
 ```
+
 **Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
 
-### Part two 
+### Part two ⭐
 
 The Elf finishes helping with the tent and sneaks back over to you. "Anyway, the second column says how the round needs to end: `X` means you need to lose, `Y` means you need to end the round in a draw, and `Z` means you need to win. Good luck!"
 
 The total score is still calculated in the same way, but now you need to figure out what shape to choose so the round ends as indicated. The example above now goes like this:
 
-In the first round, your opponent will choose Rock (A), and you need the round to end in a draw (Y), so you also choose Rock. This gives you a score of 1 + 3 = 4.
-In the second round, your opponent will choose Paper (B), and you choose Rock so you lose (X) with a score of 1 + 0 = 1.
-In the third round, you will defeat your opponent's Scissors with Rock for a score of 1 + 6 = 7.
-Now that you're correctly decrypting the ultra top secret strategy guide, you would get a total score of 12.
+-   In the first round, your opponent will choose Rock (`A`), and you need the round to end in a draw (`Y`), so you also choose Rock. This gives you a score of 1 + 3 = **4**.\
+-   In the second round, your opponent will choose Paper (`B`), and you choose Rock so you lose (`X`) with a score of 1 + 0 = **1**.\
+-   In the third round, you will defeat your opponent's Scissors with Rock for a score of 1 + 6 = **7**.
 
-Following the Elf's instructions for the second column, what would your total score be if everything goes exactly according to your strategy guide?
+Now that you're correctly decrypting the ultra top secret strategy guide, you would get a total score of **12**.
 
-TESTING GITHUB ACTIONS2
+Following the Elf's instructions for the second column, **what would your total score be if everything goes exactly according to your strategy guide?**
+
+```{python}
+#| label: solution_2_b
+def rps_modified(input_file):
+  outcomes = {"A": {"X": 0+3, # lose (0) => scissors (3)
+                    "Y": 3+1, # draw (3) => rock (1)
+                    "Z": 6+2}, # win (6) => paper (2)
+              "B": {"X": 0+1, # lose => rock (1)
+                    "Y": 3+2, # draw => paper (2)
+                    "Z": 6+3}, # win => scissors (3)
+              "C": {"X": 0+2, # lose => paper (2)
+                    "Y": 3+3, # draw  => scissors (3)
+                    "Z": 6+1}} # win => rock (1)
+  scores = []
+  with open(input_file, "r+") as f:
+    for line in f.readlines():
+      game = line.rstrip().split(" ")
+      scores.append(outcomes[game[0]][game[1]])
+  return(sum(scores))
+
+# does it pass test case?  
+rps_modified("inputs/02_test_case.txt") == 12
+```
+
+```{python}
+#| label: answer_2_b
+rps_modified("inputs/02_input.txt")
+```
+
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+## Day 3: Rucksack Reorganization
+
+### Part one ⭐
+
+One Elf has the important job of loading all of the rucksacks with supplies for the jungle journey. Unfortunately, that Elf didn't quite follow the packing instructions, and so a few items now need to be rearranged.
+
+Each rucksack has two large **compartments**. All items of a given type are meant to go into exactly one of the two compartments. The Elf that did the packing failed to follow this rule for exactly one item type per rucksack.
+
+The Elves have made a list of all of the items currently in each rucksack (your puzzle input), but they need your help finding the errors. Every item type is identified by a single lowercase or uppercase letter (that is, a and A refer to different types of items).
+
+The list of items for each rucksack is given as characters all on a single line. A given rucksack always has the same number of items in each of its two compartments, so the first half of the characters represent items in the first compartment, while the second half of the characters represent items in the second compartment.
+
+For example, suppose you have the following list of contents from six rucksacks:
+
+    vJrwpWtwJgWrhcsFMMfFFhFp
+    jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+    PmmdzqPrVvPwwTWBwg
+    wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+    ttgJtRGJQctTZtZT
+    CrZsJsPPZsGzwwsLwLmpwMDw
+
+-   The first rucksack contains the items `vJrwpWtwJgWrhcsFMMfFFhFp`, which means its first compartment contains the items `vJrwpWtwJgWr`, while the second compartment contains the items `hcsFMMfFFhFp`. The only item type that appears in both compartments is lowercase `p`.\
+-   The second rucksack's compartments contain `jqHRNqRjqzjGDLGL` and `rsFMfFZSrLrFZsSL`. The only item type that appears in both compartments is uppercase `L`.\
+-   The third rucksack's compartments contain `PmmdzqPrV` and `vPwwTWBwg`; the only common item type is uppercase `P`.\
+-   The fourth rucksack's compartments only share item type `v`.\
+-   The fifth rucksack's compartments only share item type `t`.\
+-   The sixth rucksack's compartments only share item type `s`.
+
+To help prioritize item rearrangement, every item type can be converted to a **priority**:
+
+-   Lowercase item types `a` through `z` have priorities 1 through 26.\
+-   Uppercase item types `A` through `Z` have priorities 27 through 52.
+
+In the above example, the priority of the item type that appears in both compartments of each rucksack is 16 (`p`), 38 (`L`), 42 (`P`), 22 (`v`), 20 (`t`), and 19 (`s`); the sum of these is **157**.
+
+Find the item type that appears in both compartments of each rucksack. **What is the sum of the priorities of those item types?**
+
+```{python}
+#| label: solution_3_a
+def rucksuck(input_file):
+  prior_sum = 0
+  with open(input_file, "r+") as f:
+    for line in f.readlines():
+      inside = [el for el in line.rstrip()]
+      # get unique items of each compartment
+      comp1 = set(inside[:len(inside)//2])
+      comp2 = set(inside[len(inside)//2:])
+      # get the element that is common
+      el = list(comp1.intersection(comp2))[0]
+      if el == el.upper():
+        p = ord(el) - 65 + 27
+      else:
+        p = ord(el) - 97 + 1
+      # add the priority to the sum
+      prior_sum += p
+  return(prior_sum)
+
+rucksuck("inputs/03_test_case.txt") == 157
+```
+
+```{python}
+#| label: answer_3_a
+rucksuck("inputs/03_input.txt")
+```
+
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+### Part two ⭐
+
+As you finish identifying the misplaced items, the Elves come to you with another issue.
+
+For safety, the Elves are divided into groups of three. Every Elf carries a badge that identifies their group. For efficiency, within each group of three Elves, the badge is the **only item type carried by all three Elves**. That is, if a group's badge is item type `B`, then all three Elves will have item type `B` somewhere in their rucksack, and at most two of the Elves will be carrying any other item type.
+
+The problem is that someone forgot to put this year's updated authenticity sticker on the badges. All of the badges need to be pulled out of the rucksacks so the new authenticity stickers can be attached.
+
+Additionally, nobody wrote down which item type corresponds to each group's badges. The only way to tell which item type is the right one is by finding the one item type that is **common between all three Elves** in each group.
+
+Every set of three lines in your list corresponds to a single group, but each group can have a different badge item type. So, in the above example, the first group's rucksacks are the first three lines:
+
+    vJrwpWtwJgWrhcsFMMfFFhFp
+    jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+    PmmdzqPrVvPwwTWBwg
+
+And the second group's rucksacks are the next three lines:
+
+    wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+    ttgJtRGJQctTZtZT
+    CrZsJsPPZsGzwwsLwLmpwMDw
+
+In the first group, the only item type that appears in all three rucksacks is lowercase `r`; this must be their badges. In the second group, their badge item type must be `Z`.
+
+Priorities for these items must still be found to organize the sticker attachment efforts: here, they are 18 (`r`) for the first group and 52 (`Z`) for the second group. The sum of these is **70**.
+
+Find the item type that corresponds to the badges of each three-Elf group. **What is the sum of the priorities of those item types?**
+
+```{python}
+#| label: solution_3_b
+def rucksuck_badges(input_file):
+  common_carryon = set()
+  elves = 0
+  prior_sum = 0
+  with open(input_file, "r+") as f:
+    for line in f.readlines():
+      carryon = set([el for el in line.rstrip()])
+      
+      elves += 1
+      
+      common_carryon = carryon if elves % 3 == 1 else common_carryon.intersection(carryon)
+      
+      if (elves % 3 == 0):
+        
+        badge = list(common_carryon)[0]
+        common_carryon = set() 
+        
+        if badge == badge.upper():
+          p = ord(badge) - 65 + 27
+          
+        else:
+          p = ord(badge) - 97 + 1
+        
+        # add the priority to the sum
+        prior_sum += p
+        
+  return(prior_sum)
+
+rucksuck_badges("inputs/03_test_case.txt") 
+```
+
+```{python}
+#| label: answer_3_b
+rucksuck_badges("inputs/03_input.txt") 
+```
+
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
