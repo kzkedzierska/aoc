@@ -39,6 +39,9 @@ jobs:
         with:
           r-version: '4.2.1'
           
+      - name: Install curl dependency
+        run: sudo apt update && sudo apt install -y libcurl4-openssl-dev
+          
       - name: Cache packages
         uses: actions/cache@v1
         with:
