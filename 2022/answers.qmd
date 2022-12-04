@@ -51,10 +51,11 @@ hp_table <- function(x) {
 tibble(Day = c("[1](#day-1-calorie-counting)",
                "[2](#day-2-rock-paper-scissors)",
                "[3](#day-3-rucksack-reorganization)",
-               4:25),
+               "[4](#day-4-camp-cleanup)",
+               5:25),
        Week = rep(1:4, times = c(7, 7, 7, 4))) %>%
-  mutate(`Part 1` = c(rep(html("&#11088;"), 3), rep("", 22)),
-         `Part 2` = c(rep(html("&#11088;"), 3), rep("", 22))) %>%
+  mutate(`Part 1` = c(rep(html("&#11088;"), 4), rep("", 21)),
+         `Part 2` = c(rep(html("&#11088;"), 4), rep("", 21))) %>%
   group_by(Week) %>%
   group_map(~ hp_table(.x)) %>% 
   data.frame(.) %>% 
@@ -384,8 +385,8 @@ def rucksuck_badges(input_file):
       
       if (elves % 3 == 0):
         
-        badge = list(common_carryon)[0]
-        common_carryon = set() 
+        badge = list(cc)[0]
+        cc = set() 
         
         if badge == badge.upper():
           p = ord(badge) - 65 + 27
@@ -398,7 +399,8 @@ def rucksuck_badges(input_file):
         
   return(prior_sum)
 
-rucksuck_badges("inputs/03_test_case.txt") 
+# does it pass test?
+rucksuck_badges("inputs/03_test_case.txt") == 70
 ```
 
 ```{python}
@@ -410,6 +412,155 @@ rucksuck_badges("inputs/03_input.txt")
 
 ## Day 4: Camp Cleanup
 
-### Part one
+### Part one ⭐ 
 
 Space needs to be cleared before the last supplies can be unloaded from the ships, and so several Elves have been assigned the job of cleaning up sections of the camp. Every section has a unique **ID number**, and each Elf is assigned a range of section IDs.
+
+However, as some of the Elves compare their section assignments with each other, they've noticed that many of the assignments **overlap**. To try to quickly find overlaps and reduce duplicated effort, the Elves pair up and make a **big list of the section assignments for each pair** (your puzzle input).
+
+For example, consider the following list of section assignment pairs:
+
+```
+2-4,6-8
+2-3,4-5
+5-7,7-9
+2-8,3-7
+6-6,4-6
+2-6,4-8
+```
+
+For the first few pairs, this list means:
+
+* Within the first pair of Elves, the first Elf was assigned sections `2-4` (sections `2`, `3`, and `4`), while the second Elf was assigned sections `6-8` (sections `6`, `7`, `8`).  
+* The Elves in the second pair were each assigned two sections.  
+* The Elves in the third pair were each assigned three sections: one got sections `5`, `6`, and `7`, while the other also got `7`, plus `8` and `9`.
+
+This example list uses single-digit section IDs to make it easier to draw; your actual list might contain larger numbers. Visually, these pairs of section assignments look like this:
+
+```
+.234.....  2-4
+.....678.  6-8
+
+.23......  2-3
+...45....  4-5
+
+....567..  5-7
+......789  7-9
+
+.2345678.  2-8
+..34567..  3-7
+
+.....6...  6-6
+...456...  4-6
+
+.23456...  2-6
+...45678.  4-8
+```
+
+Some of the pairs have noticed that one of their assignments **fully contains the other**. For example, `2-8` fully contains `3-7`, and `6-6` is fully contained by `4-6`. In pairs where one assignment fully contains the other, one Elf in the pair would be exclusively cleaning sections their partner will already be cleaning, so these seem like the most in need of reconsideration. In this example, there are 2 such pairs.
+
+**In how many assignment pairs does one range fully contain the other?**
+
+```{python}
+# Define wrapper for checking test case
+def test_case(cmd, result):
+  assert cmd == result, f"Should be {result}, is {cmd}"
+
+def compare_ranges(range1, range2):
+  r1 = [int(el) for el in range1.split("-")]
+  r2 = [int(el) for el in range2.split("-")]
+  
+  if ((r1[0] >= r2[0]) & (r1[1] <= r2[1])):
+    return(True)
+  
+  elif ((r2[0] >= r1[0]) & (r2[1] <= r1[1])):
+    return(True)
+  
+  else:
+    return(False)
+
+test_case(compare_ranges("1-3", "2-5"), False)
+test_case(compare_ranges("1-6", "2-5"), True)
+  
+def camp_cleanup(input_file):
+  with open(input_file, "r+") as f:
+    ranges = [line.split(",") for line in f.readlines()]
+    
+    fully_contain = [compare_ranges(r[0], r[1]) for r in ranges]
+    
+    return(sum(fully_contain))
+  
+test_case(camp_cleanup("inputs/04_test_case.txt"), 2)
+```
+
+
+```{python}
+camp_cleanup("inputs/04_input.txt")
+```
+
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+
+### Part Two ⭐ 
+
+It seems like there is still quite a bit of duplicate work planned. Instead, the Elves would like to know the number of pairs that **overlap at all**.
+
+In the above example, the first two pairs (`2-4`,`6-8` and `2-3`,`4-5`) don't overlap, while the remaining four pairs (`5-7`,`7-9`, `2-8`,`3-7`, `6-6`,`4-6`, and `2-6`,`4-8`) do overlap:
+
+* `5-7`,`7-9` overlaps in a single section, `7`.
+* `2-8`,`3-7` overlaps all of the sections `3` through `7`.
+* `6-6`,`4-6` overlaps in a single section, `6`.
+* `2-6`,`4-8` overlaps in sections `4`, `5`, and `6`.
+
+So, in this example, the number of overlapping assignment pairs is **4**.
+
+**In how many assignment pairs do the ranges overlap?**
+
+```{python}
+# this solution also covers part 1
+def compare_ranges_p2(range1, range2, fully=True):
+  r1 = [int(el) for el in range1.split("-")]
+  r1 = set(range(r1[0], r1[1] + 1))
+  
+  r2 = [int(el) for el in range2.split("-")]
+  r2 = set(range(r2[0], r2[1] + 1))
+  
+  # get the intersection
+  inter = r1.intersection(r2)
+  
+  # if interested in fully only, check if intersection 
+  # is the size of smaller set
+  if ((fully) & (len(inter) == min(len(r1), len(r2)))):
+    return(True)
+  
+  # if any overlap, check if intersection non empty
+  if ((not fully) & (len(inter) > 0)):
+    return(True)
+  
+  # all other case mean no overlap
+  return(False)
+
+# check if part 1 would be good
+test_case(compare_ranges_p2("1-3", "2-5"), False)
+# check the test cases for not fully overlapping
+test_case(compare_ranges_p2("1-3", "2-5", fully=False), True)
+test_case(compare_ranges_p2("1-3", "4-5", fully=False), False)
+
+
+def camp_cleanup_p2(input_file, fully=True):
+  with open(input_file, "r+") as f:
+    ranges = [line.split(",") for line in f.readlines()]
+    
+    overlaps = [compare_ranges_p2(r[0], r[1], fully) for r in ranges]
+    
+    return(sum(overlaps))
+  
+test_case(camp_cleanup_p2("inputs/04_test_case.txt"), 2)
+test_case(camp_cleanup_p2("inputs/04_test_case.txt", fully=False), 4)
+```
+
+
+```{python}
+camp_cleanup_p2("inputs/04_input.txt", fully=False)
+```
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
