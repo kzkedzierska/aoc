@@ -168,7 +168,7 @@ def max_calories_snacks(input_file):
   
   sum_snacks = [sum(snacks_) for snacks_ in snacks]
   max_calories = max(sum_snacks)
-  return(max_calories)
+  return max_calories
 
 # passing test?
 max_calories_snacks("inputs/01_test_case.txt") == 24000
@@ -210,7 +210,7 @@ def nmax_calories_snacks(input_file, n):
   
   sum_snacks = [sum(snacks_) for snacks_ in snacks]
   sum_snacks.sort(reverse=True)
-  return(sum(sum_snacks[:n]))
+  return sum(sum_snacks[:n])
 
 # passing test?
 nmax_calories_snacks("inputs/01_test_case.txt", 2) == 35000
@@ -266,7 +266,7 @@ def rps(input_file):
     for line in f.readlines():
       game = line.rstrip().split(" ")
       scores.append(outcomes[game[0]][game[1]])
-  return(sum(scores))
+  return sum(scores)
       
 rps("inputs/02_test_case.txt") == 15
 ```
@@ -309,7 +309,7 @@ def rps_modified(input_file):
     for line in f.readlines():
       game = line.rstrip().split(" ")
       scores.append(outcomes[game[0]][game[1]])
-  return(sum(scores))
+  return sum(scores)
 
 # does it pass test case?  
 rps_modified("inputs/02_test_case.txt") == 12
@@ -377,7 +377,7 @@ def rucksuck(input_file):
         p = ord(el) - 97 + 1
       # add the priority to the sum
       prior_sum += p
-  return(prior_sum)
+  return prior_sum
 
 rucksuck("inputs/03_test_case.txt") == 157
 ```
@@ -445,7 +445,7 @@ def rucksuck_badges(input_file):
         # add the priority to the sum
         prior_sum += p
         
-  return(prior_sum)
+  return prior_sum
 
 # does it pass test?
 rucksuck_badges("inputs/03_test_case.txt") == 70
@@ -520,13 +520,13 @@ def compare_ranges(range1, range2):
   r2 = [int(el) for el in range2.split("-")]
   
   if ((r1[0] >= r2[0]) & (r1[1] <= r2[1])):
-    return(True)
+    return True
   
   elif ((r2[0] >= r1[0]) & (r2[1] <= r1[1])):
-    return(True)
+    return True
   
   else:
-    return(False)
+    return False
 
 test_case(compare_ranges("1-3", "2-5"), False)
 test_case(compare_ranges("1-6", "2-5"), True)
@@ -537,7 +537,7 @@ def camp_cleanup(input_file):
     
     fully_contain = [compare_ranges(r[0], r[1]) for r in ranges]
     
-    return(sum(fully_contain))
+    return sum(fully_contain)
   
 test_case(camp_cleanup("inputs/04_test_case.txt"), 2)
 ```
@@ -582,14 +582,14 @@ def compare_ranges_p2(range1, range2, fully=True):
   # if interested in fully only, check if intersection 
   # is the size of smaller set
   if ((fully) & (len(inter) == min(len(r1), len(r2)))):
-    return(True)
+    return True
   
   # if any overlap, check if intersection non empty
   if ((not fully) & (len(inter) > 0)):
-    return(True)
+    return True
   
   # all other case mean no overlap
-  return(False)
+  return False
 
 # check if part 1 would be good
 test_case(compare_ranges_p2("1-3", "2-5"), False)
@@ -604,7 +604,7 @@ def camp_cleanup_p2(input_file, fully=True):
     
     overlaps = [compare_ranges_p2(r[0], r[1], fully) for r in ranges]
     
-    return(sum(overlaps))
+    return sum(overlaps)
   
 test_case(camp_cleanup_p2("inputs/04_test_case.txt"), 2)
 test_case(camp_cleanup_p2("inputs/04_test_case.txt", fully=False), 4)
