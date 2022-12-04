@@ -40,7 +40,7 @@ bash ./misc/generate_input_for_summary_table.sh
 #| message: false
 #| warning: false
 require(reticulate)
-library(tidyverse)
+library(dplyr)
 library(gt)
 # https://stackoverflow.com/a/65835640
 hp_table <- function(x) {
@@ -58,52 +58,52 @@ hp_table <- function(x) {
 }
 
 empty_days_df <-
-  tibble(day = 1:25)
+  tibble::tibble(day = 1:25)
 
 # read in the stars generated from the headers in this file
 stars_df <-
-  read_tsv("misc/stars", col_names = "stars", 
-           show_col_types = FALSE) %>%
+  readr::read_tsv("misc/stars", col_names = "stars",
+                  show_col_types = FALSE) %>%
   
-  mutate(
+  dplyr::mutate(
     # assumin part two follows part one, all in order, no skipping
-    part = case_when(
-      row_number() %% 2 == 0 ~ "Part 2",
+    part = dplyr::case_when(
+      dplyr::row_number() %% 2 == 0 ~ "Part 2",
       TRUE ~ "Part 1"), 
     # get the day, assuming all headers are in order,
-    day = (row_number()+1) %/% 2
-    ) %>%
-  pivot_wider(names_from = "part", 
-              values_from = "stars")
+    day = (dplyr::row_number()+1) %/% 2
+  ) %>%
+  tidyr::pivot_wider(names_from = "part", 
+                     values_from = "stars")
 
 # read in the solved days, generated from headers of this file
-read_tsv(col_names = "header", file = "misc/solved_days", 
-         show_col_types = FALSE) %>%
+readr::read_tsv(col_names = "header", file = "misc/solved_days", 
+                show_col_types = FALSE) %>%
   # create the hyperlink to the contents
-  mutate(day = str_extract(header, "[0-9]+"), 
-         day = as.numeric(day),
-         Day = glue::glue("[{day}]({header})")) %>%
+  dplyr::mutate(day = stringr::str_extract(header, "[0-9]+"), 
+                day = as.numeric(day),
+                Day = glue::glue("[{day}]({header})")) %>%
   # add the stars
-  full_join(stars_df) %>%
+  dplyr::full_join(stars_df) %>%
   # fill with days not solved
-  full_join(empty_days_df) %>%
+  dplyr::full_join(empty_days_df) %>%
   # replace NA with empty texts so the table looks nice
-  replace_na(list(`Part 1` = "",
-                  `Part 2` = "")) %>%
+  tidyr::replace_na(list(`Part 1` = "",
+                         `Part 2` = "")) %>%
   # get the empty days number
-  mutate(Day = case_when(
+  dplyr::mutate(Day = dplyr::case_when(
     is.na(Day) ~ glue::glue("{day}"),
     TRUE ~ Day
   )) %>%
   # calculate week
-  mutate(Week = case_when(
+  dplyr::mutate(Week = dplyr::case_when(
     day %% 7 != 0 ~ day %/% 7 + 1,
     TRUE ~ day %/% 7)) %>%
   # select only necessary columns
-  select(Week, Day, `Part 1`, `Part 2`) %>%
+  dplyr::select(Week, Day, `Part 1`, `Part 2`) %>%
   # use the custom function to create a table per each week
-  group_by(Week) %>%
-  group_map(~ hp_table(.x)) %>% 
+  dplyr::group_by(Week) %>%
+  dplyr::group_map(~ hp_table(.x)) %>% 
   data.frame(.) %>% 
   setNames(., paste("Week", 1:4)) %>% 
   # pass to gt
