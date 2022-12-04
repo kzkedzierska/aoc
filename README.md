@@ -1,4 +1,10 @@
-# Advent of Code
+# My Advent of Code (AOC) solutions
+
+I solved `AOC 2020` challenges using `R` with solutions organised and split into subdirectories, you can check them out [here](/2020).
+
+For `AOC 2022` I decided to solve the problems by writing up my solutions in Quarto Publication (so far using `Python`). You can look up the answers in the online version of the notebook [here](https://kzkedzierska.quarto.pub/advent-of-code-2022/).
+
+## About AOC
 
 From the [subreddit Wiki](https://www.reddit.com/r/adventofcode/wiki/index): Advent of Code is a series of small programming puzzles for a variety of skill levels. They are self-contained and are just as appropriate for an expert who wants to stay sharp as they are for a beginner who is just learning to code. Each puzzle calls upon different skills and has two parts that build on a theme.
 
