@@ -30,7 +30,7 @@ This notebook contains the solutions to the [Advent of Code 2022 problems](https
 #| echo: false
 #| message: false
 #| warning: false
-
+require(reticulate)
 library(tidyverse)
 library(gt)
 # https://stackoverflow.com/a/65835640
