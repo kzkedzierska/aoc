@@ -568,7 +568,7 @@ So, in this example, the number of overlapping assignment pairs is **4**.
 
 ```{python}
 #| label: solution_4_b
-# this solution also covers part 1
+# this solution also works for part 1
 def compare_ranges_p2(range1, range2, fully=True):
   r1 = [int(el) for el in range1.split("-")]
   r1 = set(range(r1[0], r1[1] + 1))
@@ -605,8 +605,10 @@ def camp_cleanup_p2(input_file, fully=True):
     overlaps = [compare_ranges_p2(r[0], r[1], fully) for r in ranges]
     
     return sum(overlaps)
-  
+
+# check if part 1 would be good  
 test_case(camp_cleanup_p2("inputs/04_test_case.txt"), 2)
+# check test case
 test_case(camp_cleanup_p2("inputs/04_test_case.txt", fully=False), 4)
 ```
 
@@ -616,3 +618,341 @@ test_case(camp_cleanup_p2("inputs/04_test_case.txt", fully=False), 4)
 camp_cleanup_p2("inputs/04_input.txt", fully=False)
 ```
 **Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+### Visualisation
+
+First, I will read in the data and process it.
+
+```{r}
+#| label: solution_r_4_p1
+#| code-fold: true
+
+camp_cleanup_input_df <-
+  # read in input
+  readr::read_csv("inputs/04_input.txt", 
+                col_names = c("elf1", "elf2"), 
+                col_types = "c") %>%
+  # number pairs
+  dplyr::mutate(pair = as.character(1:n())) %>%
+  # make longer to look like this:
+  # pair  elf     range
+  # 1     "elf1"  "1-3"
+  # 1     "elf2"  "3-5"
+  tidyr::pivot_longer(names_to = "elf", values_to = "range", 
+                      dplyr::starts_with("elf")) %>%
+  # extract start & end range to look like this:
+  # pair  elf     range   range_start   range_end
+  # 1     "elf1"  "1-3"   1             3
+  # 1     "elf2"  "3-5"   3             5
+  tidyr::separate(range, into = c("range_start", "range_end"), 
+                  sep = "-", convert = TRUE, remove = FALSE) %>%
+  # list all assignments within range:
+  # pair  elf     range   range_start   range_end   range_pos
+  # 1     "elf1"  "1-3"   1             3           "1;2;3"
+  # 1     "elf2"  "3-5"   3             5           "3;4;5"
+  dplyr::rowwise() %>%
+  dplyr::mutate(range_pos = paste(seq(range_start, range_end), 
+                                  collapse = ";")) %>%
+  # replace elf range with both ranges:
+  # pair  elf     range       range_start   range_end   range_pos
+  # 1     "elf1"  "1-3,3-5"   1             3           "1;2;3"
+  # 1     "elf2"  "1-3,3-5"   3             5           "3;4;5"  
+  dplyr::group_by(pair) %>%
+  dplyr::mutate(range = paste(unique(range), collapse = ",")) %>%
+  # separate rows:
+  # pair  elf     range       range_start   range_end   range_pos
+  # 1     "elf1"  "1-3,3-5"   1             3           1
+  # 1     "elf1"  "1-3,3-5"   1             3           2
+  # 1     "elf1"  "1-3,3-5"   1             3           3
+  # 1     "elf2"  "1-3,3-5"   3             5           3
+  # 1     "elf2"  "1-3,3-5"   3             5           4
+  # 1     "elf2"  "1-3,3-5"   3             5           5
+  tidyr::separate_rows(range_pos, sep = ";", convert = TRUE) %>%
+  # make a note if both elves assigned same room:
+  # pair  range       range_pos   elf  
+  # 1     "1-3,3-5"   1           "elf1"  
+  # 1     "1-3,3-5"   2           "elf1"   
+  # 1     "1-3,3-5"   3           "both"   
+  # 1     "1-3,3-5"   4           "elf2"
+  # 1     "1-3,3-5"   5           "elf2" 
+  dplyr::group_by(pair, range, range_pos) %>%
+  dplyr::mutate(elf = case_when(
+    dplyr::n() == 1 ~ elf,
+    TRUE ~ "both"
+  ), .groups = "drop") %>% 
+  unique() %>%
+  # label the pair as one of 3 cases
+  # pair  range       range_pos   elf     overlap
+  # 1     "1-3,3-5"   1           "elf1"  "Case 2: there is some overlap"
+  # 2     "1-2,4-7"   4           "elf2"  "Case 3: no overlap"
+  # 3     "4-5,2-6"   5           "both"  "Case 1: one fully contains the other"
+  dplyr::group_by(pair) %>%
+  dplyr::mutate(
+    overlap = case_when(
+      # when one contains the other, there is only "both" and one 
+      # of the elves 
+      length(unique(elf)) < 3 & 
+        "both" %in% unique(elf) ~ "Case 1: one fully contains the other",
+      # when there is just some overlap - that's the second case
+      any(elf == "both") ~ "Case 2: there is some overlap",
+      # all other cases - no overlap
+      TRUE ~ "Case 3: no overlap"),
+    # make into factor for nice plotting
+    overlap = factor(overlap, 
+                     levels = c("Case 1: one fully contains the other",
+                                "Case 2: there is some overlap",
+                                "Case 3: no overlap"))) %>% 
+  dplyr::ungroup()
+```
+
+```{r}
+#| label: helper_vars_r_4
+#| code-fold: true
+camp_cleanup_counted_df <-
+  camp_cleanup_input_df %>%
+  dplyr::select(pair, overlap) %>%
+  unique() %>%
+  dplyr::count(overlap)
+
+n_pairs_with_full_overlap <-
+  camp_cleanup_counted_df %>% 
+  dplyr::filter(overlap == "Case 1: one fully contains the other") %>% 
+  dplyr::pull(n)
+
+n_pairs_with_overlap <- 
+  camp_cleanup_counted_df %>% 
+  dplyr::filter(overlap != "Case 3: no overlap") %>% 
+  dplyr::pull(n) %>% 
+  sum()
+
+n_pairs_without_overlap <-
+  camp_cleanup_counted_df %>% 
+  dplyr::filter(overlap == "Case 3: no overlap") %>% 
+  dplyr::pull(n) %>% 
+  sum()
+```
+
+
+After processing the data, I can check the answers:
+
+```{r}
+#| label: answer_r_4
+#| code-fold: false
+camp_cleanup_counted_df
+```
+
+For part 1, the answer is `r n_pairs_with_full_overlap` and for part 2: `r n_pairs_with_overlap` (sum of *Case 1* and *Case 2*).
+
+
+```{r}
+#| label: setup_ggplot_4
+#| code-fold: true
+#| warning: false
+#| message: false
+library(ggplot2)
+sysfonts::font_add_google("Permanent Marker")
+showtext::showtext_auto()
+theme_set(theme_minimal() +
+            theme(panel.grid.minor = element_blank(),
+                   panel.grid.major.y = element_line(linetype = "dotted", color = "black"),
+                   panel.grid.major.x = element_blank(),
+                   axis.ticks.x = element_line(), legend.position = "bottom", 
+                   text = element_text(family = "Permanent Marker", size = 16)))
+
+```
+
+
+Now, let's see how do those cases look like if visualised. We have 3 cases - where assignment of one fully contains the other, where there is some overlap and when the assignments do not overlap.
+
+```{r fig.width=4, fig.height=3.6}
+#| label: cases_vis_4
+#| code-fold: true
+#| column: body-outset
+#| out-width: 800px
+camp_cleanup_input_df %>%
+  dplyr::group_by(overlap) %>%
+  dplyr::filter(pair %in% sample(unique(pair), 10)) %>%
+  ggplot(aes(range_pos, pair, fill = elf)) +
+  geom_tile(alpha = 0.6, color = "black") +
+  facet_wrap(overlap~., scales = "free_y", ncol = 1) +
+  scale_fill_manual(values = c("elf1" = "#EC9A29", 
+                               "elf2" = "#94D1BE", 
+                               "both" = "#3A4E48")) +
+  theme(axis.ticks = element_blank(), 
+        axis.text = element_blank(),
+        legend.position = "bottom", 
+        panel.grid.major.y = element_blank(), 
+        axis.ticks.x = element_blank()) +
+  labs(x = "Section #", 
+       y = "Random selection of pairs of elves", 
+       title = "Visualisation of section assignments",
+       fill = "Assigned elf",
+       caption = "Day 4 AoC 2022")
+
+```
+What fraction of the assignments overlaps between the elves (as fraction of the bigger assignment)?
+
+```{r, fig.width=5, fig.height=3}
+#| label: fraction_overlap_vis_4
+#| code-fold: true
+#| column: body-outset
+#| out-width: 1100px
+fract_per_section_df <- 
+  camp_cleanup_input_df %>%
+  dplyr::group_by(pair, range) %>%
+  dplyr::mutate(max_range = max(range_pos) - min(range_pos) + 1) %>%
+  dplyr::group_by(pair, max_range, overlap) %>%
+  dplyr::summarise(count = sum(elf == "both"), .groups = "drop") %>%
+  dplyr::mutate(fract_overlap = count / max_range) 
+
+
+  
+fract_per_section_df %>%
+  ggplot(aes(fract_overlap)) +
+  geom_histogram(data = . %>% dplyr::filter(fract_overlap > 0),
+                 binwidth = 0.01, fill = "darkgreen", color = "black") +
+  geom_histogram(data = . %>% dplyr::filter(fract_overlap == 0),
+                 binwidth = 0.01, fill = "darkorange", color = "black") +
+  annotate("curve", 
+           x = 0.4, xend = 0.02, 
+           y = 110, yend = 120,
+           curvature = .3,
+           arrow = arrow(length = unit(2, "mm"))) +
+  annotate(geom = "label", 
+           x = 0.2, y = 110, 
+           label = glue::glue("There are {n_pairs_without_overlap} pairs without any overlap  "), 
+           hjust = "left", family = "Permanent Marker", size = 6) +
+  annotate(geom = "label", 
+           x = 0.4, y = 60, 
+           label = glue::glue("and {n_pairs_with_overlap} pair with varying fraction of overlap  "), 
+           hjust = "left", family = "Permanent Marker", size = 6) +
+  labs(title = "How much of assignments are overlapping?",
+       caption = "Day 4 AoC 2022",
+       x = "Fraction of overlap", 
+       y = "Frequency") +
+  scale_x_continuous(breaks = seq(0, 1, 0.2)) 
+```
+How many elves were assigned per each section?
+
+```{r fig.width=6, fig.height=3.5}
+#| label: elves_per_section_vis_4
+#| code-fold: true
+#| column: body-outset
+#| out-width: 1100px
+per_pos_counts_df <-
+  camp_cleanup_input_df %>%
+  dplyr::mutate(elf = stringr::str_remove(elf, "[1-2]")) %>%
+  dplyr::count(range_pos, elf) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(n = case_when(
+    elf == "both" ~ as.integer(2*n),
+    TRUE ~ n)) %>%
+  dplyr::group_by(range_pos) %>%
+  dplyr::mutate(sum_cleaned = sum(n)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(most_cleaned = sum_cleaned == max(sum_cleaned),
+                least_cleaned = sum_cleaned == min(sum_cleaned)) 
+
+min_pos <-
+  per_pos_counts_df %>% filter(least_cleaned) %>% pull(range_pos)
+
+max_pos <-
+  per_pos_counts_df %>% filter(most_cleaned) %>% pull(range_pos)
+
+min_n <-
+  per_pos_counts_df %>% filter(least_cleaned) %>% pull(sum_cleaned)
+
+max_n <-
+  per_pos_counts_df %>% filter(most_cleaned) %>% pull(sum_cleaned)
+
+per_pos_counts_df %>%
+  ggplot(aes(range_pos, n)) +
+  geom_bar(aes(fill = elf), stat = "identity", width = 1, color = NA) + 
+  geom_bar(data = . %>% dplyr::filter(most_cleaned | least_cleaned),
+           aes(group = elf), stat = "identity", width = 1, color = NA,
+           fill = "white", alpha = .5) + 
+  annotate("curve", 
+           x = max_pos + 5, xend = max_pos + 1, 
+           y = max_n - 370, yend = max_n - 30,
+           arrow = arrow(length = unit(2, "mm"))) +
+  annotate(geom = "label", 
+           x = max_pos - 25, y = max_n - 430, 
+           label = glue::glue("Section #{max_pos} was asigned to {max_n} elves  "), 
+           hjust = "left", family = "Permanent Marker", size = 6) +
+  annotate("curve", 
+           x = min_pos + 10, xend = min_pos + 0.9, 
+           y = min_n + 20, yend = min_n*0.9,
+           curvature = .3, arrow = arrow(length = unit(2, "mm"))) +
+  annotate(geom = "label", x = min_pos + 10 + 0.1, y = min_n + 20, 
+           label = glue::glue("Section #{min_pos} was asigned to {min_n} elves  "), 
+           hjust = "left", family = "Permanent Marker", size = 6) +
+  ggthemes::scale_fill_wsj(labels = c("doubled", "unique")) +
+  labs(title = "How many elves assigned per each section?",
+       caption = "Day 4 AoC 2022",
+       x = "Section #", y = "Number of elves",
+       fill = "Assignment") +
+  theme(legend.position = "top")
+```
+How many sections were assigned per elf? Size of assignments tends to be bigger in case of one assignment containing other one.
+
+```{r fig.width=7.2, fig.height=3}
+#| label: sections_per_elf_vis_4
+#| code-fold: true
+#| column: body-outset
+#| out-width: 900px
+sections_per_elf_df <-
+  camp_cleanup_input_df %>%
+  dplyr::mutate(elf = case_when(
+    elf == "both" ~ "elf1;elf2",
+    TRUE ~ elf
+  )) %>%
+  tidyr::separate_rows(elf, sep = ";") %>%
+  dplyr::count(pair, overlap, elf) 
+
+sections_per_elf_df %>%
+  dplyr::group_by(overlap) %>%
+  dplyr::mutate(median = round(median(n), 1),
+                mean = round(mean(n), 1),
+                temp_fill = stringr::str_extract(overlap, "Case [0-9]+")) %>%
+  ggplot(aes(n)) + 
+  geom_histogram(color = "black", aes(fill = temp_fill), bins = 50) +
+  geom_label(data = . %>% dplyr::select(overlap, median, mean) %>% unique(),
+             size = 6,
+             aes(x = 50, y = 90,
+                 label = glue::glue("median: {median}\nmean: {mean}")), 
+             family = "Permanent Marker") +
+  facet_wrap(~overlap) +
+  scale_fill_manual(values = c("Case 1" = "#4D6A6D",
+                               "Case 2" = "#798478", 
+                               "Case 3" = "#C9ADA1")) +
+  theme(legend.position = "none") +
+  labs(title = "# of sections assigned per elfves",
+       y = "Frequency",
+       x = "Size of the assignmnent",
+       caption = "Day 4 AoC 2022")
+```
+There are a lot of pairs with same length of assignments in the overlap cases.
+
+```{r fig.width=6, fig.height=3}
+#| label: sections_elf1_elf2_vis_4
+#| code-fold: true
+#| column: body-outset
+#| out-width: 1100px
+sections_per_elf_df %>%
+  dplyr::group_by(overlap) %>%
+  dplyr::mutate(median = round(median(n), 1),
+                mean = round(mean(n), 1),
+                temp_fill = stringr::str_extract(overlap, "Case [0-9]+")) %>%
+  tidyr::pivot_wider(names_from = "elf", values_from = "n") %>%
+  ggplot(aes(elf1, elf2)) + 
+  geom_jitter(aes(color = temp_fill)) +
+  facet_wrap(~overlap) +
+  scale_color_manual(values = c("Case 1" = "#4D6A6D",
+                                "Case 2" = "#798478", 
+                                "Case 3" = "#C9ADA1")) +
+  theme(legend.position = "none") +
+  labs(caption = "Day 4 AoC 2022", 
+       title = "Relationship between size of assignements")
+```
+
+
