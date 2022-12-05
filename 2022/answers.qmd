@@ -551,7 +551,7 @@ camp_cleanup("inputs/04_input.txt")
 **Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
 
 
-### Part Two ⭐ 
+### Part two ⭐ 
 
 It seems like there is still quite a bit of duplicate work planned. Instead, the Elves would like to know the number of pairs that **overlap at all**.
 
@@ -955,4 +955,313 @@ sections_per_elf_df %>%
        title = "Relationship between size of assignements")
 ```
 
+## Day 5: Supply Stacks
 
+### Part one ⭐
+
+The expedition can depart as soon as the final supplies have been unloaded from the ships. Supplies are stored in stacks of marked **crates**, but because the needed supplies are buried under many other crates, the crates need to be rearranged.
+
+The ship has a **giant cargo crane** capable of moving crates between stacks. To ensure none of the crates get crushed or fall over, the crane operator will rearrange them in a series of carefully-planned steps. After the crates are rearranged, the desired crates will be at the top of each stack.
+
+The Elves don't want to interrupt the crane operator during this delicate procedure, but they forgot to ask her **which** crate will end up where, and they want to be ready to unload them as soon as possible so they can embark.
+
+They do, however, have a drawing of the starting stacks of crates and the rearrangement procedure (your puzzle input). For example:
+
+```
+    [D]    
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3 
+
+move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2
+```
+
+In this example, there are three stacks of crates. Stack 1 contains two crates: crate `Z` is on the bottom, and crate `N` is on top. Stack 2 contains three crates; from bottom to top, they are crates `M`, `C`, and `D`. Finally, stack 3 contains a single crate, `P`.
+
+Then, the rearrangement procedure is given. In each step of the procedure, a quantity of crates is moved from one stack to a different stack. In the first step of the above rearrangement procedure, one crate is moved from stack 2 to stack 1, resulting in this configuration:
+
+```
+[D]        
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3
+```
+In the second step, three crates are moved from stack 1 to stack 3. Crates are moved **one at a time**, so the first crate to be moved (`D`) ends up below the second and third crates:
+
+
+```
+        [Z]
+        [N]   
+    [C] [D]   
+    [M] [P]
+ 1   2   3
+```
+
+Then, both crates are moved from stack 2 to stack 1. Again, because crates are moved **one at a time**, crate `C` ends up below crate `M`:
+
+```
+        [Z]
+        [N]   
+[M]     [D]   
+[C]     [P]
+ 1   2   3
+```
+
+Finally, one crate is moved from stack 1 to stack 2:
+
+```
+        [Z]
+        [N]   
+        [D]   
+[C] [M] [P]
+ 1   2   3
+```
+
+The Elves just need to know **which crate will end up on top of each stack**; in this example, the top crates are `C` in stack 1, `M` in stack 2, and `Z` in stack 3, so you should combine these together and give the Elves the message `CMZ`.
+
+**After the rearrangement procedure completes, what crate ends up on top of each stack?**
+
+First, I need to deal with input. I will sepatate the stacks and instructions into two files. I will also clean up stacks to ease reading it in, from this:
+
+```
+    [D]    
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3 
+```
+
+to this:
+
+```
+0D0
+NC0
+ZMP
+123
+```
+Here `0` is an empty space, all spaces are removed such us that each space is represented by crate `A`-`Z` or `0`. Crates are numbered in the last line.
+
+```bash
+input_file=$1
+# create the stacks input
+grep -v ^move ${input_file} | 
+  # remove empty lines
+  awk 'NF' |
+    # treat all 4 spaces as empty position in stacks
+    sed 's/ {4}/0/g' |
+      # remove all spaces & [], each character should be stack
+      sed 's/ //g;s/\[//g; s/\]//g' > ${input_file/.txt/_stacks.txt}
+
+# create instructions input
+grep ^move ${input_file} > ${input_file/.txt/_inst.txt}
+```
+
+I put the code in the script and run if from Python. 
+
+```{python}
+#| label: solution_5_a_process_input
+def process_input(input_file):
+  from subprocess import call, DEVNULL, STDOUT
+  call("./helper_scripts/05_process_inputs.sh " + input_file, 
+       shell=True, stdout=DEVNULL, stderr=STDOUT)
+       
+process_input("inputs/05_test_case.txt")
+```
+
+Then, I process stacks input and create the stacks list - first element is the top of each stack.
+
+```{python}
+#| label: solution_5_a_read_input
+def read_input(input_file):
+  levels = []
+  with open(input_file, "r+") as f:
+    lines = f.readlines()
+    for line in lines:
+      if line[0] != '1':
+        levels.append([el for el in line.strip()])
+  
+  stacks = [[m[i] for m in levels if m[i] != '0'] for i in range(len(levels[0]))]
+  return stacks
+
+stacks = read_input("inputs/05_test_case_stacks.txt")
+stacks
+```
+
+Now, define logic to move crane, as per description the crane moves one crate at a time.
+
+```{python}
+#| label: solution_5_a_move_crane
+def move_crane(input_instuctions, input_stacks):
+  stacks = input_stacks.copy()
+  with open(input_instuctions, "r+") as f:
+    instructions = f.readlines()
+    for inst in instructions:
+      inst_l = inst.strip().split(" ")
+      inst_l = [int(el) for el in inst_l[1::2]]
+      how_many = inst_l[0]
+      stack_from = stacks[inst_l[1]-1]
+      stack_to = stacks[inst_l[2]-1]
+      # print(f"Move {how_many} from {stack_from} to {stack_to}")
+      for i in range(how_many):
+        crate = stack_from[::-1].pop()
+        stack_to.insert(0, crate)
+        stack_from = stack_from[1:]
+      
+      stacks[inst_l[1]-1] = stack_from
+      stacks[inst_l[2]-1] = stack_to
+      
+  return "".join([s[0] for s in stacks])
+
+move_crane("inputs/05_test_case_inst.txt", stacks)
+```
+
+And finally, create a function to run them all
+
+```{python}
+#| label: solution_5_a_main
+def day5_part1(input_file):
+  # make sure the inputs are processed
+  process_input(input_file)
+  # read in the stacks
+  stacks = read_input(input_file.replace(".txt", "_stacks.txt"))
+  # move the crane
+  out_str = move_crane(input_file.replace(".txt", "_inst.txt"), stacks)
+  
+  return out_str
+
+# Define wrapper for checking test case
+def test_case(cmd, result):
+  assert cmd == result, f"Should be {result}, is {cmd}"
+  
+test_case(day5_part1("inputs/05_test_case.txt"), "CMZ")
+# added after discovering bug in bash script
+test_case(day5_part1("inputs/05_test_case_alt.txt"), "ZMN")
+```
+
+Check the answer
+
+```{python}
+#| label: solution_5_a_answer
+day5_part1("inputs/05_input.txt")
+```
+
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+### Part two ⭐ 
+
+As you watch the crane operator expertly rearrange the crates, you notice the process isn't following your prediction.
+
+Some mud was covering the writing on the side of the crane, and you quickly wipe it away. The crane isn't a CrateMover 9000 - it's a **CrateMover 9001**.
+
+The CrateMover 9001 is notable for many new and exciting features: air conditioning, leather seats, an extra cup holder, and **the ability to pick up and move multiple crates at once**.
+
+Again considering the example above, the crates begin in the same configuration:  
+
+```
+    [D]    
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3 
+```
+
+Moving a single crate from stack 2 to stack 1 behaves the same as before:
+
+```
+[D]        
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3 
+```
+
+However, the action of moving three crates from stack 1 to stack 3 means that those three moved crates **stay in the same order**, resulting in this new configuration:
+
+```
+        [D]
+        [N]
+    [C] [Z]
+    [M] [P]
+ 1   2   3
+```
+
+Next, as both crates are moved from stack 2 to stack 1, they **retain their order** as well:
+
+```
+        [D]
+        [N]
+[C]     [Z]
+[M]     [P]
+ 1   2   3
+```
+
+Finally, a single crate is still moved from stack 1 to stack 2, but now it's crate `C` that gets moved:
+
+```
+        [D]
+        [N]
+        [Z]
+[M] [C] [P]
+ 1   2   3
+```
+
+In this example, the CrateMover 9001 has put the crates in a totally different order: `MCD`.
+
+Before the rearrangement process finishes, update your simulation so that the Elves know where they should stand to be ready to unload the final supplies. **After the rearrangement procedure completes, what crate ends up on top of each stack?**
+
+I need to update the crane function - where I will multiple crates at one time.
+
+```{python}
+#| label: solution_5_b_move_crane
+def move_crane_9001(input_instuctions, input_stacks):
+  stacks = input_stacks.copy()
+  with open(input_instuctions, "r+") as f:
+    instructions = f.readlines()
+    for inst in instructions:
+      inst_l = inst.strip().split(" ")
+      inst_l = [int(el) for el in inst_l[1::2]]
+      how_many = inst_l[0]
+      stack_from = stacks[inst_l[1]-1]
+      stack_to = stacks[inst_l[2]-1]
+      # print(f"Move {how_many} from {stack_from} to {stack_to}")
+      crates = stack_from[:how_many]
+      
+      stack_to = crates + stack_to
+      stack_from = stack_from[how_many:]
+      
+      stacks[inst_l[1]-1] = stack_from
+      stacks[inst_l[2]-1] = stack_to
+      
+  return "".join([s[0] for s in stacks])
+
+stacks = read_input("inputs/05_test_case_stacks.txt")
+test_case(move_crane_9001("inputs/05_test_case_inst.txt", stacks), "MCD")
+test_case(move_crane_9001("inputs/05_test_case_alt_inst.txt", stacks), "DCN")
+```
+
+And function to run all components
+
+```{python}
+#| label: solution_5_b_main
+def day5_part2(input_file):
+  # make sure the inputs are processed
+  process_input(input_file)
+  # read in the stacks
+  stacks = read_input(input_file.replace(".txt", "_stacks.txt"))
+  # move the crane
+  out_str = move_crane_9001(input_file.replace(".txt", "_inst.txt"), stacks)
+  
+  return out_str
+
+test_case(day5_part2("inputs/05_test_case.txt"), "MCD")
+test_case(day5_part2("inputs/05_test_case_alt.txt"), "DCN")
+```
+
+What's the answer?
+
+```{python}
+#| label: answer_5_b
+day5_part2("inputs/05_input.txt")
+```
+
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
