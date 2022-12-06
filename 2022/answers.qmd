@@ -918,7 +918,7 @@ sections_per_elf_df %>%
   geom_histogram(color = "black", aes(fill = temp_fill), bins = 50) +
   geom_label(data = . %>% dplyr::select(overlap, median, mean) %>% unique(),
              size = 6,
-             aes(x = 50, y = 90,
+             aes(x = max(sections_per_elf_df$n)/2, y = 90,
                  label = glue::glue("median: {median}\nmean: {mean}")), 
              family = "Permanent Marker") +
   facet_wrap(~overlap) +
@@ -1262,6 +1262,124 @@ What's the answer?
 ```{python}
 #| label: answer_5_b
 day5_part2("inputs/05_input.txt")
+```
+
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+## Day 6: Tuning Trouble
+
+### Part one ⭐ 
+
+The preparations are finally complete; you and the Elves leave camp on foot and begin to make your way toward the **star** fruit grove.
+
+As you move through the dense undergrowth, one of the Elves gives you a handheld **device**. He says that it has many fancy features, but the most important one to set up right now is the **communication system**.
+
+However, because he's heard you have [significant](https://adventofcode.com/2016/day/6) [experience](https://adventofcode.com/2016/day/25) [dealing](https://adventofcode.com/2019/day/7) [with](https://adventofcode.com/2019/day/7) [signal-based](https://adventofcode.com/2019/day/16) [systems](https://adventofcode.com/2021/day/25), he convinced the other Elves that it would be okay to give you their one malfunctioning device - surely you'll have no problem fixing it.
+
+As if inspired by comedic timing, the device emits a few colorful sparks.
+
+To be able to communicate with the Elves, the device needs to **lock on to their signal**. The signal is a series of seemingly-random characters that the device receives one at a time.
+
+To fix the communication system, you need to add a subroutine to the device that detects a **start-of-packet marker** in the datastream. In the protocol being used by the Elves, the start of a packet is indicated by a sequence of **four characters that are all different**.
+
+The device will send your subroutine a datastream buffer (your puzzle input); your subroutine needs to identify the first position where the four most recently received characters were all different. Specifically, it needs to report the number of characters from the beginning of the buffer to the end of the first such four-character marker.
+
+For example, suppose you receive the following datastream buffer:
+
+```
+mjqjpqmgbljsphdztnvjfqwrcgsmlb
+```
+
+After the first three characters (`mjq`) have been received, there haven't been enough characters received yet to find the marker. The first time a marker could occur is after the fourth character is received, making the most recent four characters `mjqj`. Because `j` is repeated, this isn't a marker.
+
+The first time a marker appears is after the **seventh** character arrives. Once it does, the last four characters received are `jpqm`, which are all different. In this case, your subroutine should report the value `7`, because the first start-of-packet marker is complete after 7 characters have been processed.
+
+Here are a few more examples:
+
+* `bvwbjplbgvbhsrlpgdmjqwftvncz`: first marker after character `5`  
+* `nppdvjthqldpwncqszvftbrmjlhg`: first marker after character `6`  
+* `nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg`: first marker after character `10`  
+* `zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw`: first marker after character `11`  
+
+**How many characters need to be processed before the first start-of-packet marker is detected?**
+
+```{python}
+# Define wrapper for checking test case
+def test_case(cmd, result):
+  assert cmd == result, f"Should be {result}, is {cmd}"
+  
+# define finding marker function
+def find_marker(in_str):
+  for i in range(4, len(in_str)):
+    temp = in_str[i-4:i]
+    if (len(temp) == len(set([t for t in temp]))):
+      break
+  return i
+
+# tests for mentioned test cases
+test_case(find_marker("mjqjpqmgbljsphdztnvjfqwrcgsmlb"), 7)
+test_case(find_marker("bvwbjplbgvbhsrlpgdmjqwftvncz"), 5)
+test_case(find_marker("nppdvjthqldpwncqszvftbrmjlhg"), 6)
+test_case(find_marker("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"), 10)
+test_case(find_marker("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"), 11)
+```
+
+Now, check the value for the input.
+
+```{python}
+with open("inputs/06_input.txt", "r+") as f:
+  input_string = f.readline().strip()
+
+find_marker(input_string)
+```
+
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+### Part two ⭐ 
+
+Your device's communication system is correctly detecting packets, but still isn't working. It looks like it also needs to look for **messages**.
+
+A **start-of-message marker** is just like a start-of-packet marker, except it consists of **14 distinct characters** rather than 4.
+
+Here are the first positions of start-of-message markers for all of the above examples:
+
+* `mjqjpqmgbljsphdztnvjfqwrcgsmlb`: first marker after character `19`  
+* `bvwbjplbgvbhsrlpgdmjqwftvncz`: first marker after character `23`  
+* `nppdvjthqldpwncqszvftbrmjlhg`: first marker after character `23`  
+* `nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg`: first marker after character `29`  
+* `zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw`: first marker after character `26`  
+
+**How many characters need to be processed before the first start-of-message marker is detected?**
+
+I need to generalise the function from the part one and voila. 
+
+```{python}
+# define finding any function, works for part one too
+def find_any(in_str, n=4):
+  for i in range(n, len(in_str)):
+    temp = in_str[i-n:i]
+    if (len(temp) == len(set([t for t in temp]))):
+      break
+  return i
+
+# tests for part one
+test_case(find_any("mjqjpqmgbljsphdztnvjfqwrcgsmlb", 4), 7)
+test_case(find_any("bvwbjplbgvbhsrlpgdmjqwftvncz", 4), 5)
+test_case(find_any("nppdvjthqldpwncqszvftbrmjlhg", 4), 6)
+test_case(find_any("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", 4), 10)
+test_case(find_any("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", 4), 11)
+# tests for part two
+test_case(find_any("mjqjpqmgbljsphdztnvjfqwrcgsmlb", 14), 19)
+test_case(find_any("bvwbjplbgvbhsrlpgdmjqwftvncz", 14), 23)
+test_case(find_any("nppdvjthqldpwncqszvftbrmjlhg", 14), 23)
+test_case(find_any("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", 14), 29)
+test_case(find_any("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", 14), 26)
+```
+
+And when do we find message in the input?
+
+```{python}
+find_any(input_string, n=14)
 ```
 
 **Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
