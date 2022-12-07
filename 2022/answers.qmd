@@ -21,7 +21,9 @@ project:
 
 ## Intro
 
-This notebook contains the solutions to the [Advent of Code 2022 problems](https://adventofcode.com/). The repository with source code for this notebook (and solutions for AoC 2020) can be found [here](https://github.com/kzkedzierska/aoc).
+This notebook contains the solutions to the [Advent of Code 2022 problems](https://adventofcode.com/2022). The repository with source code for this notebook (and solutions for AoC 2020) can be found [here](https://github.com/kzkedzierska/aoc).
+
+From [Wikipedia](https://en.wikipedia.org/wiki/Advent_of_Code): Advent of Code is an annual set of Christmas-themed computer programming challenges that follow an Advent calendar. It has been running since 2015.
 
 ### Summary
 
@@ -1304,6 +1306,7 @@ Here are a few more examples:
 **How many characters need to be processed before the first start-of-packet marker is detected?**
 
 ```{python}
+#| label: solution_6_a
 # Define wrapper for checking test case
 def test_case(cmd, result):
   assert cmd == result, f"Should be {result}, is {cmd}"
@@ -1327,6 +1330,7 @@ test_case(find_marker("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"), 11)
 Now, check the value for the input.
 
 ```{python}
+#| label: answer_6_a
 with open("inputs/06_input.txt", "r+") as f:
   input_string = f.readline().strip()
 
@@ -1354,6 +1358,7 @@ Here are the first positions of start-of-message markers for all of the above ex
 I need to generalise the function from the part one and voila. 
 
 ```{python}
+#| label: solution_6_b
 # define finding any function, works for part one too
 def find_any(in_str, n=4):
   for i in range(n, len(in_str)):
@@ -1379,7 +1384,192 @@ test_case(find_any("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", 14), 26)
 And when do we find message in the input?
 
 ```{python}
+#| label: answer_6_b
 find_any(input_string, n=14)
 ```
 
 **Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+## Day 7: No Space Left On Device
+
+### Part one ⭐ 
+
+You can hear birds chirping and raindrops hitting leaves as the expedition proceeds. Occasionally, you can even hear much louder sounds in the distance; how big do the animals get out here, anyway?
+
+The device the Elves gave you has problems with more than just its communication system. You try to run a system update:
+
+```
+$ system-update --please --pretty-please-with-sugar-on-top
+Error: No space left on device
+```
+
+Perhaps you can delete some files to make space for the update?
+
+You browse around the filesystem to assess the situation and save the resulting terminal output (your puzzle input). For example:
+
+```
+$ cd /
+$ ls
+dir a
+14848514 b.txt
+8504156 c.dat
+dir d
+$ cd a
+$ ls
+dir e
+29116 f
+2557 g
+62596 h.lst
+$ cd e
+$ ls
+584 i
+$ cd ..
+$ cd ..
+$ cd d
+$ ls
+4060174 j
+8033020 d.log
+5626152 d.ext
+7214296 k
+```
+
+The filesystem consists of a tree of files (plain data) and directories (which can contain other directories or files). The outermost directory is called `/`. You can navigate around the filesystem, moving into or out of directories and listing the contents of the directory you're currently in.
+
+Within the terminal output, lines that begin with `$` are **commands you executed**, very much like some modern computers:
+
+* `cd` means change directory. This changes which directory is the current directory, but the specific result depends on the argument:  
+  * `cd x` moves in one level: it looks in the current directory for the directory named `x` and makes it the current directory.  
+  * `cd ..` moves out one level: it finds the directory that contains the current directory, then makes that directory the current directory.   
+  * `cd /` switches the current directory to the outermost directory, `/`.  
+* `ls` means list. It prints out all of the files and directories immediately contained by the current directory:
+  * `123 abc` means that the current directory contains a file named `abc` with size `123`.   
+  * dir `xyz` means that the current directory contains a directory named `xyz`.  
+  
+```
+- / (dir)
+  - a (dir)
+    - e (dir)
+      - i (file, size=584)
+    - f (file, size=29116)
+    - g (file, size=2557)
+    - h.lst (file, size=62596)
+  - b.txt (file, size=14848514)
+  - c.dat (file, size=8504156)
+  - d (dir)
+    - j (file, size=4060174)
+    - d.log (file, size=8033020)
+    - d.ext (file, size=5626152)
+    - k (file, size=7214296)
+```
+
+Here, there are four directories: `/` (the outermost directory), `a` and `d` (which are in `/`), and `e` (which is in `a`). These directories also contain files of various sizes.
+
+Since the disk is full, your first step should probably be to find directories that are good candidates for deletion. To do this, you need to determine the **total size** of each directory. The total size of a directory is the sum of the sizes of the files it contains, directly or indirectly. (Directories themselves do not count as having any intrinsic size.)
+
+The total sizes of the directories above can be found as follows:
+* The total size of directory `e` is **584** because it contains a single file `i` of size 584 and no other directories.  
+* The directory `a` has total size **94853** because it contains files `f` (size 29116), `g` (size 2557), and `h.lst` (size 62596), plus file `i` indirectly (`a` contains `e` which contains `i`).  
+* Directory `d` has total size **24933642**.  
+* As the outermost directory, `/` contains every file. Its total size is **48381165**, the sum of the size of every file.  
+To begin, find all of the directories with a total size of **at most 100000**, then calculate the sum of their total sizes. In the example above, these directories are `a` and `e`; the sum of their total sizes is **95437** (94853 + 584). (As in this example, this process can count files more than once!)
+
+Find all of the directories with a total size of at most 100000. **What is the sum of the total sizes of those directories?**
+
+```{python}
+#| label: solution_7_a
+import re
+
+def parse_input(input_file):
+  with open(input_file, "r+") as f:
+    lines=f.readlines()
+    parent_dir=""
+    current_dir=""
+    dirs = {"/": {'size': 0, 'parent_dir': ""}}
+    for line in lines:
+      lin_ = [el for el in line.strip().split(" ")]
+      # handle changing directories
+      if (lin_[0] == "$") & (lin_[1] == "cd"):
+        # change directory to higher up
+        if lin_[2] == "..":
+          # you can't go higher up
+          if current_dir != "/":
+            current_dir = parent_dir 
+            parent_dir = dirs[current_dir]['parent_dir']
+        # or to named directory
+        else:
+          parent_dir = "" if lin_[2] == "/" else current_dir
+          current_dir = parent_dir + '/' + lin_[2] 
+          current_dir = re.sub("/{1,}", "/", current_dir)
+      # if it's a directory
+      elif lin_[0] == "dir":
+        dir_n = current_dir + '/' + lin_[1]
+        dir_n = re.sub("/{1,}", "/", dir_n)
+        # clean up the path
+        dirs[dir_n] = {'size': 0, 'parent_dir': current_dir}
+      # if it is a file
+      elif lin_[0] != "$":
+        size = int(lin_[0])
+        cur_d = current_dir
+        while True:
+          dirs[cur_d]['size'] += size
+          if cur_d == "/":
+            break
+          cur_d = dirs[cur_d]['parent_dir']
+  return dirs
+parse_input("inputs/07_test_case.txt")
+```
+
+```{python}
+#| label: solution_7_a_test
+# Define wrapper for checking test case
+def test_case(cmd, result):
+  assert cmd == result, f"Should be {result}, is {cmd}"
+test_case(parse_input("inputs/07_test_case.txt")["/"]['size'], 48381165)
+```
+
+```{python}
+#| label: answer_7_a
+dirs_input = parse_input("inputs/07_input.txt")
+
+sum([v['size'] for k, v in dirs_input.items() if v['size'] <= 100000])
+```
+
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+### Part two ⭐ 
+
+Now, you're ready to choose a directory to delete.
+
+The total disk space available to the filesystem is **70000000**. To run the update, you need unused space of at least **30000000**. You need to find a directory you can delete that will **free up enough space** to run the update.
+
+In the example above, the total size of the outermost directory (and thus the total amount of used space) is `48381165`; this means that the size of the **unused** space must currently be `21618835`, which isn't quite the `30000000` required by the update. Therefore, the update still requires a directory with total size of at least `8381165` to be deleted before it can run.
+
+To achieve this, you have the following options:
+
+* Delete directory `e`, which would increase unused space by `584`.  
+* Delete directory `a`, which would increase unused space by `94853`.  
+* Delete directory `d`, which would increase unused space by `24933642`.  
+* Delete directory `/`, which would increase unused space by `48381165`.  
+
+Directories `e` and `a` are both too small; deleting them would not free up enough space. However, directories `d` and `/` are both big enough! Between these, choose the **smallest**: `d`, increasing unused space by `24933642`.
+
+Find the smallest directory that, if deleted, would free up enough space on the filesystem to run the update. **What is the total size of that directory?**
+
+```{python}
+#| label: answer_7_b
+needed_space = dirs_input['/']['size'] - 40000000
+dirs_its = dirs_input.items()
+
+sorted([v['size'] for k, v in dirs_its if v['size'] > needed_space])[0]
+```
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+
+
+
+
+
+
+
+
+
