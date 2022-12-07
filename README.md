@@ -4,7 +4,7 @@
 
 For `AOC 2022` I decided to solve the problems by writing up my solutions in Quarto Publication (so far using `Python`). You can look up the answers in the online version of the notebook [here](https://kzkedzierska.quarto.pub/advent-of-code-2022/). 
 
-[![Quarto Publication with my solutions, taken on 7/12](qurto_2022.png)](https://kzkedzierska.quarto.pub/advent-of-code-2022/)
+[![Quarto Publication with my solutions, taken on 7/12](quarto_2022.png)](https://kzkedzierska.quarto.pub/advent-of-code-2022/)
 
 [![Quarto Publish](https://github.com/kzkedzierska/aoc/actions/workflows/publish.yml/badge.svg)](https://github.com/kzkedzierska/aoc/actions/workflows/publish.yml)
 
