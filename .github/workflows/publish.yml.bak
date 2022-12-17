@@ -1,0 +1,65 @@
+on:
+  workflow_dispatch:
+  push:
+    branches: main
+
+name: Quarto Publish
+
+defaults:
+  run:
+    working-directory: 2022
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    
+    env:
+      RENV_PATHS_ROOT: ~/.local/share/renv
+      
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2 
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+      
+      - name: Set up Python 
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+          
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install jupyter
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      
+      - name: Install R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.2.1'
+          
+      - name: Install curl dependency
+        run: sudo apt update && sudo apt install -y libcurl4-openssl-dev
+          
+      - name: Cache packages
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.RENV_PATHS_ROOT }}
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-renv-
+      
+      - name: Restore packages
+        shell: Rscript {0}
+        run: |
+          if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
+          renv::restore()
+      
+    
+      - name: Render and Publish 
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: quarto-pub
+          path: 2022
+          QUARTO_PUB_AUTH_TOKEN: ${{ secrets.QUARTO_PUB_AUTH_TOKEN }}
