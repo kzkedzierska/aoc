@@ -62,22 +62,6 @@ hp_table <- function(x) {
 empty_days_df <-
   tibble::tibble(day = 1:25)
 
-# read in the stars generated from the headers in this file
-stars_df <-
-  readr::read_tsv("misc/stars", col_names = "stars",
-                  show_col_types = FALSE) %>%
-  
-  dplyr::mutate(
-    # assumin part two follows part one, all in order, no skipping
-    part = dplyr::case_when(
-      dplyr::row_number() %% 2 == 0 ~ "Part 2",
-      TRUE ~ "Part 1"), 
-    # get the day, assuming all headers are in order,
-    day = (dplyr::row_number()+1) %/% 2
-  ) %>%
-  tidyr::pivot_wider(names_from = "part", 
-                     values_from = "stars")
-
 # read in the solved days, generated from headers of this file
 readr::read_tsv(col_names = "header", file = "misc/solved_days", 
                 show_col_types = FALSE) %>%
@@ -85,8 +69,22 @@ readr::read_tsv(col_names = "header", file = "misc/solved_days",
   dplyr::mutate(day = stringr::str_extract(header, "[0-9]+"), 
                 day = as.numeric(day),
                 Day = glue::glue("[{day}]({header})")) %>%
-  # add the stars
-  dplyr::full_join(stars_df) %>%
+  dplyr::mutate(day = case_when(
+    !is.na(day) ~ day,
+    !is.na(dplyr::lag(day)) ~ dplyr::lag(day),
+    !is.na(dplyr::lag(day, 2)) ~ dplyr::lag(day, 2)
+  )) %>%
+  group_by(day) %>%
+  mutate(`Part 1` = case_when(
+    any(stringr::str_detect(header, "##part-one-⭐" )) ~ "⭐",
+    TRUE ~ ""
+  ), 
+  `Part 2` = case_when(
+    any(stringr::str_detect(header, "##part-two-⭐" )) ~ "⭐",
+    TRUE ~ ""
+  )) %>% 
+  ungroup() %>%
+  filter(stringr::str_detect(header, "#day")) %>%
   # fill with days not solved
   dplyr::full_join(empty_days_df) %>%
   # replace NA with empty texts so the table looks nice
@@ -1762,14 +1760,238 @@ scenic_view("inputs/08_input.txt")
 
 **Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
 
+## Day 9: Rope Bridge
+
+### Part one 
+
+[Task outline](https://adventofcode.com/2022/day/9)
+
+## Day 10: Cathode-Ray Tube
+
+### Part one ⭐ 
+
+[Problem description](https://adventofcode.com/2022/day/10).
+
+```{python}
+#| label: solution_10_a
+def read_commands(file_path):
+  with open(file_path, "r+") as f:
+    lines = f.readlines()
+    adds = [0]*241
+    adds[0] = 1
+    cycle = 0
+    for line in lines:
+      args = [arg for arg in line.strip().split(" ")]
+      if args[0] == "addx":
+
+        adds[cycle+2] = int(args[1])
+        cycle+=2
+      else:
+        cycle+=1
+  return adds
+      
+def get_signal_strengths(adds, cycles = range(20, 221, 40)):
+  strengths = [sum(adds[0:cycle])*cycle for cycle in cycles]
+  return strengths
+
+def get_sum_signal_strength(file_path, cycles = range(20, 221, 40)):
+  addxs = read_commands(file_path)
+  signal_strengths = get_signal_strengths(addxs, cycles = cycles)
+  return sum(signal_strengths)
+
+# define test
+def test_case(cmd, result):
+  assert cmd == result, f"Should be {result}, is {cmd}"
+  
+test_case(get_sum_signal_strength("inputs/10_test_case.txt"), 13140)
+```
 
 
+```{python}
+#| label: answer_10_a
+get_sum_signal_strength("inputs/10_input.txt")
+```
+
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+### Part two ⭐ 
+
+[Description of the task](https://adventofcode.com/2022/day/10#part2)
+
+```{python}
+#| label: solution_10_b
+def print_crt_output(file_path):
+  addxs = read_commands(file_path)
+  out = ""
+  sprite = ["_"] * 40
+  sprite[0:3] = ["█"]*3
+  for i in range(240):
+    j = i % 40
+    if addxs[i] != 0:
+      pos = sum(addxs[:(i+1)])
+      sprite = ["_"] * 40
+      if pos > 0:
+        sprite[(pos-1):(pos+2)] = ["█"]*3
+      elif pos >= -2:
+        sprite[0:(pos+2)] = ["█"] * (3+pos)
+    out += sprite[j]
+    if (j == 39):
+      print(out)
+      out = ""
+    i += 1
+
+print_crt_output("inputs/10_test_case.txt")
+```
 
 
+```{python}
+#| label: answer_10_b
+print_crt_output("inputs/10_input.txt")
+```
+
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+## Day 18: Boiling Boulders
+
+### Part one ⭐ 
+
+[Full task outline](https://adventofcode.com/2022/day/18).
+
+My idea is to create a 3D tensor with zeros and populate it with each cube (`-Inf`) and mark the walls as accessible with `+1`. That way I can count how many walls of cubes are accessible from each coordinates. After adding up all cubes, I can simply sum all elements bigger than 0.
 
 
+```{python}
+#| label: solution_18_a
+import numpy as np
+
+def count_walls(file_path):
+  with open(file_path, "r+") as f:
+    lines = f.readlines()
+    
+  # create an init matrix
+  dim = 5
+  a = np.zeros([dim] * 3)
+  
+  for line in lines:
+    coord = [int(p) for p in line.strip().split(",")]
+    # check if matrix is big enough, if not, extend it
+    biggest_dim = max(coord) + 2
+    if biggest_dim > dim:
+      # double the dim to extend it effectively
+      biggest_dim *= 2
+      temp_a = np.zeros([biggest_dim] * 3) 
+      temp_a[0:dim, 0:dim, 0:dim] = a
+      a = temp_a
+      dim = biggest_dim
+      
+    # now, add the cubes
+    [i, j, k] = coord
+    a[i, j, k] = -np.inf
+    
+    # mark which sides are not connected to other cubes
+    for c in [-1, +1]:
+      for b in [0, 1, 2]:
+        coord_ = coord.copy()
+        coord_[b] += c
+        [i_, j_, k_] = coord_
+        a[i_, j_, k_] += 1
+        
+  return int(np.sum(a[a>0]))
 
 
+# define test
+def test_case(cmd, result):
+  assert cmd == result, f"Should be {result}, is {cmd}"
 
+test_case(count_walls("inputs/18_test_case.txt"), 64)
+```
+
+
+```{python}
+#| label: answer_18_a
+count_walls("inputs/18_input.txt")
+```
+
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+### Part two 
+
+
+[Part two of the problem](https://adventofcode.com/2022/day/18#part2).
+
+I'm having 
+
+```python
+def build_walls(file_path):
+  with open(file_path, "r+") as f:
+    lines = f.readlines()
+  
+  
+  # create an init matrix
+  dim = 5
+  a = np.zeros([dim] * 3)
+  
+  for line in lines:
+    coord = [int(p) for p in line.strip().split(",")]
+    # check if matrix is big enough, if not, extend it
+    biggest_dim = max(coord) + 2
+    if biggest_dim > dim:
+      # double the dim to extend it effectively
+      biggest_dim *= 2
+      temp_a = np.zeros([biggest_dim] * 3) 
+      temp_a[0:dim, 0:dim, 0:dim] = a
+      a = temp_a
+      dim = biggest_dim
+      
+    # now, add the cubes
+    [i, j, k] = coord
+    a[i, j, k] = -np.inf
+    
+    # mark which sides are not connected to other cubes
+    for c in [-1, +1]:
+      for b in range(len(coord)):
+        coord_ = coord.copy()
+        coord_[b] += c
+        [i_, j_, k_] = coord_
+        a[i_, j_, k_] += 1
+        
+  return a
+```
+
+
+```python
+a = build_walls("inputs/18_test_case.txt")
+walls = np.zeros(a.shape)
+walls[np.isinf(a)] = -1 
+flood = np.zeros(walls.shape)
+def walk_along(walls, flood, pos):
+  pos_t = tuple(pos)
+  
+  if min(pos) < 0:
+    return flood
+  
+  if walls[pos_t] == -1:
+    return flood
+  
+  flood[pos_t] = 1
+  
+  for c in [-1, +1]: 
+    for i in range(len(arr.shape)):
+      pos_ = pos.copy()
+      pos_[i] += c
+      print(f"c: {c} in {i} position of {pos} resulting in {pos_}")
+      print(max(flood.shape))
+      if (max(pos_) <= max(flood.shape)) & (min(pos_) > 0):
+        flood += walk_along(walls, flood, pos_)
+      
+  return flood
+
+walk_along(c, np.zeros(c.shape), [0, 0])
+```
+
+
+```python
+count_walls_outside("inputs/18_input.txt")
+```
 
 
