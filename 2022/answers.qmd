@@ -27,6 +27,8 @@ From [Wikipedia](https://en.wikipedia.org/wiki/Advent_of_Code): Advent of Code i
 
 ### Summary
 
+I got busy and had to skip a week of answers - hence why not all problems are solved yet. 
+
 ```{bash}
 #| label: generte-input-stars-summary
 #| echo: false
@@ -1851,6 +1853,131 @@ print_crt_output("inputs/10_input.txt")
 
 **Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
 
+## Day 11: Monkey in the Middle
+
+### Part one ⭐ 
+
+[Problem desciption](https://adventofcode.com/2022/day/11). This time we are dealing with monkeys playing with our stuff.
+
+```{python}
+import numpy as np
+def process_monkey_instructions(flie_path):
+  monkey=-1
+  monkeys=[]
+  with open(flie_path, "r+") as f:
+    lines = f.readlines()
+  for line in lines:
+    line = line.strip()
+    if "Monkey" in line:
+      monkey+=1
+    elif "Starting" in line:
+      items = [int(item) for item in line.split(":")[1].split(",")]
+    elif "Operation" in line:
+      oper = line.split("Operation: ")[1]
+    elif "Test" in line:
+      divider = int(line.split("by ")[1])
+    elif "If true:" in line:
+      true_monkey = int(line.split("monkey ")[1])
+    elif "If false:" in line:
+      false_monkey = int(line.split("monkey ")[1])
+    else:
+      monkeys.append({"items": items, 
+                      "operation": oper, 
+                      "divider": divider,
+                      "if_true": true_monkey,
+                      "if_false": false_monkey,
+                      "inspected": 0})
+                      
+  # after last line, check if last monkey was added
+  try:
+    a = monkeys[monkey]
+  except IndexError:
+     monkeys.append({"items": items, 
+                      "operation": oper, 
+                      "divider": divider,
+                      "if_true": true_monkey,
+                      "if_false": false_monkey,
+                      "inspected": 0})
+                      
+  return monkeys
+
+
+def get_level_monkey_business(file_path, cycles = 20):
+  
+  monkeys = process_monkey_instructions(file_path)
+  new = 0
+  for rounds in range(cycles):
+    for monkey in monkeys:
+      while len(monkey['items']) > 0:
+        # execute the operation code in safe temporary dict
+        d = {'old': monkey['items'].pop(0)}
+        exec(monkey["operation"], d) 
+        # change worry level
+        worry = d['new'] // 3
+        if worry % monkey["divider"] == 0:
+          monkeys[monkey["if_true"]]["items"].append(worry)
+        else:
+          monkeys[monkey["if_false"]]["items"].append(worry)
+          
+        monkey["inspected"] +=1
+
+  inspected = sorted([monkey['inspected'] for monkey in monkeys], reverse=True)
+  return np.prod(inspected[:2])
+          
+# define test
+def test_case(cmd, result):
+  assert cmd == result, f"Should be {result}, is {cmd}"
+  
+# test answer
+test_case(get_level_monkey_business("inputs/11_test_case.txt"), 10605)          
+```
+
+```{python}
+get_level_monkey_business("inputs/11_input.txt")
+```
+
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+### Part two ⭐ 
+
+[Modifications to the task can be found here](https://adventofcode.com/2022/day/11#part2).
+
+```{python}
+def get_level_monkey_business2(file_path, cycles=20):
+  monkeys = process_monkey_instructions(file_path)
+  # get the lowest common multiplier
+  lcm = np.lcm.reduce([monkey['divider'] for monkey in monkeys])
+  new = 0
+  for rounds in range(cycles):
+    for monkey in monkeys:
+      while len(monkey['items']) > 0:
+        # execute the operation code in safe temporary dict
+        d = {'old': monkey['items'].pop(0)}
+        exec(monkey["operation"], d) 
+        # change worry level using lcm
+        worry = d['new'] % lcm
+        if worry % monkey["divider"] == 0:
+          monkeys[monkey["if_true"]]["items"].append(worry)
+        else:
+          monkeys[monkey["if_false"]]["items"].append(worry)
+          
+        monkey["inspected"] +=1
+  
+  inspected = sorted([monkey['inspected'] for monkey in monkeys], reverse=True)
+  return np.prod(inspected[:2])
+
+test_case(get_level_monkey_business2("inputs/11_test_case.txt", cycles=10000), 
+          2713310158)
+```
+
+
+```{python}
+get_level_monkey_business2("inputs/11_input.txt", cycles = 10000)
+```
+
+**Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+
 ## Day 18: Boiling Boulders
 
 ### Part one ⭐ 
@@ -1913,85 +2040,3 @@ count_walls("inputs/18_input.txt")
 ```
 
 **Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
-
-### Part two 
-
-
-[Part two of the problem](https://adventofcode.com/2022/day/18#part2).
-
-I'm having 
-
-```python
-def build_walls(file_path):
-  with open(file_path, "r+") as f:
-    lines = f.readlines()
-  
-  
-  # create an init matrix
-  dim = 5
-  a = np.zeros([dim] * 3)
-  
-  for line in lines:
-    coord = [int(p) for p in line.strip().split(",")]
-    # check if matrix is big enough, if not, extend it
-    biggest_dim = max(coord) + 2
-    if biggest_dim > dim:
-      # double the dim to extend it effectively
-      biggest_dim *= 2
-      temp_a = np.zeros([biggest_dim] * 3) 
-      temp_a[0:dim, 0:dim, 0:dim] = a
-      a = temp_a
-      dim = biggest_dim
-      
-    # now, add the cubes
-    [i, j, k] = coord
-    a[i, j, k] = -np.inf
-    
-    # mark which sides are not connected to other cubes
-    for c in [-1, +1]:
-      for b in range(len(coord)):
-        coord_ = coord.copy()
-        coord_[b] += c
-        [i_, j_, k_] = coord_
-        a[i_, j_, k_] += 1
-        
-  return a
-```
-
-
-```python
-a = build_walls("inputs/18_test_case.txt")
-walls = np.zeros(a.shape)
-walls[np.isinf(a)] = -1 
-flood = np.zeros(walls.shape)
-def walk_along(walls, flood, pos):
-  pos_t = tuple(pos)
-  
-  if min(pos) < 0:
-    return flood
-  
-  if walls[pos_t] == -1:
-    return flood
-  
-  flood[pos_t] = 1
-  
-  for c in [-1, +1]: 
-    for i in range(len(arr.shape)):
-      pos_ = pos.copy()
-      pos_[i] += c
-      print(f"c: {c} in {i} position of {pos} resulting in {pos_}")
-      print(max(flood.shape))
-      if (max(pos_) <= max(flood.shape)) & (min(pos_) > 0):
-        flood += walk_along(walls, flood, pos_)
-      
-  return flood
-
-walk_along(c, np.zeros(c.shape), [0, 0])
-```
-
-
-```python
-count_walls_outside("inputs/18_input.txt")
-```
-
-
