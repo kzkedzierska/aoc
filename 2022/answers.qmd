@@ -27,7 +27,7 @@ From [Wikipedia](https://en.wikipedia.org/wiki/Advent_of_Code): Advent of Code i
 
 ### Summary
 
-I got busy and had to skip a week of answers - hence why not all problems are solved yet. 
+I got busy and now not all problems are solved yet. I'll be coming back here whenever I have a bit of time to catch up on AoC!
 
 ```{bash}
 #| label: generte-input-stars-summary
@@ -1768,6 +1768,8 @@ scenic_view("inputs/08_input.txt")
 
 [Task outline](https://adventofcode.com/2022/day/9)
 
+
+
 ## Day 10: Cathode-Ray Tube
 
 ### Part one ⭐ 
@@ -1978,6 +1980,88 @@ get_level_monkey_business2("inputs/11_input.txt", cycles = 10000)
 **Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
 
 
+
+## Day 13: Distress Signal
+
+### Part one
+
+```{python}
+def compare_elements(packets_left, packets_right, debug=False):
+  if debug:
+    print(f"packets left: {packets_left}, packets right: {packets_right}")
+  
+  # if at the end
+  if len(packets_left) < 1:
+    return True
+  
+  if len(packets_right) < 1:
+    return False
+
+  left = packets_left[0]
+  right = packets_right[0]
+  # two numbers
+  if isinstance(left, int) and isinstance(right, int):
+    if right < left:
+      return False
+    elif right > left:
+      return True
+    else:
+      return compare_elements(packets_left[1:], packets_right[1:])
+      
+  # two lists
+  elif isinstance(left, list) or isinstance(right, list):
+    if debug:
+      print(f"left: {left}, right: {right}")
+    left = left if isinstance(left, list) else [left]
+    right = right if isinstance(right, list) else [right]
+    
+    if debug:
+      print(f"left: {left}, right: {right}")
+    
+    if len(right) == 0 and len(left) > 0:
+      return False
+    
+    elif len(left) == 0 and len(right) > 1:
+      return True
+    
+    else:
+      if len(left[1:]) == 0 and len(right[1:]) == 0:
+        return compare_elements(packets_left[1:], packets_right[1:])
+      else:
+        return compare_elements(left, right)
+
+  else:
+    print(f"Corner case - left: {left} and right: {right}")
+
+# define test
+def test_case(cmd, result):
+  assert cmd == result, f"Should be {result}, is {cmd}"
+  
+
+def get_indices_in_order(file_path):
+  with open(file_path, "r+") as f:
+    lines = f.readlines()
+  
+  packets = [eval(line.strip()) for line in lines if line != "\n"]
+  pleft = packets[::2]
+  pright = packets[1::2]
+  
+  in_order = [compare_elements(pleft[i], pright[i]) for i in range(len(pleft))]
+  
+  return [i + 1 for i in range(len(in_order)) if in_order[i]]
+  
+
+test_case(sum(get_indices_in_order("inputs/13_test_case.txt")), 13)
+```
+
+Too small :( 
+
+```{python}
+get_indices_in_order("inputs/13_input.txt")
+```
+
+
+
 ## Day 18: Boiling Boulders
 
 ### Part one ⭐ 
@@ -2040,3 +2124,5 @@ count_walls("inputs/18_input.txt")
 ```
 
 **Outcome:** That's the right answer! You are **one gold star** ⭐ closer to collecting enough star fruit.
+
+
