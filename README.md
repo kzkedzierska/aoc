@@ -6,7 +6,8 @@ For `AoC 2023` I am solving them in Python, in Jupyter notebooks (run in VS Code
 
 | Day | Part 1 | Part 2 |
 | --- | ------ | ------ |
-| [1](2023/Day1.ipynb) | ⭐ | ⭐ |
+| [1](2023/Day01.ipynb) | ⭐ | ⭐ |
+| [2](2023/Day02.ipynb) | ⭐ | ⭐ |
 
 
 ## 2022
