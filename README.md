@@ -2,13 +2,16 @@
 
 ## 2023 
 
-For `AoC 2023` I am solving them in Python, in Jupyter notebooks (run in VS Code). I don't keep the inputs, as per the request of the creator of Advent of Code. 
+For `AoC 2023` I am solving them in Python, in Jupyter notebooks (run in VS Code). I don't keep the inputs, as per the request of the creator of Advent of Code. I have GitHub Copilot running in VS Code, but only use it for autocompletion, the ideas for solutions and their implementation is mine. I also use GitHub Copilot for doc strings and minor improvements after I solve the tasks.
 
 | Day | Part 1 | Part 2 |
 | --- | ------ | ------ |
 | [1](2023/Day01.ipynb) | ⭐ | ⭐ |
 | [2](2023/Day02.ipynb) | ⭐ | ⭐ |
 | [3](2023/Day03.ipynb) | ⭐ | ⭐ |
+| [4](2023/Day04.ipynb) | ⭐ | ⭐ |
+| [5](2023/Day05.ipynb) | ⭐ |    |
+| [6](2023/Day06.ipynb) | ⭐ | ⭐ |
 
 
 ## 2022
