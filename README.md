@@ -13,6 +13,7 @@ For `AoC 2023` I am solving them in Python, in Jupyter notebooks (run in VS Code
 | [5](2023/Day05.ipynb) | ⭐ |    |
 | [6](2023/Day06.ipynb) | ⭐ | ⭐ |
 | [7](2023/Day07.ipynb) | ⭐ | ⭐ |
+| [8](2023/Day08.ipynb) | ⭐ | ⭐ |
 
 
 ## 2022

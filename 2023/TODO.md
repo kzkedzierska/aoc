@@ -7,7 +7,7 @@ Those days that are not solved on the day, but rather solved later for various r
 - [ ] [Day 5](2023/Day05.ipynb) Part Two
 - [x] [Day 6](2023/Day06.ipynb)
 - [x] [Day 7](2023/Day07.ipynb)
-- [ ] Day 8
+- [x] [Day 8](2023/Day08.ipynb)
 - [ ] Day 9
 - [ ] Day 10
 - [ ] Day 11
