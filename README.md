@@ -4,16 +4,15 @@
 
 For `AoC 2023` I am solving them in Python, in Jupyter notebooks (run in VS Code). I don't keep the inputs, as per the request of the creator of Advent of Code. I have GitHub Copilot running in VS Code, but only use it for autocompletion, the ideas for solutions and their implementation is mine. I also use GitHub Copilot for doc strings and minor improvements after I solve the tasks.
 
-| Day | Part 1 | Part 2 | Day | Part 1 | Part 2 |  
-| :-: | :----: | :----: | :-: | :----: | :----: |  
-| [1](2023/Day01.ipynb) | ⭐ | ⭐ | [9](2023/Day09.ipynb) | ⭐ | ⭐ |  
-| [2](2023/Day02.ipynb) | ⭐ | ⭐ | 10 | | |  
-| [3](2023/Day03.ipynb) | ⭐ | ⭐ | 11 | | |  
-| [4](2023/Day04.ipynb) | ⭐ | ⭐ | 12 | | |  
-| [5](2023/Day05.ipynb) | ⭐ |    | 13 | | |  
-| [6](2023/Day06.ipynb) | ⭐ | ⭐ | 14 | | |  
-| [7](2023/Day07.ipynb) | ⭐ | ⭐ | 15 | | |  
-| [8](2023/Day08.ipynb) | ⭐ | ⭐ |  | | |  
+| Day | Part 1 | Part 2 |  | Day | Part 1 | Part 2 |  
+| :-: | :----: | :----: | :-: | :-: | :----: | :----: |  
+| [1](2023/Day01.ipynb) | ⭐ | ⭐ | | [8](2023/Day08.ipynb) | ⭐ | ⭐ |
+| [2](2023/Day02.ipynb) | ⭐ | ⭐ | | [9](2023/Day09.ipynb) | ⭐ | ⭐ | 
+| [3](2023/Day03.ipynb) | ⭐ | ⭐ | | 10 | | |  
+| [4](2023/Day04.ipynb) | ⭐ | ⭐ | | 11 | | |  
+| [5](2023/Day05.ipynb) | ⭐ |    | | 12 | | |  
+| [6](2023/Day06.ipynb) | ⭐ | ⭐ | | 13 | | |  
+| [7](2023/Day07.ipynb) | ⭐ | ⭐ | | 14 | | |  
 
 
 ## 2022
