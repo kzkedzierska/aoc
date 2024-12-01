@@ -6,7 +6,7 @@ For `AoC 2024` I will solve the problems in `Python` using quarto flavored Jupyt
 
 | Day | Part 1 | Part 2 |     | Day | Part 1 | Part 2 |     | Day | Part 1 | Part 2 |     | Day | Part 1 | Part 2 |
 | :-: | :----: | :----: | :-: | :-: | :----: | :----: | :-: | :-: | :----: | :----: | :-: | :-: | :----: | :----: |
-| 1 ([html](http://kasia.codes/resources/aoc/2024/Day01.html), [notebook](2024/Day01.ipynb)) |   ⭐   |   ⭐   |     | 7   |        |        |     | 13  |        |        |     | 19  |        |        |
+| 1 ([html](http://kasia.codes/resources/aoc/2024/Day01), [notebook](2024/Day01.ipynb)) |   ⭐   |   ⭐   |     | 7   |        |        |     | 13  |        |        |     | 19  |        |        |
 | 2   |        |        |     | 8   |        |        |     | 14  |        |        |     | 20  |        |        |
 | 3   |        |        |     | 9   |        |        |     | 15  |        |        |     | 21  |        |        |
 | 4   |        |        |     | 10  |        |        |     | 16  |        |        |     | 22  |        |        |
