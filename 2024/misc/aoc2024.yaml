@@ -1,0 +1,7 @@
+name: aoc2024
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - jupyterlab
+  - r-quarto
