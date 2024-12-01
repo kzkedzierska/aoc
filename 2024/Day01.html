@@ -3109,6 +3109,7 @@ width: 75%;
   <ul>
   <li><a href="#part-1-sum-of-differences" id="toc-part-1-sum-of-differences" class="nav-link active" data-scroll-target="#part-1-sum-of-differences">Part 1: Sum of differences</a></li>
   <li><a href="#part-2-weighted-sum-of-common-elements" id="toc-part-2-weighted-sum-of-common-elements" class="nav-link" data-scroll-target="#part-2-weighted-sum-of-common-elements">Part 2: Weighted sum of common elements</a></li>
+  <li><a href="#bonus-bash-solutions" id="toc-bonus-bash-solutions" class="nav-link" data-scroll-target="#bonus-bash-solutions">Bonus Bash solutions</a></li>
   </ul>
 </nav>
 </div>
@@ -3398,6 +3399,100 @@ Wall time: 3.1 μs</code></pre>
 </div>
 </div>
 <p>That’s the right answer! You are one gold star ⭐ closer to finding the Chief Historian.</p>
+</section>
+<section id="bonus-bash-solutions" class="level2">
+<h2 class="anchored" data-anchor-id="bonus-bash-solutions">Bonus Bash solutions</h2>
+<p>I wanted to see how the same problems can be solved in Bash. The full script is available in the <a href="https://github.com/kzkedzierska/aoc/2024/Day01.sh"><code>Day01.sh</code> file in the repository</a>. Here’s a brief overview of the Bash solutions:</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Part 1">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Part 1
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In part 1, I sort both lists, merge them, calculate the absolute differences, and sum them up.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">part_one()</span> <span class="kw">{</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">local</span> <span class="va">input_file</span><span class="op">=</span><span class="va">$1</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span> <span class="dt">\</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;(</span><span class="fu">tr</span> <span class="at">-s</span> <span class="st">&#39; &#39;</span> <span class="op">&lt;</span><span class="st">&quot;</span><span class="va">${input_file}</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f1</span> <span class="at">-d</span><span class="st">&#39; &#39;</span> <span class="kw">|</span> <span class="fu">sort</span><span class="op">)</span> <span class="dt">\</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;(</span><span class="fu">tr</span> <span class="at">-s</span> <span class="st">&#39; &#39;</span> <span class="op">&lt;</span><span class="st">&quot;</span><span class="va">${input_file}</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f2</span> <span class="at">-d</span><span class="st">&#39; &#39;</span> <span class="kw">|</span> <span class="fu">sort</span><span class="op">)</span> <span class="kw">|</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">awk</span> <span class="at">-v</span> FS=<span class="st">&quot; &quot;</span> <span class="st">&#39;function abs(x) {</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="st">      return ((x &lt; 0.0) ? -x : x)</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="st">    } {print abs($1 - $2)}&#39;</span> <span class="kw">|</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span> <span class="at">-sd+</span> <span class="at">-</span> <span class="kw">|</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bc</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>I am using <code>paste</code> to merge the two sorted lists, <code>awk</code> to calculate the absolute differences, and <code>bc</code> to sum them up.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Part 2">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Part 2
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The second part is a bit more complex, as it requires counting the occurrences of each number in the right list. Here’s the Bash solution for part two:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">part_two()</span> <span class="kw">{</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">local</span> <span class="va">input_file</span><span class="op">=</span><span class="va">$1</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">join</span> <span class="at">-j</span> 1 <span class="dt">\</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;(</span><span class="fu">tr</span> <span class="at">-s</span> <span class="st">&#39; &#39;</span> <span class="op">&lt;</span><span class="st">&quot;</span><span class="va">${input_file}</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f1</span> <span class="at">-d</span><span class="st">&#39; &#39;</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span> <span class="at">-c</span> <span class="kw">|</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tr</span> <span class="at">-s</span> <span class="st">&#39; &#39;</span> <span class="kw">|</span> <span class="fu">awk</span> <span class="st">&#39;{print $2, $1}&#39;</span><span class="op">)</span> <span class="dt">\</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">&lt;(</span><span class="fu">tr</span> <span class="at">-s</span> <span class="st">&#39; &#39;</span> <span class="op">&lt;</span><span class="st">&quot;</span><span class="va">${input_file}</span><span class="st">&quot;</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f2</span> <span class="at">-d</span><span class="st">&#39; &#39;</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span> <span class="at">-c</span> <span class="kw">|</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tr</span> <span class="at">-s</span> <span class="st">&#39; &#39;</span> <span class="kw">|</span> <span class="fu">awk</span> <span class="st">&#39;{print $2, $1}&#39;</span><span class="op">)</span> <span class="kw">|</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">awk</span> <span class="st">&#39;{printf $1 &quot;*&quot; $2 &quot;*&quot; $3 &quot;+&quot;} END {print &quot;0&quot;}&#39;</span> <span class="kw">|</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bc</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Here, I use:</p>
+<ul>
+<li><code>uniq -c</code> which counts the occurrences of each number in both lists,<br>
+</li>
+<li><code>join</code> which combines the left and right lists by their numbers,<br>
+</li>
+<li>with <code>awk</code> I formats the weighted sum equation as <code>num * left_count * right_count</code>,<br>
+</li>
+<li>and finally, I use <code>bc</code> to evaluate the final equation.</li>
+</ul>
+</div>
+</div>
+</div>
+<p>In the script I also added functions to check the answers and print them with <code>cowsay</code> for some extra flavor. Like this:</p>
+<pre class="console"><code>  _                 
+ |_) _. ._ _|_   /| 
+ |  (_| |   |_    | 
+                    
+ _______________________________ 
+&lt; Part 1 - example test passed! &gt;
+ ------------------------------- 
+   \
+    \
+        .--.
+       |o_o |
+       |:_/ |
+      //   \ \
+     (|     | )
+    /&#39;\_   _/`\
+    \___)=(___/
+
+ ___________________________ 
+&lt; Part 1 answer is: 2430334 &gt;
+ --------------------------- 
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||</code></pre>
 </section>
 
 </main>
