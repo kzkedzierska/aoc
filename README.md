@@ -4,14 +4,17 @@
 
 For `AoC 2024` I will solve the problems in `Python` using quarto flavored Jupyter notebooks.
 
-| Day | Part 1 | Part 2 |     | Day | Part 1 | Part 2 |     | Day | Part 1 | Part 2 |     | Day | Part 1 | Part 2 |
-| :-: | :----: | :----: | :-: | :-: | :----: | :----: | :-: | :-: | :----: | :----: | :-: | :-: | :----: | :----: |
-| 1 ([html](http://kasia.codes/resources/aoc/2024/Day01), [notebook](2024/Day01.ipynb)) |   ⭐   |   ⭐   |     | 7   |        |        |     | 13  |        |        |     | 19  |        |        |
-| 2  ([html](http://kasia.codes/resources/aoc/2024/Day02), [notebook](2024/Day02.ipynb)) |   ⭐   |   ⭐  |     | 8   |        |        |     | 14  |        |        |     | 20  |        |        |
-| 3   |        |        |     | 9   |        |        |     | 15  |        |        |     | 21  |        |        |
-| 4   |        |        |     | 10  |        |        |     | 16  |        |        |     | 22  |        |        |
-| 5   |        |        |     | 11  |        |        |     | 17  |        |        |     | 23  |        |        |
-| 6   |        |        |     | 12  |        |        |     | 18  |        |        |     | 24  |        |        |
+| Day | Part 1 | Part 2 |  | Day | Part 1 | Part 2 |     | Day | Part 1 | Part 2 |     | Day | Part 1 | Part 2 |
+| :-: | :----: | :----: |:-:| :-: | :----: | :----: | :-: | :-: | :----: | :----: | :-: | :-: | :----: | :----: |
+| 1 ([html](http://kasia.codes/resources/aoc/2024/Day01), [notebook](2024/Day01.ipynb)) | ⭐ | ⭐ | | 7   |        |        |     | 13  |        |        |     | 19  |        |        |
+| 2 ([html](http://kasia.codes/resources/aoc/2024/Day02), [notebook](2024/Day02.ipynb)) | ⭐ | ⭐ | | 8   |        |        |     | 14  |        |        |     | 20  |        |        |
+| 3 ([html](http://kasia.codes/resources/aoc/2024/Day03), [notebook](2024/Day03.ipynb)) | ⭐ | ⭐ | | 9   |        |        |     | 15  |        |        |     | 21  |        |        |
+| 4   |        |        | | 10  |        |        |     | 16  |        |        |     | 22  |        |        |
+| 5   |        |        | | 11  |        |        |     | 17  |        |        |     | 23  |        |        |
+| 6   |        |        | | 12  |        |        |     | 18  |        |        |     | 24  |        |        |
+
+I wrote a blogpost where I link the solutions as well, you can see it [here](https://kasia.codes/posts/aoc24/).
+
 
 ## 2023
 
