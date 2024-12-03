@@ -6,3 +6,5 @@
 */.quarto/
 */inputs
 *.pyc
+
+.DS_Store
