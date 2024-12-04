@@ -1,6 +1,6 @@
 #!/bin/bash
 #==============================================================================
-# Description:   Helper fuNctions for the Advent of Code 2024
+# Description:   Helper functions for the Advent of Code 2024
 # Author:        Kasia Kedzierska
 # Date:          December 3rd, 2024
 #==============================================================================

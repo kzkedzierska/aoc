@@ -20,13 +20,6 @@ div.callout-note.callout-style-default>.callout-header {
   border-radius: 55em;
 }
 
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 75%;
-}
-
 #title-block-header.quarto-title-block.default .quarto-title-meta {
   grid-template-columns: repeat(3, 1fr);
 }
