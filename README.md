@@ -6,10 +6,10 @@ For `AoC 2024` I will solve the problems in `Python` (and sometimes I'll add `Ba
 
 | Day | Links                                                                                     |Part 1|Part 2|
 |:--:|:------------------------------------------------------------------------------------------:|:----:|:----:|
-|1 | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day01) · [📓 Notebook](2024/Day01/Day01.ipynb) · [💻 Bash](2024/Day01/Day01.sh)  |  ⭐  |  ⭐  |
-|2 | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day02) · [📓 Notebook](2024/Day02/Day02.ipynb)   |  ⭐  |  ⭐  |
-|3 | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day03) · [📓 Notebook](2024/Day03/Day03.ipynb) · [💻 Bash](2024/Day03/Day03.sh)  |  ⭐  |  ⭐  |
-|4 | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day04) · [📓 Notebook](2024/Day04/Day04.ipynb)   |  ⭐  |  ⭐  |
+|1 | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day01) · [📓 Notebook](2024/day_01/notebook.ipynb) · [💻 Bash](2024/day_01/solution.sh)  |  ⭐  |  ⭐  |
+|2 | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day02) · [📓 Notebook](2024/day_02/notebook.ipynb)   |  ⭐  |  ⭐  |
+|3 | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day03) · [📓 Notebook](2024/day_03/notebook.ipynb) · [💻 Bash](2024/day_01/solution.sh)  |  ⭐  |  ⭐  |
+|4 | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day04) · [📓 Notebook](2024/day_04/notebook.ipynb)   |  ⭐  |  ⭐  |
 |5 |   |        |        |
 |6 |   |        |        |
 |7 |   |        |        |

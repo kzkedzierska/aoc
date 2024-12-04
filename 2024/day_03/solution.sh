@@ -7,7 +7,7 @@
 #==============================================================================
 
 # Read in the helper functions
-source ./misc/helper.sh
+source ../misc/helper.sh
 
 # Define inputs
 read -r example_input_p1 <<'EOF'
