@@ -6,34 +6,34 @@ For `AoC 2024` I will solve the problems in `Python` (and sometimes I'll add `Ba
 
 | Day | Links                                                                                     |Part 1|Part 2|
 |:--:|:------------------------------------------------------------------------------------------:|:----:|:----:|
-| 1   | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day01) · [📓 Notebook](2024/Day01.ipynb) · [💻 Bash](2024/Day01.sh)  |  ⭐  |  ⭐  |
-| 2   | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day02) · [📓 Notebook](2024/Day02.ipynb)   |  ⭐  |  ⭐  |
-| 3   | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day03) · [📓 Notebook](2024/Day03.ipynb) · [💻 Bash](2024/Day03.sh)  |  ⭐  |  ⭐  |
-| 4   | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day04) · [📓 Notebook](2024/Day04.ipynb)   |  ⭐  |  ⭐  |
-| 5   |   |        |        |
-| 6   |   |        |        |
-| 7   |   |        |        |
-|     |   |        |        |
-| 8   |   |        |        |
-| 9   |   |        |        |
-| 10  |   |        |        |
-| 11  |   |        |        |
-| 12  |   |        |        |
-| 13  |   |        |        |
-| 14  |   |        |        |
-|     |   |        |        |
-| 15  |   |        |        |
-| 16  |   |        |        |
-| 17  |   |        |        |
-| 18  |   |        |        |
-| 19  |   |        |        |
-| 20  |   |        |        |
-| 21  |   |        |        |
-|     |   |        |        |
-| 22  |   |        |        |
-| 23  |   |        |        |
-| 24  |   |        |        |
-| 25  |   |        |        |
+|1 | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day01) · [📓 Notebook](2024/Day01/Day01.ipynb) · [💻 Bash](2024/Day01/Day01.sh)  |  ⭐  |  ⭐  |
+|2 | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day02) · [📓 Notebook](2024/Day02/Day02.ipynb)   |  ⭐  |  ⭐  |
+|3 | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day03) · [📓 Notebook](2024/Day03/Day03.ipynb) · [💻 Bash](2024/Day03/Day03.sh)  |  ⭐  |  ⭐  |
+|4 | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day04) · [📓 Notebook](2024/Day04/Day04.ipynb)   |  ⭐  |  ⭐  |
+|5 |   |        |        |
+|6 |   |        |        |
+|7 |   |        |        |
+|  |   |        |        |
+|8 |   |        |        |
+|9 |   |        |        |
+|10|   |        |        |
+|11|   |        |        |
+|12|   |        |        |
+|13|   |        |        |
+|14|   |        |        |
+|  |   |        |        |
+|15|   |        |        |
+|16|   |        |        |
+|17|   |        |        |
+|18|   |        |        |
+|19|   |        |        |
+|20|   |        |        |
+|21|   |        |        |
+|  |   |        |        |
+|22|   |        |        |
+|23|   |        |        |
+|24|   |        |        |
+|25|   |        |        |
 
 For an overview of my journey and insights, check out my [blog post on AoC 2024](https://kasia.codes/posts/aoc24/). ✍️
 
