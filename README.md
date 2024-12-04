@@ -2,19 +2,40 @@
 
 ## 2024
 
-For `AoC 2024` I will solve the problems in `Python` using quarto flavored Jupyter notebooks.
+For `AoC 2024` I will solve the problems in `Python` (and sometimes I'll add `Bash` solution). Each day's solution is linked to its rendered HTML output and notebook source.
 
-| Day | Part 1 | Part 2 |  | Day | Part 1 | Part 2 |     | Day | Part 1 | Part 2 |     | Day | Part 1 | Part 2 |
-| :-: | :----: | :----: |:-:| :-: | :----: | :----: | :-: | :-: | :----: | :----: | :-: | :-: | :----: | :----: |
-| 1 ([html](http://kasia.codes/resources/aoc/2024/Day01), [notebook](2024/Day01.ipynb)) | ⭐ | ⭐ | | 7   |        |        |     | 13  |        |        |     | 19  |        |        |
-| 2 ([html](http://kasia.codes/resources/aoc/2024/Day02), [notebook](2024/Day02.ipynb)) | ⭐ | ⭐ | | 8   |        |        |     | 14  |        |        |     | 20  |        |        |
-| 3 ([html](http://kasia.codes/resources/aoc/2024/Day03), [notebook](2024/Day03.ipynb)) | ⭐ | ⭐ | | 9   |        |        |     | 15  |        |        |     | 21  |        |        |
-| 4   |        |        | | 10  |        |        |     | 16  |        |        |     | 22  |        |        |
-| 5   |        |        | | 11  |        |        |     | 17  |        |        |     | 23  |        |        |
-| 6   |        |        | | 12  |        |        |     | 18  |        |        |     | 24  |        |        |
+| Day | Links                                                                                     | Part 1 | Part 2 |
+|:--:|-------------------------------------------------------------------------------------------|:--:|:--:|
+| 1   | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day01) · [📓 Notebook](2024/Day01.ipynb)  | ⭐ | ⭐ |
+| 2   | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day02) · [📓 Notebook](2024/Day02.ipynb)  | ⭐ | ⭐ |
+| 3   | [📄 HTML](http://kasia.codes/resources/aoc/2024/Day03) · [📓 Notebook](2024/Day03.ipynb)  | ⭐ | ⭐ |
+| 4   |   |        |        |
+| 5   |   |        |        |
+| 6   |   |        |        |
+| 7   |   |        |        |
+|     |   |        |        |
+| 8   |   |        |        |
+| 9   |   |        |        |
+| 10  |   |        |        |
+| 11  |   |        |        |
+| 12  |   |        |        |
+| 13  |   |        |        |
+| 14  |   |        |        |
+|     |   |        |        |
+| 15  |   |        |        |
+| 16  |   |        |        |
+| 17  |   |        |        |
+| 18  |   |        |        |
+| 19  |   |        |        |
+| 20  |   |        |        |
+| 21  |   |        |        |
+|     |   |        |        |
+| 22  |   |        |        |
+| 23  |   |        |        |
+| 24  |   |        |        |
+| 25  |   |        |        |
 
-I wrote a blogpost where I link the solutions as well, you can see it [here](https://kasia.codes/posts/aoc24/).
-
+For an overview of my journey and insights, check out my [blog post on AoC 2024](https://kasia.codes/posts/aoc24/). ✍️
 
 ## 2023
 
