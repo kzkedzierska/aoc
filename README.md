@@ -1,8 +1,31 @@
 # My Advent of Code (AoC) solutions
 
+This repository contains my solutions to Advent of Code puzzles. I started solving them in 2020, and I'm continuing to do so in 2022, 2023, and 2024. So far, I didn't have time to solve all the puzzles in a given year, especially when the work gets busy, the puzzles get harder and it’s time to prepare for Christmas. Maybe this year will be different. 🤞
+
+Table of contents:
+
+- [2024](#2024)
+- [2023](#2023)
+- [2022](#2022)
+- [2020](#2020)
+
+<details>
+<summary> About Advent of Code </summary>
+
+## About AoC
+
+From the [subreddit Wiki](https://www.reddit.com/r/adventofcode/wiki/index):
+
+> Advent of Code is a series of small programming puzzles for a variety of skill levels. They are self-contained and are just as appropriate for an expert who wants to stay sharp as they are for a beginner who is just learning to code. Each puzzle calls upon different skills and has two parts that build on a theme.
+
+You can access the problems here: [adventofcode.com](https://adventofcode.com/). It will show you the most recent problems. If you want to access other year just type [adventofcode.com/2019](https://adventofcode.com/2019) for the year 2019.
+</details>
+
 ## 2024
 
 For `AoC 2024` I will solve the problems in `Python` (and sometimes I'll add `Bash` solution). Each day's solution is linked to its rendered HTML output and notebook source.
+
+For an overview of my journey and insights, check out my [blog post on AoC 2024](https://kasia.codes/posts/aoc24/). ✍️
 
 | Day | Links                                                                                     |Part 1|Part 2|
 |:--:|:------------------------------------------------------------------------------------------:|:----:|:----:|
@@ -11,31 +34,6 @@ For `AoC 2024` I will solve the problems in `Python` (and sometimes I'll add `Ba
 |3 | [📄 HTML](http://kasia.codes/resources/aoc/2024/day_03) · [📓 Notebook](2024/day_03/notebook.ipynb) · [💻 Bash](2024/day_01/solution.sh)  |  ⭐  |  ⭐  |
 |4 | [📄 HTML](http://kasia.codes/resources/aoc/2024/day_04) · [📓 Notebook](2024/day_04/notebook.ipynb)   |  ⭐  |  ⭐  |
 |5 | [📄 HTML](http://kasia.codes/resources/aoc/2024/day_05) · [📓 Notebook](2024/day_05/notebook.ipynb)   |  ⭐  |  ⭐  |
-|6 |   |        |        |
-|7 |   |        |        |
-|  |   |        |        |
-|8 |   |        |        |
-|9 |   |        |        |
-|10|   |        |        |
-|11|   |        |        |
-|12|   |        |        |
-|13|   |        |        |
-|14|   |        |        |
-|  |   |        |        |
-|15|   |        |        |
-|16|   |        |        |
-|17|   |        |        |
-|18|   |        |        |
-|19|   |        |        |
-|20|   |        |        |
-|21|   |        |        |
-|  |   |        |        |
-|22|   |        |        |
-|23|   |        |        |
-|24|   |        |        |
-|25|   |        |        |
-
-For an overview of my journey and insights, check out my [blog post on AoC 2024](https://kasia.codes/posts/aoc24/). ✍️
 
 ## 2023
 
@@ -62,11 +60,3 @@ For `AoC 2022` I decided to solve the problems by writing up my solutions in Qua
 ## 2020
 
 In 2020, I solved `AOC 2020` challenges using `R` with solutions organised and split into subdirectories, you can check them out [here](/2020).
-
-## About AOC
-
-From the [subreddit Wiki](https://www.reddit.com/r/adventofcode/wiki/index): Advent of Code is a series of small programming puzzles for a variety of skill levels. They are self-contained and are just as appropriate for an expert who wants to stay sharp as they are for a beginner who is just learning to code. Each puzzle calls upon different skills and has two parts that build on a theme.
-
-You can access the problems here: [adventofcode.com/](https://adventofcode.com/). It will show you the most recent problems. If you want to access other year just type [adventofcode.com/2019](https://adventofcode.com/2019) for the year 2019.
-
-This repository contains my solutions to Advent of Code exercises. Usually, during Christmas holiday break I take some time to solve few problems from Advent of Code. Decided to keep the code tidy and put it on GitHub for future reference.
