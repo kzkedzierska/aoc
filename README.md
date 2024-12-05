@@ -10,7 +10,7 @@ For `AoC 2024` I will solve the problems in `Python` (and sometimes I'll add `Ba
 |2 | [📄 HTML](http://kasia.codes/resources/aoc/2024/day_02) · [📓 Notebook](2024/day_02/notebook.ipynb)   |  ⭐  |  ⭐  |
 |3 | [📄 HTML](http://kasia.codes/resources/aoc/2024/day_03) · [📓 Notebook](2024/day_03/notebook.ipynb) · [💻 Bash](2024/day_01/solution.sh)  |  ⭐  |  ⭐  |
 |4 | [📄 HTML](http://kasia.codes/resources/aoc/2024/day_04) · [📓 Notebook](2024/day_04/notebook.ipynb)   |  ⭐  |  ⭐  |
-|5 |   |        |        |
+|5 | [📄 HTML](http://kasia.codes/resources/aoc/2024/day_05) · [📓 Notebook](2024/day_05/notebook.ipynb)   |  ⭐  |  ⭐  |
 |6 |   |        |        |
 |7 |   |        |        |
 |  |   |        |        |
