@@ -80,7 +80,7 @@ fi
 
 # Replace placeholders in the notebook (use a temporary file for safety)
 tmp_file=$(mktemp) || error "Failed to create temporary file."
-sed -e "s/<TITLE>/Day ${new_day}/g" \
+sed -e "s/<TITLE>/'Day ${new_day}'/g" \
   -e "s/<DATE>/$(date +'%B %d, %Y')/g" \
   "${notebook_target}" >"${tmp_file}" ||
   error "Failed to process template placeholders."

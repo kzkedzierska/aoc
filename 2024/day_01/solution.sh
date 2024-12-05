@@ -10,8 +10,8 @@
 source ./misc/helper.sh
 
 # Define file paths
-example_input_file="inputs/Example_day01.txt"
-input_file="inputs/Day01.txt"
+example_input_file="inputs/example_day_01.txt"
+input_file="inputs/day_01.txt"
 
 # Save example input to the file
 echo -e "3   4\n4   3\n2   5\n1   3\n3   9\n3   3" >"${example_input_file}"

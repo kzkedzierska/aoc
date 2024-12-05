@@ -22,7 +22,7 @@ EOF
 test_answer_p1=161
 test_answer_p2=48
 
-input_file="inputs/Day03.txt"
+input_file="inputs/day_03.txt"
 
 # Welcome message for Day 1 tasks
 cat <<"EOF"
