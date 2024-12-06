@@ -1,5 +1,25 @@
 # My Advent of Code (AoC) solutions
 
+```
+         🎄                                      🎄
+        /_\                                     /_\
+       /___\                                   /___\
+      /_____\                                 /_____\
+     /_______\                               /_______\
+    /_________\                             /_________\
+
+    _      _             _          __    ___         _      
+   /_\  __| |_ _____ _ _| |_   ___ / _|  / __|___  __| |___  
+  / _ \/ _` \ V / -_) ' \  _| / _ \  _| | (__/ _ \/ _` / -_) 
+ /_/ \_\__,_|\_/\___|_||_\__| \___/_|    \___\___/\__,_\___| 
+
+         |||                                     |||
+         |||                                     |||
+     ~~~~~~~~~                               ~~~~~~~~~
+         🎁                                         🎁
+
+```
+
 This repository contains my solutions to Advent of Code puzzles. I started solving them in [2020](#2020), and I'm continuing to do so in [2022](#2022), [2023](#2023), and [2024](#current-2024). So far, I didn't have time to solve all the puzzles in a given year, especially when work gets busy, puzzles get harder and it’s time to prepare for Christmas. Hoping this year will be different. 🤞
 
 <details>
