@@ -1,13 +1,6 @@
 # My Advent of Code (AoC) solutions
 
-This repository contains my solutions to Advent of Code puzzles. I started solving them in 2020, and I'm continuing to do so in 2022, 2023, and 2024. So far, I didn't have time to solve all the puzzles in a given year, especially when the work gets busy, the puzzles get harder and it’s time to prepare for Christmas. Maybe this year will be different. 🤞
-
-Table of contents:
-
-- [2024](#2024)
-- [2023](#2023)
-- [2022](#2022)
-- [2020](#2020)
+This repository contains my solutions to Advent of Code puzzles. I started solving them in [2020](#2020), and I'm continuing to do so in [2022](#2022), [2023](#2023), and [2024](#current-2024). So far, I didn't have time to solve all the puzzles in a given year, especially when work gets busy, puzzles get harder and it’s time to prepare for Christmas. Hoping this year will be different. 🤞
 
 <details>
 <summary> About Advent of Code </summary>
@@ -21,7 +14,7 @@ From the [subreddit Wiki](https://www.reddit.com/r/adventofcode/wiki/index):
 You can access the problems here: [adventofcode.com](https://adventofcode.com/). It will show you the most recent problems. If you want to access other year just type [adventofcode.com/2019](https://adventofcode.com/2019) for the year 2019.
 </details>
 
-## 2024
+## Current: 2024
 
 For `AoC 2024` I will solve the problems in `Python` (and sometimes I'll add `Bash` solution). Each day's solution is linked to its rendered HTML output and notebook source.
 
@@ -35,7 +28,8 @@ For an overview of my journey and insights, check out my [blog post on AoC 2024]
 |4 | [📄 HTML](http://kasia.codes/resources/aoc/2024/day_04) · [📓 Notebook](2024/day_04/notebook.ipynb)   |  ⭐  |  ⭐  |
 |5 | [📄 HTML](http://kasia.codes/resources/aoc/2024/day_05) · [📓 Notebook](2024/day_05/notebook.ipynb)   |  ⭐  |  ⭐  |
 
-## 2023
+<details>
+<summary> <h2 id="2023"> 2023 </h2> </summary>
 
 For `AoC 2023` I am solving them in Python, in Jupyter notebooks (run in VS Code). I don't keep the inputs, as per the request of the creator of Advent of Code. I have GitHub Copilot running in VS Code, but only use it for autocompletion, the ideas for solutions and their implementation is mine. I also use GitHub Copilot for doc strings and minor improvements after I solve the tasks.
 
@@ -49,7 +43,10 @@ For `AoC 2023` I am solving them in Python, in Jupyter notebooks (run in VS Code
 | [6](2023/Day06.ipynb) | ⭐ | ⭐ | | 13 | | |  
 | [7](2023/Day07.ipynb) | ⭐ | ⭐ | | 14 | | |  
 
-## 2022
+</details>
+
+<details>
+<summary> <h2 id="2022"> 2022 </h2> </summary>
 
 For `AoC 2022` I decided to solve the problems by writing up my solutions in Quarto Publication (so far using `Python`). You can look up the answers in the online version of the notebook [here](https://kzkedzierska.quarto.pub/advent-of-code-2022/).
 
@@ -57,6 +54,11 @@ For `AoC 2022` I decided to solve the problems by writing up my solutions in Qua
 
 [![Quarto Publish](https://github.com/kzkedzierska/aoc/actions/workflows/publish.yml/badge.svg)](https://github.com/kzkedzierska/aoc/actions/workflows/publish.yml)
 
-## 2020
+</details>
+
+<details>
+<summary> <h2 id="2020"> 2020 </h2> </summary>
 
 In 2020, I solved `AOC 2020` challenges using `R` with solutions organised and split into subdirectories, you can check them out [here](/2020).
+
+</details>
