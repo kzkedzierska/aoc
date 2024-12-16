@@ -49,6 +49,8 @@ For an overview of my journey and insights, check out my [blog post on AoC 2024]
 |5 | [📄 HTML](http://kasia.codes/resources/aoc/2024/day_05) · [📓 Notebook](2024/day_05/notebook.ipynb)   |  ⭐  |  ⭐  |
 |6 | 📄 HTML · [📓 Notebook [WIP]](2024/day_06/notebook.ipynb)   |  ⭐  |     |
 |7 | 📄 HTML · [📓 Notebook [WIP]](2024/day_07/notebook.ipynb)   |  ⭐  |  ⭐  |
+|8 |   |    |    |
+|9 | [📄 HTML](http://kasia.codes/resources/aoc/2024/day_09) · [📓 Notebook](2024/day_09/notebook.ipynb)   |  ⭐  |  ⭐  |
 
 <details>
 <summary> <h2 id="2023"> 2023 </h2> </summary>
