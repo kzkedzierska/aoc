@@ -3152,7 +3152,7 @@ grid-template-columns: repeat(3, 1fr);
 
 
 <p>Today, together with historian elves we’re falling into despair, or rather having to debug some very weird computer program. Must admit, reading the instructions the first time made me question if I want to do it. Not because the task is hard, but because the instructions are so weird. But let’s not get ahead of ourselves.</p>
-<p>We are falling through a void and the only way to save us is to debug a 3-bit (weird I might add!) computer program. Read the whole stroy on the official <a href="https://adventofcode.com/2024/day/17">Day 17 of Advent of Code 2024</a> website.</p>
+<p>We are falling through a void and the only way to save us is to debug a 3-bit (weird I might add!) computer program. Read the whole story on the official <a href="https://adventofcode.com/2024/day/17">Day 17 of Advent of Code 2024</a> website.</p>
 <p>Here’s a ChatGPT negotiated illustration of the setup:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -3317,8 +3317,8 @@ Setting up
 <div id="cell-12" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>time part_one(input_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>CPU times: user 114 μs, sys: 63 μs, total: 177 μs
-Wall time: 220 μs</code></pre>
+<pre><code>CPU times: user 515 μs, sys: 601 μs, total: 1.12 ms
+Wall time: 780 μs</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>&#39;1,5,3,0,2,5,2,5,3&#39;</code></pre>
@@ -3346,9 +3346,6 @@ Wall time: 220 μs</code></pre>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;3 written in binary is `</span><span class="sc">{</span>print_binary(<span class="dv">3</span>)<span class="sc">}</span><span class="ss">` and shifted 3 bits to the left is &#39;</span><span class="sc">{</span>print_binary(<span class="dv">3</span> <span class="op">&lt;&lt;</span> <span class="dv">3</span>)<span class="sc">}</span><span class="ss">&#39; (</span><span class="sc">{</span>binary_to_int(print_binary(<span class="dv">3</span> <span class="op">&lt;&lt;</span> <span class="dv">3</span>))<span class="sc">}</span><span class="ss">). Shifting 3 bits to the left is the same as multiplying by 2^3 = 8&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>1 written in binary is `1` and shifted 1 bit to the left is &#39;10&#39; (2). Shifting 1 bit to the left is the same as multiplying by 2^1 = 2
-2 written in binary is `10` and shifted 2 bits to the left is &#39;100&#39; (4). Shifting 2 bits to the left is the same as multiplying by 2^2 = 4
-3 written in binary is `11` and shifted 3 bits to the left is &#39;11000&#39; (24). Shifting 3 bits to the left is the same as multiplying by 2^3 = 8
-
 2 written in binary is `10` and shifted 2 bits to the left is &#39;100&#39; (4). Shifting 2 bits to the left is the same as multiplying by 2^2 = 4
 3 written in binary is `11` and shifted 3 bits to the left is &#39;11000&#39; (24). Shifting 3 bits to the left is the same as multiplying by 2^3 = 8</code></pre>
 </div>
@@ -3444,8 +3441,8 @@ Wall time: 220 μs</code></pre>
 <div id="cell-21" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>time part_two(input_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>CPU times: user 1.83 ms, sys: 133 μs, total: 1.96 ms
-Wall time: 3.08 ms</code></pre>
+<pre><code>CPU times: user 2.45 ms, sys: 799 μs, total: 3.25 ms
+Wall time: 3.24 ms</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>108107566389757</code></pre>
