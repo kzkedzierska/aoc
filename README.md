@@ -16,11 +16,11 @@
          |||                                     |||
          |||                                     |||
      ~~~~~~~~~                               ~~~~~~~~~
-         🎁                                         🎁
+         🎁                                       🎁
 
 ```
 
-This repository contains my solutions to Advent of Code puzzles. I started solving them in [2020](#2020), and I'm continuing to do so in [2022](#2022), [2023](#2023), and [2024](#current-2024). So far, I didn't have time to solve all the puzzles in a given year, especially when work gets busy, puzzles get harder and it’s time to prepare for Christmas. Hoping this year will be different. 🤞
+This repository contains my solutions to Advent of Code puzzles. I started solving them in [2020](#2020), and I'm continuing to do so in [2022](#2022), [2023](#2023), [2024](#2024) and [2025](#current-2025). So far, I didn't have time to solve all the puzzles in a given year, especially when work gets busy, puzzles get harder & require more time and it’s time to prepare for Christmas. Hoping this year, since there are only [12 puzzles instead of the regular 24](https://www.reddit.com/r/adventofcode/comments/1ocwh04/changes_to_advent_of_code_starting_this_december/), will be different. 🤞
 
 <details>
 <summary> About Advent of Code </summary>
@@ -34,7 +34,27 @@ From the [subreddit Wiki](https://www.reddit.com/r/adventofcode/wiki/index):
 You can access the problems here: [adventofcode.com](https://adventofcode.com/). It will show you the most recent problems. If you want to access other year just type [adventofcode.com/2019](https://adventofcode.com/2019) for the year 2019.
 </details>
 
-## Current: 2024
+## Current: 2025  
+
+This year my goal is to solve all the puzzles. No decorators, no fancy stuff, no blog posts, just pure problem solving. I will likely use Python for that, but will not shy away from using bash or other languages if it makes sense for a given problem.
+
+| Day | Links                                                                                     |Part 1|Part 2|
+|:--:|:------------------------------------------------------------------------------------------:|:----:|:----:|
+| 1 |  | | 
+| 2 |  | |
+| 3 |  | |
+| 4 |  | |
+| 5 |  | |
+| 6 |  | |
+| 7 |  | |
+| 8 |  | |
+| 9 |  | |
+|10 |  | |
+|11 |  | |
+|12 |  | |
+
+<details>
+<summary> <h2 id="2024"> 2024 </h2> </summary>
 
 ⭐ collected so far: 23/50
 
@@ -56,6 +76,8 @@ For an overview of my journey and insights, check out my [blog post on AoC 2024]
 |17| [📄 HTML](http://kasia.codes/resources/aoc/2024/day_17) · [📓 Notebook](2024/day_17/notebook.ipynb)   |  ⭐  |  ⭐  |
 |18| [📄 HTML](http://kasia.codes/resources/aoc/2024/day_18) · [📓 Notebook](2024/day_18/notebook.ipynb)   |  ⭐  |  ⭐  |
 |19| [📄 HTML](http://kasia.codes/resources/aoc/2024/day_19) · [📓 Notebook](2024/day_19/notebook.ipynb)   |  ⭐  |  ⭐  |
+
+</details>
 
 <details>
 <summary> <h2 id="2023"> 2023 </h2> </summary>

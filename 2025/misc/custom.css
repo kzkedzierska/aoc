@@ -1,0 +1,25 @@
+/* Change background color of code blocks */
+
+pre code {
+  background-color: #f5f5f5;
+  padding: 15px;
+  /* Add padding for spacing */
+  border-radius: 10px;
+  /* Optional: Rounded corners */
+  overflow-x: auto;
+  /* Ensure horizontal scrolling for long lines */
+  border: 2px solid #333;
+  border-radius: 15px 5px 5px 25px / 5px 25px 25px 5px;
+}
+
+.sourceCode {
+  overflow: auto;
+}
+
+div.callout-note.callout-style-default>.callout-header {
+  border-radius: 55em;
+}
+
+#title-block-header.quarto-title-block.default .quarto-title-meta {
+  grid-template-columns: repeat(3, 1fr);
+}
