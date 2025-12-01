@@ -25,7 +25,7 @@ def setup_logger(name: str | None = None, level: str = "INFO") -> logging.Logger
     # Configure the root logger to use coloredlogs with default styling
     coloredlogs.install(
         level=level,
-        fmt=f"%(asctime)s [{hostname}] %(name)s[%(process)d] %(levelname)s %(message)s",
+        fmt=f"%(asctime)s [{hostname}] %(name)s %(levelname)s %(message)s",
     )
 
     # Get or create logger
@@ -43,6 +43,15 @@ def setup_logger(name: str | None = None, level: str = "INFO") -> logging.Logger
 
     logging.Logger.success = success
     return logger
+
+
+def extended_assert(actual_value, expected_value):
+    """Assert and print expected vs actual"""
+    # Create a logger if not already available
+    logger = logging.getLogger(__name__)
+
+    if actual_value != expected_value:
+        logger.error(f"Expected {expected_value}, got {actual_value}")
 
 
 def verify_answer(f: Callable[[str], int], example_input: str, expected_answer: int) -> None:

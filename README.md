@@ -38,20 +38,20 @@ You can access the problems here: [adventofcode.com](https://adventofcode.com/).
 
 This year my goal is to solve all the puzzles. No decorators, no fancy stuff, no blog posts, just pure problem solving. I will likely use Python for that, but will not shy away from using bash or other languages if it makes sense for a given problem.
 
-| Day | Links                                                                                     |Part 1|Part 2|
-|:--:|:------------------------------------------------------------------------------------------:|:----:|:----:|
-| 1 |  | | 
-| 2 |  | |
-| 3 |  | |
-| 4 |  | |
-| 5 |  | |
-| 6 |  | |
-| 7 |  | |
-| 8 |  | |
-| 9 |  | |
-|10 |  | |
-|11 |  | |
-|12 |  | |
+| Day | Notebook | Part 1 | Part 2|
+|:--:|:---------:|:------:|:-----:|
+| 1 | [Python notebook](./2025/day_01.ipynb) | ⭐ | ⭐ |
+| 2 |  | | |
+| 3 |  | | |
+| 4 |  | | |
+| 5 |  | | |
+| 6 |  | | |
+| 7 |  | | |
+| 8 |  | | |
+| 9 |  | | |
+|10 |  | | |
+|11 |  | | |
+|12 |  | | |
 
 <details>
 <summary> <h2 id="2024"> 2024 </h2> </summary>
