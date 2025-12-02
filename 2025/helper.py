@@ -45,13 +45,13 @@ def setup_logger(name: str | None = None, level: str = "INFO") -> logging.Logger
     return logger
 
 
-def extended_assert(actual_value, expected_value):
+def extended_assert(finput, actual_value, expected_value):
     """Assert and print expected vs actual"""
     # Create a logger if not already available
     logger = logging.getLogger(__name__)
 
     if actual_value != expected_value:
-        logger.error(f"Expected {expected_value}, got {actual_value}")
+        logger.error(f"For {finput} expected {expected_value}, got {actual_value}")
 
 
 def verify_answer(f: Callable[[str], int], example_input: str, expected_answer: int) -> None:

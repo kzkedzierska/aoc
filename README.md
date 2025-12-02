@@ -41,7 +41,7 @@ This year my goal is to solve all the puzzles. No decorators, no fancy stuff, no
 | Day | Notebook | Part 1 | Part 2|
 |:--:|:---------:|:------:|:-----:|
 | 1 | [Python notebook](./2025/day_01.ipynb) | ⭐ | ⭐ |
-| 2 |  | | |
+| 2 | [Python notebook](./2025/day_02.ipynb) | ⭐ | ⭐ |
 | 3 |  | | |
 | 4 |  | | |
 | 5 |  | | |
