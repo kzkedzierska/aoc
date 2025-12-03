@@ -42,7 +42,7 @@ This year my goal is to solve all the puzzles. No decorators, no fancy stuff, no
 |:--:|:---------:|:------:|:-----:|
 | 1 | [Python notebook](./2025/day_01.ipynb) | ⭐ | ⭐ |
 | 2 | [Python notebook](./2025/day_02.ipynb) | ⭐ | ⭐ |
-| 3 |  | | |
+| 3 | [Python notebook](./2025/day_03.ipynb) | ⭐ | ⭐ |
 | 4 |  | | |
 | 5 |  | | |
 | 6 |  | | |
