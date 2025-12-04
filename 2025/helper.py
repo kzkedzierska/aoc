@@ -47,10 +47,14 @@ def setup_logger(name: str | None = None, level: str = "INFO") -> logging.Logger
 
 def extended_assert(finput, actual_value, expected_value):
     """Assert and print expected vs actual"""
+    import numpy as np
+
     # Create a logger if not already available
     logger = logging.getLogger(__name__)
-
-    if actual_value != expected_value:
+    if isinstance(actual_value, np.ndarray):
+        if not np.array_equal(actual_value, expected_value):
+            logger.error(f"For {finput} {expected_value.shape=}, got {actual_value.shape=}")
+    elif actual_value != expected_value:
         logger.error(f"For {finput} expected {expected_value}, got {actual_value}")
 
 
