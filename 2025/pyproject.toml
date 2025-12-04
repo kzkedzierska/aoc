@@ -8,4 +8,5 @@ dependencies = [
     "coloredlogs>=15.0.1",
     "ipykernel>=7.1.0",
     "numpy>=2.3.5",
+    "pillow>=12.0.0",
 ]
