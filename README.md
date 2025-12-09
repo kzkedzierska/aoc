@@ -36,7 +36,7 @@ You can access the problems here: [adventofcode.com](https://adventofcode.com/).
 
 ## Current: 2025  
 
-⭐ collected so far: 16/24
+⭐ collected so far: 17/24
 
 This year my goal is to solve all the puzzles. No decorators, no fancy stuff, no blog posts, just pure problem solving. I will likely use Python for that, but will not shy away from using bash or other languages if it makes sense for a given problem.
 
@@ -50,7 +50,7 @@ This year my goal is to solve all the puzzles. No decorators, no fancy stuff, no
 | 6 | [Python notebook](./2025/day_06.ipynb) | ⭐ | ⭐ |
 | 7 | [Python notebook](./2025/day_07.ipynb) | ⭐ | ⭐ |
 | 8 | [Python notebook](./2025/day_08.ipynb) | ⭐ | ⭐ |
-| 9 |  | | |
+| 9 | [Python notebook](./2025/day_09.ipynb) | ⭐ |    |
 |10 |  | | |
 |11 |  | | |
 |12 |  | | |
